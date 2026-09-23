@@ -1,12 +1,12 @@
-const CACHE = "lover-legend-import-cost-v36.7-stable-os10-loginfix1";
+const CACHE = "lla-online-store-v1-brandingfix1";
 const CORE = [
   "./",
-  "./index.html?v=36.7-os10-loginfix1",
-  "./css/style.css?v=36.7-os10-loginfix1",
-  "./js/common.js?v=36.7-os10-loginfix1",
-  "./js/sync.js?v=36.7-os10-loginfix1",
-  "./js/app.js?v=36.7-os10-loginfix1",
-  "./manifest.json?v=36.7-os10-loginfix1",
+  "./index.html?v=36.7-os10-branding1",
+  "./css/style.css?v=36.7-os10-branding1",
+  "./js/common.js?v=36.7-os10-branding1",
+  "./js/sync.js?v=36.7-os10-branding1",
+  "./js/app.js?v=36.7-os10-branding1",
+  "./manifest.json?v=36.7-os10-branding1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/favicon.ico",
@@ -41,7 +41,7 @@ self.addEventListener("fetch", event => {
       fetch(event.request)
         .then(response => {
           const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put("./index.html?v=36.7-os10-loginfix1", copy));
+          caches.open(CACHE).then(cache => cache.put("./index.html?v=36.7-os10-branding1", copy));
           return response;
         })
         .catch(() => caches.match("./index.html"))

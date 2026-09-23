@@ -86,7 +86,7 @@ select {
 }
 
 .app-header-main-title {
-  color: #008b8b;
+  color: #b3123d;
   font-size: 27px;
   line-height: 1.08;
   font-weight: 800;
@@ -95,7 +95,7 @@ select {
 
 .app-header-subtitle {
   margin-top: 4px;
-  color: #07813f;
+  color: #7a263d;
   font-size: 16px;
   line-height: 1.15;
   font-weight: 800;
