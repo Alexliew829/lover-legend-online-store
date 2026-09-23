@@ -19223,7 +19223,7 @@ function setupInventoryMasterV299(){
 }
 
 
-// ================= LLA Online Store V1.0 =================
+// ================= Lover Legend Online Store V1.1 =================
 const ONLINE_STORE_SETTINGS_KEY_V10 = "onlineStoreV10";
 let onlineStoreSelectedProductIdV10 = "";
 
@@ -19309,6 +19309,8 @@ function renderOnlineStoreProductListV10(){
         <div class="online-store-product-name-v10">${escapeHTML(p.name||"")}</div>
         <div class="online-store-product-meta-v10">
           <span>库存 <strong>${formatNumber(counts.stock)}</strong></span>
+          <span>平均成本 <strong>${formatMoney(Number(p.averageCost)||0,"RM ")}</strong></span>
+          <span>Online最低 <strong>${formatMoney(Number(p.onlineMinimumPrice)||0,"RM ")}</strong></span>
           <span>随机 <strong>${formatNumber(counts.random)}</strong></span>
           <span>一物一拍 <strong>${formatNumber(counts.unique)}</strong></span>
           <span>未分配 <strong>${formatNumber(Math.max(0,counts.unallocated))}</strong></span>
@@ -19328,6 +19330,8 @@ function setOnlineStoreEditorValuesV10(productId){
   setText("onlineStoreMasterIdV10",onlineStoreSelectedProductIdV10);
   setText("onlineStoreMasterNameV10",String(product.name||""));
   const setVal=(id,value)=>{const el=document.getElementById(id);if(el)el.value=value};
+  setVal("onlineStoreAverageCostV11",formatMoney(Number(product.averageCost)||0,"RM "));
+  setVal("onlineStoreMinimumPriceV11",Number(product.onlineMinimumPrice)||"");
   setVal("onlineStoreRandomQtyV10",config.randomQty||0);
   setVal("onlineStoreRegularPriceV10",config.regularPrice||"");
   setVal("onlineStorePromotionPriceV10",config.promotionPrice||"");
@@ -19399,6 +19403,13 @@ function collectOnlineStoreConfigFromEditorV10(){
 }
 function saveOnlineStoreEditorV10(){
   const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;
+  const onlineMinimumPrice=Math.max(0,Number(document.getElementById("onlineStoreMinimumPriceV11")?.value)||0);
+  const products=getProducts();
+  const productIndex=products.findIndex(item=>String(item?.id||"").trim().toUpperCase()===onlineStoreSelectedProductIdV10);
+  if(productIndex>=0){
+    products[productIndex]={...products[productIndex],onlineMinimumPrice,onlineMinimumPriceUpdatedAt:new Date().toISOString()};
+    saveProducts(products);
+  }
   const config=collectOnlineStoreConfigFromEditorV10();
   const c=getOnlineStoreCountsV10(product,config);
   if(c.unallocated<0){window.alert(`不能保存：Online Store 已分配 ${c.random+c.unique} 棵，但真实库存只有 ${c.stock} 棵。`);return;}

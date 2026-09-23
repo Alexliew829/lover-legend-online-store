@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#b3123d" />
-  <title>LLA Online Store 管理</title>
+  <title>线上商店管理系统 | Online Store Management Admin</title>
   <link rel="manifest" href="./manifest.json?v=36.7-os10-branding1" />
   <link rel="shortcut icon" href="./assets/icons/favicon.ico?v=36.7-os10-branding1" />
   <link rel="icon" href="./assets/icons/favicon.ico?v=36.7-os10-branding1" sizes="any" />
@@ -14,7 +14,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/icons/apple-touch-icon.png?v=36.7-os10-branding1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="application-name" content="LLA Online Store 管理" />
+  <meta name="application-name" content="线上商店管理系统" />
   <meta name="msapplication-TileColor" content="#b3123d" />
   <meta name="msapplication-TileImage" content="./assets/icons/icon-192.png?v=36.7-os10-branding1" />
   <style id="access-lock-critical-v299">
@@ -113,10 +113,10 @@
              alt="Lover Legend green logo" />
 
         <div class="app-header-title">
-          <div class="app-header-main-title">LLA Online Store 管理</div>
-          <div class="app-header-subtitle">Lover Legend Online Store Admin</div>
+          <div class="app-header-main-title">线上商店管理系统</div>
+          <div class="app-header-subtitle">Online Store Management Admin</div>
           <div class="app-header-brand">Lover Legend Gardening</div>
-          <div class="app-header-version">Online Store V1.0 · Import Base 36.7 Stable</div>
+          <div class="app-header-version">Online Store V1.1 · Import Base 37.2 Stable</div>
         </div>
 
         <img class="app-header-logo app-header-logo-red"
@@ -239,10 +239,10 @@
         <section class="panel online-store-panel-v10">
           <div class="section-title-row online-store-title-row-v10">
             <div>
-              <h2>LLA Online Store 管理</h2>
-              <div class="muted">Online Store V1.0 · 以库存主产品编号为唯一入口</div>
+              <h2>线上商店管理系统</h2>
+              <div class="muted">Online Store V1.1 · 以库存主产品编号为唯一入口</div>
             </div>
-            <span class="online-store-version-v10">V1.0</span>
+            <span class="online-store-version-v10">V1.1</span>
           </div>
 
           <div class="online-store-search-row-v10">
@@ -272,6 +272,12 @@
             <div><span>一物一拍分配</span><strong id="onlineStoreUniqueAllocatedV10">0</strong></div>
             <div><span>未分配库存</span><strong id="onlineStoreUnallocatedV10">0</strong></div>
           </div>
+
+          <div class="online-store-form-grid-v10 online-store-price-foundation-v11">
+            <label>平均成本（Import）<input id="onlineStoreAverageCostV11" type="text" readonly /></label>
+            <label>Online 最低售价 (RM)<input id="onlineStoreMinimumPriceV11" type="number" min="0" step="0.01" inputmode="decimal" /></label>
+          </div>
+          <div class="muted online-store-price-note-v11">Online 最低售价为独立字段，不使用 Import System 原最低售价；现阶段先独立保存，自动计算规则后续设置。</div>
           <div id="onlineStoreAllocationWarningV10" class="online-store-warning-v10" hidden></div>
 
           <div class="online-store-block-v10">
@@ -1017,18 +1023,6 @@
       </a>
       <a class="nav-btn" data-page="onlineStorePage" href="./?page=online-store">
         <span>🛍️</span><small>Online Store</small>
-      </a>
-      <a class="nav-btn" data-page="importPage" href="./?page=import">
-        <span>📦</span><small>产品进口</small>
-      </a>
-      <a class="nav-btn" data-page="supplierPage" href="./?page=supplier">
-        <span>🏷️</span><small>产品管理</small>
-      </a>
-      <a class="nav-btn" data-page="historyPage" href="./?page=history">
-        <span>📜</span><small>历史查询</small>
-      </a>
-      <a class="nav-btn" data-page="settingsPage" href="./?page=settings">
-        <span>⚙️</span><small>设置</small>
       </a>
     </nav>
   </div>
