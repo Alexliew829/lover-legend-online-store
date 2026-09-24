@@ -6,18 +6,18 @@
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <meta content="#b3123d" name="theme-color"/>
 <title>线上商店管理系统 | Online Store Management Admin</title>
-<link href="./manifest.json?v=37.2-os13" rel="manifest"/>
-<link href="./assets/icons/favicon.ico?v=37.2-os13" rel="shortcut icon"/>
-<link href="./assets/icons/favicon.ico?v=37.2-os13" rel="icon" sizes="any"/>
-<link href="./assets/icons/favicon-16x16.png?v=37.2-os13" rel="icon" sizes="16x16" type="image/png"/>
-<link href="./assets/icons/favicon-32x32.png?v=37.2-os13" rel="icon" sizes="32x32" type="image/png"/>
-<link href="./assets/icons/icon-192.png?v=37.2-os13" rel="icon" sizes="192x192" type="image/png"/>
-<link href="./assets/icons/apple-touch-icon.png?v=37.2-os13" rel="apple-touch-icon" sizes="180x180"/>
+<link href="./manifest.json?v=37.2-os14-orange-fixed" rel="manifest"/>
+<link href="./assets/icons/online-store-orange-favicon.ico?v=37.2-os14-orange-fixed" rel="shortcut icon"/>
+<link href="./assets/icons/online-store-orange-favicon.ico?v=37.2-os14-orange-fixed" rel="icon" sizes="any"/>
+<link href="./assets/icons/online-store-orange-favicon-16.png?v=37.2-os14-orange-fixed" rel="icon" sizes="16x16" type="image/png"/>
+<link href="./assets/icons/online-store-orange-favicon-32.png?v=37.2-os14-orange-fixed" rel="icon" sizes="32x32" type="image/png"/>
+<link href="./assets/icons/online-store-orange-192.png?v=37.2-os14-orange-fixed" rel="icon" sizes="192x192" type="image/png"/>
+<link href="./assets/icons/online-store-orange-apple-touch.png?v=37.2-os14-orange-fixed" rel="apple-touch-icon" sizes="180x180"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="default" name="apple-mobile-web-app-status-bar-style"/>
 <meta content="线上商店管理系统" name="application-name"/>
 <meta content="#b3123d" name="msapplication-TileColor"/>
-<meta content="./assets/icons/icon-192.png?v=37.2-os13" name="msapplication-TileImage"/>
+<meta content="./assets/icons/online-store-orange-192.png?v=37.2-os14-orange-fixed" name="msapplication-TileImage"/>
 <style id="access-lock-critical-v299">
     html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif}
     .access-lock{position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(242,248,244,.96)}
@@ -77,7 +77,7 @@
 <div class="app-header-main-title">线上商店管理系统</div>
 <div class="app-header-subtitle">Online Store Management Admin</div>
 <div class="app-header-brand">Lover Legend Gardening</div>
-<div class="app-header-version">Online Store V1.3 · Import Base 37.2 Stable</div>
+<div class="app-header-version">Online Store V1.4 · Import Base 37.2 Stable</div>
 </div>
 <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red" src="./assets/images/logo-red.jpg"/>
 </div>
@@ -190,9 +190,9 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>线上商店管理系统</h2>
-<div class="muted">Online Store V1.3 · 以 Import / Inventory System 为唯一真实库存来源</div>
+<div class="muted">Online Store V1.4 · 以 Import / Inventory System 为唯一真实库存来源</div>
 </div>
-<span class="online-store-version-v10">V1.3</span>
+<span class="online-store-version-v10">V1.4</span>
 </div>
 <div class="online-store-search-row-v10">
 <input aria-label="搜索产品" autocomplete="off" class="search-input text-left-input" id="onlineStoreSearchV10" placeholder="输入产品编号、中文名或英文名"/>
@@ -213,20 +213,22 @@
 <div class="online-store-allocation-grid-v10">
 <div><span>真实总库存</span><strong id="onlineStoreRealStockV10">0</strong></div>
 <div><span>随机发货分配</span><strong id="onlineStoreRandomAllocatedV10">0</strong></div>
-<div><span>一物一拍分配</span><strong id="onlineStoreUniqueAllocatedV10">0</strong></div>
+<div><span>一物一拍 / 单株精选</span><strong id="onlineStoreUniqueAllocatedV10">0</strong></div>
 <div><span>未分配库存</span><strong id="onlineStoreUnallocatedV10">0</strong></div>
 </div>
 <div class="online-store-form-grid-v10 online-store-price-foundation-v11">
 <label>平均成本（Import）<input id="onlineStoreAverageCostV11" placeholder="由 Import / Inventory System 自动读取" readonly="" type="text"/><small class="field-hint-v12">只读：来自真实库存主资料的平均成本。</small></label>
 <label>Online 最低售价 (RM)<input id="onlineStoreMinimumPriceV11" inputmode="decimal" placeholder="例如 1,234.00" type="text"/><small class="field-hint-v12">Online Store 独立最低售价，不沿用 Import 最低售价。</small></label>
+<label>运费 / 配送成本 (RM)<input id="onlineStoreShippingCostV14" inputmode="decimal" placeholder="例如 30.00" type="text"/><small class="field-hint-v12">先作为后台成本；以后会与顾客前台配送方式对应。可修改。</small></label>
+<label>花盆成本 (RM)<input id="onlineStorePotCostV14" inputmode="decimal" placeholder="VND 产品自动带入；例如 55.00" type="text"/><small class="field-hint-v12">VND 产品按 Import System 花盆成本规则自动带入；可手动覆盖。</small></label>
 </div>
 <div class="muted online-store-price-note-v11">Online 最低售价为独立字段，不使用 Import System 原最低售价；现阶段先独立保存，自动计算规则后续设置。</div>
 <div class="online-store-warning-v10" hidden="" id="onlineStoreAllocationWarningV10"></div>
 <div class="online-store-block-v10">
 <div class="online-store-block-head-v10">
 <div>
-<strong>随机发货</strong>
-<small>同一主产品中挑选较普通植株作为随机发货库存</small>
+<strong>入门精选 · 随机发货</strong>
+<small>入门精选的销售方式之一；与“一物一拍 / 单株精选”可同时从真实库存分配。</small>
 </div>
 <label class="online-store-switch-v10"><input id="onlineStoreRandomPublishedV10" type="checkbox"/> 上架</label>
 </div>
@@ -234,26 +236,51 @@
 <label>分配数量<input id="onlineStoreRandomQtyV10" inputmode="numeric" placeholder="例如 5" type="text"/><small class="field-hint-v12">输入要分配给随机发货的数量，例如 1、2、3。</small></label>
 <label>Online Regular Price (RM)<input id="onlineStoreRegularPriceV10" inputmode="decimal" placeholder="例如 1,580.00" type="text"/><small class="field-hint-v12">顾客看到的 Online 正常售价。</small></label>
 <label>Promotion Price (RM)<input id="onlineStorePromotionPriceV10" inputmode="decimal" placeholder="例如 1,380.00" type="text"/><small class="field-hint-v12">有促销时输入；没有促销可留空。</small></label>
-<label>视频链接<input id="onlineStoreRandomVideoV10" placeholder="粘贴 YouTube / Video URL" type="url"/><small class="field-hint-v12">随机发货代表视频，建议 1 个。</small></label>
+<label>视频链接
+<div class="media-input-row-v14"><input id="onlineStoreRandomVideoV10" placeholder="粘贴 YouTube / Video URL" type="url"/><button class="secondary-btn media-mini-btn-v14" data-media-copy-target-v14="onlineStoreRandomVideoV10" type="button">复制</button><button class="danger-outline-btn media-mini-btn-v14" data-media-clear-target-v14="onlineStoreRandomVideoV10" type="button">删除</button></div>
+<small class="field-hint-v12">随机发货代表视频，建议 1 个；已粘贴的链接可复制或删除。</small></label>
+</div>
+<div class="online-store-cost-breakdown-v14">
+  <div><span>平均成本</span><strong id="onlineStoreCostAverageV14">RM 0.00</strong></div>
+  <div><span>运费 / 配送</span><strong id="onlineStoreCostShippingV14">RM 0.00</strong></div>
+  <div><span>花盆成本</span><strong id="onlineStoreCostPotV14">RM 0.00</strong></div>
+  <div><span>佣金</span><strong id="onlineStoreCostCommissionV14">RM 0.00</strong></div>
+  <div><span>Payment Fee</span><strong id="onlineStoreCostGatewayV14">RM 0.00</strong></div>
+  <div><span>包装成本</span><strong id="onlineStoreCostPackagingV14">RM 0.00</strong></div>
+  <div class="cost-total-v14"><span>总成本</span><strong id="onlineStoreCostTotalV14">RM 0.00</strong></div>
 </div>
 <div class="online-store-profit-grid-v13" id="onlineStoreRandomProfitV13">
   <div class="online-store-profit-card-v13"><span>正常售价利润</span><strong id="onlineStoreRegularProfitV13">RM 0.00</strong><small id="onlineStoreRegularMarginV13">利润率 0.00%</small></div>
   <div class="online-store-profit-card-v13"><span>促销售价利润</span><strong id="onlineStorePromotionProfitV13">—</strong><small id="onlineStorePromotionMarginV13">没有促销价</small></div>
 </div>
-<small class="field-hint-v12 online-store-profit-note-v13">利润会随着售价即时更新。计算：售价 − 平均成本 − Affiliate − Payment Fee − 包装成本。最低售价为蓝色价格保护值。</small>
-<label class="online-store-wide-label-v10">代表照片（最多5张，每行一个链接）
-              <textarea id="onlineStoreRandomPhotosV10" placeholder="每行粘贴一个照片链接，最多 5 张" rows="5"></textarea>
-<small class="field-hint-v12">随机发货只需要代表照片，不需要每棵单独拍摄。</small></label>
+<small class="field-hint-v12 online-store-profit-note-v13">利润会随着售价即时更新。总成本包含：平均成本 + 运费 + 花盆 + 佣金 + Payment Fee + 包装成本。最低售价为蓝色价格保护值。</small>
+<div class="online-store-wide-label-v10">
+  <strong class="media-section-title-v14">代表照片（最多5张）</strong>
+  <div class="media-toolbar-v14"><input id="onlineStoreRandomPhotoUrlV14" placeholder="粘贴 Photo URL" type="url"/><button class="secondary-btn" id="onlineStoreAddPhotoUrlV14" type="button">＋ 加入链接</button><button class="secondary-btn" id="onlineStoreChoosePhotosV14" type="button">相册选择</button><button class="secondary-btn" id="onlineStoreTakePhotoV14" type="button">拍照</button></div>
+  <input accept="image/*" hidden id="onlineStorePhotoPickerV14" multiple type="file"/>
+  <input accept="image/*" capture="environment" hidden id="onlineStoreCameraV14" type="file"/>
+  <textarea hidden id="onlineStoreRandomPhotosV10" rows="5"></textarea>
+  <div class="media-list-v14" id="onlineStoreRandomPhotoListV14"></div>
+  <small class="field-hint-v12">随机发货只需要代表照片。链接可复制/删除；相册与拍照入口已预留，永久上传需连接图片储存服务。</small>
+</div>
 </div>
 <div class="online-store-block-v10">
 <div class="online-store-block-head-v10">
 <div>
-<strong>高货 · 一物一拍</strong>
-<small>子编号只属于 Online Store，不建立新的库存 Product ID</small>
+<strong>入门精选 · 一物一拍 / 单株精选</strong>
+<small>与随机发货同属“入门精选”；子编号只属于 Online Store，不建立新的库存 Product ID。</small>
 </div>
 <button class="secondary-btn" id="onlineStoreAddUniqueV10" type="button">＋ 新增一棵</button>
 </div>
 <div class="online-store-unique-list-v10" id="onlineStoreUniqueListV10"></div>
+</div>
+<div class="online-store-block-v10">
+<div class="online-store-block-head-v10"><div><strong>高端精品</strong><small>独立等级；最终售价由人工设置，系统只计算成本、利润与利润率。</small></div><button class="secondary-btn" id="onlineStoreAddPremiumV14" type="button">＋ 新增一棵</button></div>
+<div class="online-store-unique-list-v10" id="onlineStorePremiumListV14"></div>
+</div>
+<div class="online-store-block-v10">
+<div class="online-store-block-head-v10"><div><strong>藏家级别</strong><small>独立等级；最终售价由人工设置，可搭配普通区域或贵宾厅 / VIP Room 浏览权限。</small></div><button class="secondary-btn" id="onlineStoreAddCollectorV14" type="button">＋ 新增一棵</button></div>
+<div class="online-store-unique-list-v10" id="onlineStoreCollectorListV14"></div>
 </div>
 <div class="online-store-save-bar-v10">
 <span class="status-text" id="onlineStoreSaveStatusV10"></span>
@@ -552,6 +579,19 @@
     </div>
   </section>
 </section>
+<section class="page" id="onlineStoreHistoryPageV14">
+<section class="panel online-store-history-v14">
+<div class="section-title-row"><div><h2>历史查询 / History Search</h2><div class="muted">Online Store 专用，只读查询；不使用 Import System 旧历史页面。</div></div></div>
+<div class="online-history-filter-grid-v14">
+  <input id="onlineStoreHistorySearchV14" placeholder="搜索产品编号、产品名、记录内容" type="search"/>
+  <select id="onlineStoreHistoryTypeV14"><option value="all">全部记录</option><option value="product">产品 / 售价</option><option value="media">照片 / 视频</option><option value="settings">设置</option><option value="allocation">库存分配</option></select>
+  <input id="onlineStoreHistoryStartV14" placeholder="dd-mm-yyyy" inputmode="numeric" maxlength="10" type="text"/>
+  <input id="onlineStoreHistoryEndV14" placeholder="dd-mm-yyyy" inputmode="numeric" maxlength="10" type="text"/>
+</div>
+<div class="settings-action-row-v12 paired-settings-actions-v14"><button class="primary-btn paired-action-btn-v14" id="onlineStoreHistorySearchBtnV14" type="button">查看历史</button><button class="secondary-btn paired-action-btn-v14" id="onlineStoreHistoryClearBtnV14" type="button">清除筛选</button></div>
+<div class="online-store-history-list-v14" id="onlineStoreHistoryListV14"></div>
+</section>
+</section>
 <section class="page" id="settingsPage">
 <h2>设置 / Settings</h2><div class="online-store-settings-v12">
 <section class="panel settings-section-v12">
@@ -582,7 +622,7 @@
 <small class="field-hint-v12">可填图片网址；留空继续使用目前完整“传奇 / 情人”Logo。</small>
 </label>
 </div>
-<div class="settings-action-row-v12"><button class="primary-btn" id="saveOnlineStoreBrandingV12" type="button">保存品牌设置</button></div>
+<div class="settings-action-row-v12 paired-settings-actions-v14"><button class="primary-btn paired-action-btn-v14" id="saveOnlineStoreBrandingV12" type="button">保存品牌设置</button><button class="danger-outline-btn paired-action-btn-v14" id="resetOnlineStoreBrandingV14" type="button">回到原厂 / Reset to Factory</button></div>
 </section>
 <section class="panel settings-section-v12">
 <div class="settings-section-head-v12"><div><h3>数据管理 / Data Management</h3><p>Backup 与 Restore 沿用 Import / Inventory System 的数据保护机制。Restore 会覆盖资料，必须确认。</p></div></div>
@@ -616,9 +656,9 @@
 <small class="field-hint-v12">可纳入 Online Store 最低售价计算。</small>
 </label>
 </div>
-<div class="settings-action-row-v12">
-<button class="primary-btn" id="saveOnlineStorePricingRulesV12" type="button">保存售价设置</button>
-<button class="danger-outline-btn" id="resetOnlineStorePricingRulesV12" type="button">回到原厂设置 / Reset to Factory</button>
+<div class="settings-action-row-v12 paired-settings-actions-v14">
+<button class="primary-btn paired-action-btn-v14" id="saveOnlineStorePricingRulesV12" type="button">保存售价设置</button>
+<button class="danger-outline-btn paired-action-btn-v14" id="resetOnlineStorePricingRulesV12" type="button">回到原厂设置 / Reset to Factory</button>
 </div>
 </section>
 </div>
@@ -891,7 +931,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V1.3</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V1.4</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>Revision（上次 → 当前）</span><strong id="settingsRevisionV185">读取中…</strong></div>
 <div class="info-row"><span>储存方式</span><strong>Google Sheet 自动同步</strong></div>
@@ -914,7 +954,9 @@
 <span>🛍️</span><small>Online Store</small>
 </a>
 <a class="nav-btn" data-page="storePreviewPage" href="./?page=preview"><span>👁️</span><small>前台预览</small></a>
+<a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span>🧾</span><small>历史查询</small></a>
 <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span>⚙️</span><small>设置</small></a></nav>
+<div class="page-jump-controls-v14" aria-label="页面快速导航"><button id="jumpTopV14" type="button">↑ 到顶部</button><button id="jumpBottomV14" type="button">↓ 到底部</button></div>
 </div>
 </body>
 </html>
