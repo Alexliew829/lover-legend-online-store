@@ -77,7 +77,7 @@
 <div class="app-header-main-title">线上商店管理系统</div>
 <div class="app-header-subtitle">Online Store Management Admin</div>
 <div class="app-header-brand">Lover Legend Gardening</div>
-<div class="app-header-version">Online Store V1.7 · Import Base 37.2 Stable</div>
+<div class="app-header-version">Online Store V1.8 · Import Base 37.2 Stable</div>
 </div>
 <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red" src="./assets/images/logo-red.jpg"/>
 </div>
@@ -190,10 +190,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>线上商店管理系统</h2>
-<div class="muted">Online Store V1.7 · 以 Import / Inventory System 为唯一真实库存来源</div>
+<div class="muted">Online Store V1.8 · Import 库存与成本只读 · Online 只负责销售</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V37.2 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V1.7</span>
+<span class="online-store-version-v10">V1.8</span>
 </div>
 <div class="online-store-search-row-v10">
 <input aria-label="搜索产品" autocomplete="off" class="search-input text-left-input" id="onlineStoreSearchV10" placeholder="输入产品编号、中文名或英文名"/>
@@ -220,8 +220,8 @@
 <div class="online-store-form-grid-v10 online-store-price-foundation-v11">
 <label>平均成本（Import）<input id="onlineStoreAverageCostV11" placeholder="由 Import / Inventory System 自动读取" readonly="" type="text"/><small class="field-hint-v12">只读：来自真实库存主资料的平均成本。</small></label>
 <label>Online 最低售价 (RM)<input id="onlineStoreMinimumPriceV11" inputmode="decimal" placeholder="例如 1,234.00" type="text"/><small class="field-hint-v12">Online Store 独立最低售价，不沿用 Import 最低售价。</small></label>
-<label>运费 / 配送成本 (RM)<input id="onlineStoreShippingCostV14" inputmode="decimal" placeholder="例如 30.00" type="text"/><small class="field-hint-v12">先作为后台成本；以后会与顾客前台配送方式对应。可修改。</small></label>
-<label>花盆成本 (RM)<input id="onlineStorePotCostV14" inputmode="decimal" placeholder="VND 产品自动带入；例如 55.00" type="text"/><small class="field-hint-v12">VND 产品按 Import System 花盆成本规则自动带入；可手动覆盖。</small></label>
+<label>运费 / 配送成本 (RM)<input id="onlineStoreShippingCostV14" inputmode="decimal" placeholder="由销售规则带入" readonly="" type="text"/><small class="field-hint-v12">只读：用于销售利润参考，不回写 Import。</small></label>
+<label>花盆成本 (RM)<input id="onlineStorePotCostV14" inputmode="decimal" placeholder="由 Import / 销售规则带入" readonly="" type="text"/><small class="field-hint-v12">只读：Import 控制成本，Online Store 不修改成本。</small></label>
 </div>
 <div class="muted online-store-price-note-v11">Online 最低售价属于 Online Store 专用资料；不会写入或覆盖 Import / Inventory 产品库存资料。</div>
 <div class="online-store-warning-v10" hidden="" id="onlineStoreAllocationWarningV10"></div>
@@ -656,12 +656,13 @@
 <div class="status-text" id="passwordChangeStatus"></div>
 </section>
 <section class="panel settings-section-v12">
-<div class="settings-section-head-v12"><div><h3>数据管理 / Data Management</h3><p>Backup 与 Restore 沿用 Import / Inventory System 的数据保护机制。Restore 会覆盖资料，必须确认。</p></div></div>
+<div class="settings-section-head-v12"><div><h3>数据管理 / Data Management</h3><p>Backup 与 Restore 只处理 Online Store 自己的销售/商城资料，不修改 Import 库存、成本或最低售价。</p></div></div>
 <div class="settings-tools-grid settings-tools-online-v12">
 <button class="tool-action-btn" id="onlineStoreBackupV12" type="button"><span class="tool-action-icon">💾</span><span>Backup</span></button>
+<input accept="application/json,.json" id="onlineStoreRestoreFileV18" type="file" hidden=""/>
 <button class="tool-action-btn" id="onlineStoreRestoreV12" type="button"><span class="tool-action-icon">📂</span><span>Restore</span></button>
 </div>
-<small class="settings-inline-note-v12">建议在大幅修改价格规则、促销规则或执行 Restore 前先 Backup。</small>
+<small class="settings-inline-note-v12">建议在大幅修改价格规则、促销规则或执行 Restore 前先 Backup。此备份仅属于 Online Store。</small>
 </section>
 <section class="panel settings-section-v12">
 <div class="settings-section-head-v12"><div><h3>售价、利润与折扣 / Pricing Rules</h3><p>这些是 Online Store 专用参数，不改变 Import System 原最低售价。自动售价公式会以这些参数为基础继续扩展。</p></div></div>
@@ -934,7 +935,8 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V1.7</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V1.8</strong></div>
+<div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存/成本只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V37.2 · Live Read-Only</strong></div>
 <div class="info-row"><span>密码保护</span><strong id="systemInfoPasswordV16">检查中…</strong></div>

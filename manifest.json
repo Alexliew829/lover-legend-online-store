@@ -1,7 +1,7 @@
 {
   "name": "线上商店管理系统",
   "short_name": "Online Store",
-  "description": "Lover Legend Gardening · Online Store Management Admin V1.7 · Import V37.2 Live Inventory",
+  "description": "Lover Legend Gardening · Online Store Management Admin V1.8 · Import V37.2 Live Inventory",
   "start_url": "/lover-legend-online-store/",
   "scope": "/lover-legend-online-store/",
   "display": "standalone",

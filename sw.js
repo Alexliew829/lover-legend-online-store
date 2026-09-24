@@ -1,4 +1,4 @@
-const CACHE = "lover-legend-online-store-v1.7-import372-live-orange";
+const CACHE = "lover-legend-online-store-v1.8-import372-live-orange";
 const CORE = [
   "./",
   "./index.html?v=17-import372-live",
