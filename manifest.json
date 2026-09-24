@@ -1,7 +1,7 @@
 {
   "name": "线上商店管理系统",
   "short_name": "Online Store",
-  "description": "Lover Legend Gardening · Online Store Management Admin V1.4",
+  "description": "Lover Legend Gardening · Online Store Management Admin V1.6 · Import V37.2 Live Inventory",
   "start_url": "/lover-legend-online-store/",
   "scope": "/lover-legend-online-store/",
   "display": "standalone",
@@ -10,25 +10,25 @@
   "lang": "zh-CN",
   "icons": [
     {
-      "src": "./assets/icons/online-store-orange-192.png",
+      "src": "./assets/icons/online-store-orange-v15-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./assets/icons/online-store-orange-512.png",
+      "src": "./assets/icons/online-store-orange-v15-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./assets/icons/online-store-orange-maskable-192.png",
+      "src": "./assets/icons/online-store-orange-v15-maskable-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "./assets/icons/online-store-orange-maskable-512.png",
+      "src": "./assets/icons/online-store-orange-v15-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

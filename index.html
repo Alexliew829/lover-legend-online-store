@@ -4,20 +4,20 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
-<meta content="#b3123d" name="theme-color"/>
+<meta content="#f97316" name="theme-color"/>
 <title>线上商店管理系统 | Online Store Management Admin</title>
-<link href="./manifest.json?v=37.2-os14-orange-fixed" rel="manifest"/>
-<link href="./assets/icons/online-store-orange-favicon.ico?v=37.2-os14-orange-fixed" rel="shortcut icon"/>
-<link href="./assets/icons/online-store-orange-favicon.ico?v=37.2-os14-orange-fixed" rel="icon" sizes="any"/>
-<link href="./assets/icons/online-store-orange-favicon-16.png?v=37.2-os14-orange-fixed" rel="icon" sizes="16x16" type="image/png"/>
-<link href="./assets/icons/online-store-orange-favicon-32.png?v=37.2-os14-orange-fixed" rel="icon" sizes="32x32" type="image/png"/>
-<link href="./assets/icons/online-store-orange-192.png?v=37.2-os14-orange-fixed" rel="icon" sizes="192x192" type="image/png"/>
-<link href="./assets/icons/online-store-orange-apple-touch.png?v=37.2-os14-orange-fixed" rel="apple-touch-icon" sizes="180x180"/>
+<link href="./manifest.json?v=16-import372-live" rel="manifest"/>
+<link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
+<link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
+<link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
+<link href="./assets/icons/online-store-orange-v15-favicon-32.png?v=16" rel="icon" sizes="32x32" type="image/png"/>
+<link href="./assets/icons/online-store-orange-v15-192.png?v=16" rel="icon" sizes="192x192" type="image/png"/>
+<link href="./assets/icons/apple-touch-icon-v15.png?v=16" rel="apple-touch-icon" sizes="180x180"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="default" name="apple-mobile-web-app-status-bar-style"/>
 <meta content="线上商店管理系统" name="application-name"/>
-<meta content="#b3123d" name="msapplication-TileColor"/>
-<meta content="./assets/icons/online-store-orange-192.png?v=37.2-os14-orange-fixed" name="msapplication-TileImage"/>
+<meta content="#f97316" name="msapplication-TileColor"/>
+<meta content="./assets/icons/online-store-orange-v15-192.png?v=16" name="msapplication-TileImage"/>
 <style id="access-lock-critical-v299">
     html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif}
     .access-lock{position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(242,248,244,.96)}
@@ -38,12 +38,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=37.2-os13" rel="preload"/>
-<link href="./css/style.css?v=37.2-os13" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=37.2-os13" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=37.2-os13"></script>
-<script defer="" src="./js/sync.js?v=37.2-os13"></script>
-<script defer="" src="./js/app.js?v=37.2-os13"></script>
+<link as="style" href="./css/style.css?v=16-import372-live" rel="preload"/>
+<link href="./css/style.css?v=16-import372-live" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=16-import372-live" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=16-import372-live"></script>
+<script defer="" src="./js/sync.js?v=16-import372-live"></script>
+<script defer="" src="./js/app.js?v=16-import372-live"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog">
@@ -77,7 +77,7 @@
 <div class="app-header-main-title">线上商店管理系统</div>
 <div class="app-header-subtitle">Online Store Management Admin</div>
 <div class="app-header-brand">Lover Legend Gardening</div>
-<div class="app-header-version">Online Store V1.4 · Import Base 37.2 Stable</div>
+<div class="app-header-version">Online Store V1.6 · Import Base 37.2 Stable</div>
 </div>
 <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red" src="./assets/images/logo-red.jpg"/>
 </div>
@@ -190,9 +190,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>线上商店管理系统</h2>
-<div class="muted">Online Store V1.4 · 以 Import / Inventory System 为唯一真实库存来源</div>
+<div class="muted">Online Store V1.6 · 以 Import / Inventory System 为唯一真实库存来源</div>
+<div class="online-store-live-source-v15">库存来源：Import / Inventory V37.2 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V1.4</span>
+<span class="online-store-version-v10">V1.6</span>
 </div>
 <div class="online-store-search-row-v10">
 <input aria-label="搜索产品" autocomplete="off" class="search-input text-left-input" id="onlineStoreSearchV10" placeholder="输入产品编号、中文名或英文名"/>
@@ -222,9 +223,24 @@
 <label>运费 / 配送成本 (RM)<input id="onlineStoreShippingCostV14" inputmode="decimal" placeholder="例如 30.00" type="text"/><small class="field-hint-v12">先作为后台成本；以后会与顾客前台配送方式对应。可修改。</small></label>
 <label>花盆成本 (RM)<input id="onlineStorePotCostV14" inputmode="decimal" placeholder="VND 产品自动带入；例如 55.00" type="text"/><small class="field-hint-v12">VND 产品按 Import System 花盆成本规则自动带入；可手动覆盖。</small></label>
 </div>
-<div class="muted online-store-price-note-v11">Online 最低售价为独立字段，不使用 Import System 原最低售价；现阶段先独立保存，自动计算规则后续设置。</div>
+<div class="muted online-store-price-note-v11">Online 最低售价属于 Online Store 专用资料；不会写入或覆盖 Import / Inventory 产品库存资料。</div>
 <div class="online-store-warning-v10" hidden="" id="onlineStoreAllocationWarningV10"></div>
-<div class="online-store-block-v10">
+<div class="online-room-selector-v16" id="onlineRoomSelectorV16">
+  <div class="online-room-selector-head-v16">
+    <div><strong>选择商品房间</strong><small>一次只处理一间房；保存并关闭后再选择下一间。</small></div>
+    <span id="onlineRoomAvailableV16">可分配库存：0</span>
+  </div>
+  <div class="online-room-choice-grid-v16">
+    <button type="button" class="room-choice-v16 room-vip-v16" data-room-open-v16="vip"><strong>贵宾室 / VIP Room</strong><small>藏家级别</small><span data-room-status-v16="vip"></span></button>
+    <button type="button" class="room-choice-v16 room-premium-v16" data-room-open-v16="premium"><strong>高端精品</strong><small>Guest Mode</small><span data-room-status-v16="premium"></span></button>
+    <button type="button" class="room-choice-v16 room-entry-v16" data-room-open-v16="entry"><strong>入门精选</strong><small>一物一拍 / 随机发货</small><span data-room-status-v16="entry"></span></button>
+  </div>
+</div>
+<div class="online-room-toolbar-v16" id="onlineRoomToolbarV16" hidden>
+  <div><strong id="onlineRoomCurrentTitleV16">—</strong><small id="onlineRoomCurrentHintV16"></small></div>
+  <div class="online-room-toolbar-actions-v16" id="onlineRoomToolbarActionsV16"></div>
+</div>
+<div class="online-store-block-v10" id="onlineRoomRandomBlockV16">
 <div class="online-store-block-head-v10">
 <div>
 <strong>入门精选 · 随机发货</strong>
@@ -264,7 +280,7 @@
   <small class="field-hint-v12">随机发货只需要代表照片。链接可复制/删除；相册与拍照入口已预留，永久上传需连接图片储存服务。</small>
 </div>
 </div>
-<div class="online-store-block-v10">
+<div class="online-store-block-v10" id="onlineRoomEntryBlockV16">
 <div class="online-store-block-head-v10">
 <div>
 <strong>入门精选 · 一物一拍 / 单株精选</strong>
@@ -274,17 +290,17 @@
 </div>
 <div class="online-store-unique-list-v10" id="onlineStoreUniqueListV10"></div>
 </div>
-<div class="online-store-block-v10">
+<div class="online-store-block-v10" id="onlineRoomPremiumBlockV16">
 <div class="online-store-block-head-v10"><div><strong>高端精品</strong><small>独立等级；最终售价由人工设置，系统只计算成本、利润与利润率。</small></div><button class="secondary-btn" id="onlineStoreAddPremiumV14" type="button">＋ 新增一棵</button></div>
 <div class="online-store-unique-list-v10" id="onlineStorePremiumListV14"></div>
 </div>
-<div class="online-store-block-v10">
+<div class="online-store-block-v10" id="onlineRoomVipBlockV16">
 <div class="online-store-block-head-v10"><div><strong>藏家级别</strong><small>独立等级；最终售价由人工设置，可搭配普通区域或贵宾厅 / VIP Room 浏览权限。</small></div><button class="secondary-btn" id="onlineStoreAddCollectorV14" type="button">＋ 新增一棵</button></div>
 <div class="online-store-unique-list-v10" id="onlineStoreCollectorListV14"></div>
 </div>
 <div class="online-store-save-bar-v10">
 <span class="status-text" id="onlineStoreSaveStatusV10"></span>
-<button class="primary-btn" id="onlineStoreSaveV10" type="button">保存设置</button>
+<button class="primary-btn" id="onlineStoreSaveV10" type="button">保存并关闭</button>
 </div>
 </section>
 </section>
@@ -624,6 +640,21 @@
 </div>
 <div class="settings-action-row-v12 paired-settings-actions-v14"><button class="primary-btn paired-action-btn-v14" id="saveOnlineStoreBrandingV12" type="button">保存品牌设置</button><button class="danger-outline-btn paired-action-btn-v14" id="resetOnlineStoreBrandingV14" type="button">回到原厂 / Reset to Factory</button></div>
 </section>
+<section class="panel settings-section-v12 password-security-v16">
+<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>Online Store 后台独立密码。首次默认密码：123456；测试期间可手动关闭密码保护。</p></div></div>
+<div class="password-protection-row-v16">
+  <div><strong>后台密码保护</strong><small id="onlineStorePasswordStateV16">检查中...</small></div>
+  <button class="primary-btn" id="onlineStorePasswordToggleV16" type="button">检查中...</button>
+</div>
+<div class="password-change-grid">
+<label>旧密码<input autocapitalize="none" autocomplete="off" autocorrect="off" class="masked-access-code" data-1p-ignore="true" data-lpignore="true" id="oldAccessPassword" maxlength="12" name="oldSystemAccessCode" spellcheck="false" type="text" placeholder="默认首次为 123456"/></label>
+<label>新密码<input autocapitalize="none" autocomplete="off" autocorrect="off" class="masked-access-code" data-1p-ignore="true" data-lpignore="true" id="newAccessPassword" maxlength="12" name="newSystemAccessCode" spellcheck="false" type="text" placeholder="最多12个字"/></label>
+<label>确认新密码<input autocapitalize="none" autocomplete="off" autocorrect="off" class="masked-access-code" data-1p-ignore="true" data-lpignore="true" id="confirmAccessPassword" maxlength="12" name="confirmSystemAccessCode" spellcheck="false" type="text" placeholder="再次输入新密码"/></label>
+</div>
+<div class="settings-action-row-v12 paired-settings-actions-v14"><button class="primary-btn paired-action-btn-v14" id="changeAccessPasswordBtn" type="button">更改密码</button></div>
+<div class="current-password-hint">当前密码提示：<strong id="currentPasswordHint">6个数字</strong></div>
+<div class="status-text" id="passwordChangeStatus"></div>
+</section>
 <section class="panel settings-section-v12">
 <div class="settings-section-head-v12"><div><h3>数据管理 / Data Management</h3><p>Backup 与 Restore 沿用 Import / Inventory System 的数据保护机制。Restore 会覆盖资料，必须确认。</p></div></div>
 <div class="settings-tools-grid settings-tools-online-v12">
@@ -654,6 +685,10 @@
 <label>默认包装成本 (RM)
             <input id="onlineStorePackagingCostV12" inputmode="decimal" placeholder="例如 20.00" type="text"/>
 <small class="field-hint-v12">可纳入 Online Store 最低售价计算。</small>
+</label>
+<label>随机发货最低数量
+            <input id="onlineStoreRandomMinimumV16" inputmode="numeric" placeholder="例如 5" type="text"/>
+<small class="field-hint-v12">默认 5 棵；少于此数量不能进入“入门精选 → 随机发货”。</small>
 </label>
 </div>
 <div class="settings-action-row-v12 paired-settings-actions-v14">
@@ -792,39 +827,7 @@
 </div>
 <div class="status-text" id="promotionStatusV183"></div>
 </details>
-<section class="panel legacy-import-settings-v12">
-<h3>更改系统密码</h3>
-<p class="settings-help">
-            密码可以使用英文字母、数字或任何符号，不限最少字数，最多12个字。更改时必须输入旧密码。
-          </p>
-<div class="password-change-grid">
-<label>
-              旧密码
-              <input autocapitalize="none" autocomplete="off" autocorrect="off" class="masked-access-code" data-1p-ignore="true" data-lpignore="true" id="oldAccessPassword" maxlength="12" name="oldSystemAccessCode" spellcheck="false" type="text"/>
-</label>
-<label>
-              新密码
-              <input autocapitalize="none" autocomplete="off" autocorrect="off" class="masked-access-code" data-1p-ignore="true" data-lpignore="true" id="newAccessPassword" maxlength="12" name="newSystemAccessCode" spellcheck="false" type="text"/>
-</label>
-<label>
-              确认新密码
-              <input autocapitalize="none" autocomplete="off" autocorrect="off" class="masked-access-code" data-1p-ignore="true" data-lpignore="true" id="confirmAccessPassword" maxlength="12" name="confirmSystemAccessCode" spellcheck="false" type="text"/>
-</label>
-</div>
-<button class="primary-btn" id="changeAccessPasswordBtn" type="button">更改密码</button>
-<div class="current-password-hint">
-            当前密码提示：<strong id="currentPasswordHint">6个数字</strong>
-</div>
-<div class="status-text" id="passwordChangeStatus"></div>
-<div class="device-biometric-settings">
-<div>
-<strong>此设备 Face ID / 生物辨识</strong>
-<span id="deviceBiometricStatus">检查中...</span>
-</div>
-<button class="secondary-btn" id="setupBiometricBtn" type="button">启用 / 重新设置</button>
-<button class="ghost-btn" id="removeBiometricBtn" type="button">关闭此设备</button>
-</div>
-</section>
+
 <section class="panel legacy-import-settings-v12">
 <h3>资料管理</h3>
 <div class="settings-tools-grid">
@@ -931,8 +934,10 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V1.4</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V1.6</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
+<div class="info-row"><span>库存来源</span><strong>Import / Inventory V37.2 · Live Read-Only</strong></div>
+<div class="info-row"><span>密码保护</span><strong id="systemInfoPasswordV16">检查中…</strong></div>
 <div class="info-row"><span>Revision（上次 → 当前）</span><strong id="settingsRevisionV185">读取中…</strong></div>
 <div class="info-row"><span>储存方式</span><strong>Google Sheet 自动同步</strong></div>
 <div class="info-row"><span>Google Sheet</span><strong id="systemInfoGoogleSheetV203">检查中…</strong></div>
