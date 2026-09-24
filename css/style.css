@@ -6627,7 +6627,7 @@ body.system-media-preview-open-v305{overflow:hidden}
 .price-positive-v13{color:#188447!important;font-weight:800}.price-negative-v13{color:#c62828!important;font-weight:800}
 
 
-/* ================= Online Store V1.6 ================= */
+/* ================= Online Store V1.7 ================= */
 .online-store-product-id-v10,.online-store-master-id-v10,.online-store-unique-id-v10{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:30px;padding:4px 9px!important;border:1px solid #8bc7a0!important;border-radius:9px!important;background:#effaf2!important;color:#0d6a38!important;font-weight:900!important;line-height:1.05!important}
 .online-store-manage-btn-v12{align-self:stretch;min-height:58px!important;border-radius:10px!important;font-size:1rem!important;font-weight:850!important;padding:8px 16px!important}
 .online-store-inventory-meta-v12 span{min-height:58px;display:flex;flex-direction:column;justify-content:center}
@@ -6644,7 +6644,7 @@ body.system-media-preview-open-v305{overflow:hidden}
 @media(max-width:760px){.online-store-product-card-v10{align-items:stretch}.online-store-manage-btn-v12{min-height:58px!important}.paired-settings-actions-v14{grid-template-columns:1fr 1fr!important}.page-jump-controls-v14{right:10px;bottom:86px}.media-input-row-v14{grid-template-columns:minmax(0,1fr) auto auto}.media-list-v14{grid-template-columns:1fr}}
 @media(max-width:430px){.paired-settings-actions-v14{grid-template-columns:1fr!important}.online-history-filter-grid-v14{grid-template-columns:1fr}.media-input-row-v14{grid-template-columns:1fr 1fr}.media-input-row-v14 input{grid-column:1/-1}.online-store-cost-breakdown-v14{grid-template-columns:repeat(2,minmax(0,1fr))}.page-jump-controls-v14 button{font-size:13px;padding:9px 12px}}
 
-/* Online Store V1.6 - live Import inventory source badge */
+/* Online Store V1.7 - live Import inventory source badge */
 .online-store-live-source-v15{
   display:inline-flex;
   align-items:center;
@@ -6662,5 +6662,19 @@ body.system-media-preview-open-v305{overflow:hidden}
   .online-store-live-source-v15{font-size:13px;line-height:1.35;border-radius:12px;}
 }
 
-/* ================= Online Store V1.6 Rooms + Security ================= */
+/* ================= Online Store V1.7 Rooms + Security ================= */
 .online-room-selector-v16{margin:14px 0 18px;padding:16px;border:1px solid #d8e3dc;border-radius:16px;background:#fbfdfb}.online-room-selector-head-v16{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.online-room-selector-head-v16 strong{font-size:18px}.online-room-selector-head-v16 small{display:block;margin-top:3px;color:#667}.online-room-selector-head-v16>span{font-weight:800;color:#276749}.online-room-choice-grid-v16{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.room-choice-v16{min-height:84px;border-radius:14px;border:2px solid #dfe7e2;background:white;padding:12px;text-align:left;cursor:pointer}.room-choice-v16 strong{display:block;font-size:17px}.room-choice-v16 small,.room-choice-v16 span{display:block;margin-top:4px}.room-choice-v16 span{font-weight:800;color:#276749}.room-choice-v16:disabled{opacity:.5;cursor:not-allowed;background:#f1f2f2}.online-room-toolbar-v16{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;margin:12px 0;border-radius:14px;background:#fff8ed;border:1px solid #f0c36d}.online-room-toolbar-v16 strong{font-size:18px}.online-room-toolbar-v16 small{display:block;color:#6b5b46;margin-top:3px}.online-room-toolbar-actions-v16{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.password-protection-row-v16{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border:1px solid #dde5e0;border-radius:14px;margin-bottom:14px}.password-protection-row-v16 strong,.password-protection-row-v16 small{display:block}.warning-red-v16{color:#c62828!important;font-weight:850}.password-security-v16 .password-change-grid input{text-align:left!important;min-height:48px}.online-store-save-bar-v10[hidden],.online-room-toolbar-v16[hidden],.online-room-selector-v16[hidden],#onlineRoomRandomBlockV16[hidden],#onlineRoomEntryBlockV16[hidden],#onlineRoomPremiumBlockV16[hidden],#onlineRoomVipBlockV16[hidden]{display:none!important}@media(max-width:760px){.online-room-choice-grid-v16{grid-template-columns:1fr}.online-room-selector-head-v16,.online-room-toolbar-v16,.password-protection-row-v16{align-items:stretch;flex-direction:column}.online-room-toolbar-actions-v16{justify-content:stretch}.online-room-toolbar-actions-v16 button{flex:1 1 100%;min-height:48px}.room-choice-v16{min-height:74px}.password-protection-row-v16 button{min-height:48px}}
+
+/* ================= Online Store V1.7 Room Focus ================= */
+/* Entering a room becomes a single-task screen: hide the long product list and parent inventory foundation. */
+#onlineStorePage.online-room-focus-v17 > .online-store-panel-v10{display:none!important}
+#onlineStorePage.online-room-focus-v17 #onlineStoreEditorV10 .online-store-allocation-grid-v10,
+#onlineStorePage.online-room-focus-v17 #onlineStoreEditorV10 .online-store-price-foundation-v11,
+#onlineStorePage.online-room-focus-v17 #onlineStoreEditorV10 .online-store-price-note-v11,
+#onlineStorePage.online-room-focus-v17 #onlineStoreEditorV10 #onlineStoreAllocationWarningV10{display:none!important}
+#onlineStorePage.online-room-focus-v17 #onlineStoreEditorV10{margin-top:0}
+#onlineStorePage.online-room-focus-v17 .online-store-editor-head-v10{position:sticky;top:0;z-index:8;background:#fff;padding-top:10px;padding-bottom:10px;border-bottom:1px solid #edf1ee}
+#onlineStorePage.online-room-focus-v17 .online-room-toolbar-v16{margin-top:10px}
+@media(max-width:760px){
+  #onlineStorePage.online-room-focus-v17 .online-store-editor-head-v10{position:static}
+}

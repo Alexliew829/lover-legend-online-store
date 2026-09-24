@@ -1,12 +1,12 @@
-const CACHE = "lover-legend-online-store-v1.6-import372-live-orange";
+const CACHE = "lover-legend-online-store-v1.7-import372-live-orange";
 const CORE = [
   "./",
-  "./index.html?v=16-import372-live",
-  "./css/style.css?v=16-import372-live",
-  "./js/common.js?v=16-import372-live",
-  "./js/sync.js?v=16-import372-live",
-  "./js/app.js?v=16-import372-live",
-  "./manifest.json?v=16-import372-live",
+  "./index.html?v=17-import372-live",
+  "./css/style.css?v=17-import372-live",
+  "./js/common.js?v=17-import372-live",
+  "./js/sync.js?v=17-import372-live",
+  "./js/app.js?v=17-import372-live",
+  "./manifest.json?v=17-import372-live",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -39,10 +39,10 @@ self.addEventListener("fetch", event => {
       fetch(event.request)
         .then(response => {
           const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put("./index.html?v=16-import372-live", copy));
+          caches.open(CACHE).then(cache => cache.put("./index.html?v=17-import372-live", copy));
           return response;
         })
-        .catch(() => caches.match("./index.html?v=16-import372-live") || caches.match("./index.html"))
+        .catch(() => caches.match("./index.html?v=17-import372-live") || caches.match("./index.html"))
     );
     return;
   }
