@@ -32,6 +32,7 @@ let cloudLastErrorMessage = "";
 const CLOUD_FOREGROUND_CHECK_GAP = 1500;
 const CLOUD_BACKGROUND_REVISION_MS_V367 = 8000;
 const PROMOTION_LIGHT_SYNC_MS_V372 = 3000;
+const ONLINE_STORE_IMPORT_READ_ONLY_V19 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
 
 function getCloudConfig() {
   const saved = loadJSON(CLOUD_CONFIG_KEY, {});
@@ -195,15 +196,14 @@ function setupCloudSync() {
     scheduleForegroundCloudCheck(0);
   }, CLOUD_BACKGROUND_REVISION_MS_V367);
 
-  // V37.2: Promotion Settings gets its own very small read channel while the
-  // promotion panel is open. This lets phone/desktop mirror join/exit/margin
-  // changes quickly without reading Products/Imports/Batches just to repaint
-  // two promotion controls. It never advances the global revision unless the
-  // server proves the only unseen revision is a promotion-only write.
+  // Online Store V1.9 never mirrors Import promotion state. Import promotion
+  // belongs only to the Import system; Online Store has its own promotion data.
   window.clearInterval(promotionLightSyncTimerV372);
-  promotionLightSyncTimerV372 = window.setInterval(() => {
-    try { pollPromotionStateLightV372(); } catch (_) {}
-  }, PROMOTION_LIGHT_SYNC_MS_V372);
+  if (!ONLINE_STORE_IMPORT_READ_ONLY_V19) {
+    promotionLightSyncTimerV372 = window.setInterval(() => {
+      try { pollPromotionStateLightV372(); } catch (_) {}
+    }, PROMOTION_LIGHT_SYNC_MS_V372);
+  }
 
   // 首次开启只由这里执行一次同步。
   window.setTimeout(() => runCloudSync(), 0);
@@ -320,6 +320,11 @@ async function ensureAccessPasswordSettingsFromCloudV10() {
 window.ensureAccessPasswordSettingsFromCloudV10 = ensureAccessPasswordSettingsFromCloudV10;
 
 async function callGoogleApi(payload, attempt = 0) {
+  // V1.9 strict boundary: Online Store may only READ the Import API. All Import
+  // mutations (minimum price, cost, promotion, product edits, pushes) are blocked.
+  if (ONLINE_STORE_IMPORT_READ_ONLY_V19 && String(payload?.action || "") !== "pull") {
+    throw new Error("Online Store V1.9: Import API is read-only");
+  }
   const controller = new AbortController();
   const timeoutId = window.setTimeout(() => controller.abort(), 25000);
 
@@ -607,6 +612,19 @@ async function runCloudSync() {
   cloudSyncRequestedWhileBusy = false;
 
   try {
+    // V1.9: Online Store's Import connection is pull-only. Even if inherited
+    // Import code marks a local mirror dirty, discard that queue and re-read
+    // canonical Import data instead of ever pushing it back.
+    if (ONLINE_STORE_IMPORT_READ_ONLY_V19) {
+      const q = getCloudQueue();
+      if (q.dirty) clearLegacyPendingCloudState();
+      if (!cloudInitialSyncComplete || !isCloudBootstrapComplete()) setCloudState("syncing");
+      const remoteUpdatedV19 = await pullLatestSnapshot(!isCloudBootstrapComplete());
+      if (remoteUpdatedV19) showLatestDataSyncedToast();
+      cloudInitialSyncComplete = true;
+      setCloudState("synced");
+      return;
+    }
     let queue = getCloudQueue();
     // V36.3: if the queue was clean before this page loaded but became dirty while
     // setup/render code was running, that dirtiness is startup housekeeping, not
@@ -1445,6 +1463,11 @@ function applyRemoteData(data) {
     // authoritative live state. Never strip it during a Pull: doing so can
     // falsely turn an active promotion off after a revision conflict.
     const safeRemoteSettingsV336 = sanitizeLegacySettingsV323(data.settings || {}, data.products || []);
+    // V1.9: Import promotion/manual-price display state must never appear in Online Store.
+    if (ONLINE_STORE_IMPORT_READ_ONLY_V19) {
+      delete safeRemoteSettingsV336.promotionV183;
+      delete safeRemoteSettingsV336.minimumPriceManualOverrides;
+    }
     localStorage.setItem("importSystemSettings", JSON.stringify(safeRemoteSettingsV336));
     const hydratedProductsV341 = hydrateRemoteProductManualFlagsV341(data.products, safeRemoteSettingsV336);
     localStorage.setItem("importSystemProducts", JSON.stringify(hydratedProductsV341));
