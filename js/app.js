@@ -3666,7 +3666,7 @@ function renderSystemInformationV203() {
   const stock = active.reduce((sum, item) => sum + (Number(item?.stock) || 0), 0);
   const config = typeof getCloudConfig === "function" ? getCloudConfig() : {};
   const set = (id, text) => { const el=document.getElementById(id); if(el) el.textContent=text; };
-  set("systemInfoVersionV203", "V2.2");
+  set("systemInfoVersionV203", "V2.3");
   set("systemInfoApiVersionV203", systemHealthV203.apiOk === true ? `V${systemHealthV203.apiVersion || APP_VERSION}` : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoGoogleSheetV203", systemHealthV203.apiOk === true ? "已连接 Google Web App" : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoLastSyncV203", formatSystemDateTimeV203(config.lastSyncAt) || "尚未同步");
@@ -3698,7 +3698,7 @@ async function runSystemHealthCheckV203({ refreshSales = true } = {}) {
       await window.pullOnlineImportReadOnlyV20(false);
       systemHealthV203 = {
         checked:true, checking:true, apiOk:true,
-        apiVersion:String(APP_VERSION || "37.2"),
+        apiVersion:String(window.ONLINE_STORE_IMPORT_API_VERSION_V23 || "Read-Only"),
         schemaVersion:String(CLOUD_SCHEMA_VERSION || ""),
         error:"", restoreJob:null
       };
@@ -3769,7 +3769,7 @@ function getImportAnomaliesV201() {
     if (systemHealthV203.apiOk === false) {
       issues.push({severity:"critical", type:"google-api", title:"Google Web App / Database 连接异常", detail:systemHealthV203.error || "无法读取 Google Web App。", action:"请检查网络、Web App 部署和 Google Sheet 读取权限。"});
     } else if (systemHealthV203.apiOk === true) {
-      if (systemHealthV203.apiVersion && systemHealthV203.apiVersion !== APP_VERSION) {
+      if (!window.ONLINE_STORE_IMPORT_READ_ONLY_V20 && systemHealthV203.apiVersion && systemHealthV203.apiVersion !== APP_VERSION) {
         issues.push({severity:"critical", type:"version-mismatch", title:"Frontend 与 API 版本不一致", detail:`Frontend V${APP_VERSION} · API V${systemHealthV203.apiVersion}`, action:"请确认 Apps Script 已更新并重新 Deploy，然后强制刷新。"});
       }
       if (systemHealthV203.schemaVersion && systemHealthV203.schemaVersion !== CLOUD_SCHEMA_VERSION) {
@@ -19233,7 +19233,7 @@ function setupInventoryMasterV299(){
 }
 
 
-// ================= Lover Legend Online Store V2.2 =================
+// ================= Lover Legend Online Store V2.3 =================
 const ONLINE_STORE_SETTINGS_KEY_V10 = "onlineStoreV10"; // legacy key inside Import settings; read only for one-time migration
 const ONLINE_STORE_VERSION_V12 = "2.2";
 const ONLINE_STORE_UI_SETTINGS_KEY_V12 = "onlineStoreUiSettingsV12"; // legacy key inside Import settings; read only for one-time migration
@@ -19284,18 +19284,18 @@ let onlineStoreSelectedProductIdV10 = "";
 function getOnlineStoreStateV10(){
   let state=loadJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,null);
   if(!state||typeof state!=="object"||Array.isArray(state)){
-    state={version:"2.2",products:{}};
+    state={version:"2.3",products:{}};
     saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,state);
   }
-  return {version:"2.2",products:state.products&&typeof state.products==="object"&&!Array.isArray(state.products)?state.products:{}};
+  return {version:"2.3",products:state.products&&typeof state.products==="object"&&!Array.isArray(state.products)?state.products:{}};
 }
-function saveOnlineStoreStateV10(state){ saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"2.2",products:state.products||{}}); }
+function saveOnlineStoreStateV10(state){ saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"2.3",products:state.products||{}}); }
 function getOnlineStoreConfigV10(productId){
   const state=getOnlineStoreStateV10();
   const id=String(productId||"").trim().toUpperCase();
   const raw=state.products[id];
   const cfg=normalizeOnlineStoreConfigV10(id,raw);
-  // V2.2 strict boundary: Online Store state stores sales-only fields.
+  // V2.3 strict boundary: Online Store state stores sales-only fields.
   // Import products provide ID / name / stock / average cost / minimum price read-only.
   return cfg;
 }
@@ -19525,7 +19525,7 @@ function getOnlineStoreLiveCostConfigV14(product){
   const shippingEl=document.getElementById("onlineStoreShippingCostV14");
   const editorOpen=onlineStoreSelectedProductIdV10===String(product?.id||"").trim().toUpperCase();
   const shipping=editorOpen&&shippingEl?Math.max(0,parseOnlineNumberV12(shippingEl.value)):Math.max(0,Number(saved.shippingCost)||0);
-  // V2.2: pot cost is controlled by Import V37.2. VND averageCost excludes the pot,
+  // V2.3: pot cost is controlled by Import V37.2. VND averageCost excludes the pot,
   // so Online adds the Import-derived pot cost as a separate read-only cost line.
   const pot=getOnlineStoreAutomaticPotCostV14(product);
   return {shipping,pot};
@@ -19679,7 +19679,7 @@ function saveOnlineStoreEditorV10(){
   if(!window.confirm(`确认保存 Online Store 设置？\n\n产品：${onlineStoreSelectedProductIdV10} ${product.name||""}\nImport 最低售价（只读）：RM ${formatOnlineMoneyInputV12(importMinimumPrice)}\nOnline 销售保护底线：RM ${formatOnlineMoneyInputV12(onlineProtectionFloor)}\n随机发货：${c.random}\n一物一拍 / 单株精选：${c.unique}\n未分配：${Math.max(0,c.unallocated)}\n\n确认后才会保存。`))return;
   if(saveBtn){saveBtn.textContent="保存中...";saveBtn.disabled=true;}
   try{
-    // V2.2: Import / Inventory System is the only real product + stock + average-cost + minimum-price source.
+    // V2.3: Import / Inventory System is the only real product + stock + average-cost + minimum-price source.
     // Online Store saves only store-specific configuration and NEVER writes the Import product collection here.
     const state=getOnlineStoreStateV10();state.products[onlineStoreSelectedProductIdV10]={...config,updatedAt:new Date().toISOString()};saveOnlineStoreStateV10(state);
     addOnlineStoreHistoryV14("product",onlineStoreSelectedProductIdV10,product.name||"",`保存商品设置；随机发货 ${c.random}，一物一拍/单株精选 ${c.unique}，未分配 ${Math.max(0,c.unallocated)}；Import最低售价 RM ${formatOnlineMoneyInputV12(importMinimumPrice)}；Online保护底线 RM ${formatOnlineMoneyInputV12(onlineProtectionFloor)}`);
@@ -19695,7 +19695,7 @@ function setupOnlineStoreV10(){
   search?.addEventListener("input",()=>renderOnlineStoreProductListV10());
   filter?.addEventListener("change",()=>renderOnlineStoreProductListV10());
   document.querySelector('.nav-btn[data-page="onlineStorePage"]')?.addEventListener("click",()=>{
-    // V2.2: refresh Import V37.2 read-only stock/cost/minimum-price before repainting Online Store.
+    // V2.3: refresh Import V37.2 read-only stock/cost/minimum-price before repainting Online Store.
     if(typeof window.refreshLatestCloudData==="function") Promise.resolve(window.refreshLatestCloudData()).catch(()=>{}).finally(()=>{renderOnlineStoreProductListV10();if(onlineStoreSelectedProductIdV10)setOnlineStoreEditorValuesV10(onlineStoreSelectedProductIdV10);});
   });
   list?.addEventListener("click",e=>{const copy=e.target.closest("[data-online-copy-v12]");if(copy){e.preventDefault();e.stopPropagation();copyOnlineTextV12(copy.dataset.onlineCopyV12,copy);return;}const btn=e.target.closest("[data-online-manage-v10]");if(btn)setOnlineStoreEditorValuesV10(btn.dataset.onlineManageV10)});
@@ -19730,7 +19730,7 @@ function setupOnlineStoreV10(){
   document.getElementById("onlineStoreRandomPhotoListV14")?.addEventListener("click",e=>{const idx=Number(e.target.closest("[data-photo-index-v14]")?.dataset.photoIndexV14);if(!Number.isInteger(idx))return;const ta=document.getElementById("onlineStoreRandomPhotosV10");const arr=String(ta?.value||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(e.target.closest("[data-photo-copy-v14]")){copyOnlineTextV12(arr[idx]||"",e.target.closest("[data-photo-copy-v14]"));return;}if(e.target.closest("[data-photo-delete-v14]")&&confirm("确认删除这张代表照片链接？")){arr.splice(idx,1);ta.value=arr.join("\n");renderOnlineStorePhotoListV14();}});
   document.querySelectorAll("[data-media-copy-target-v14]").forEach(btn=>btn.addEventListener("click",()=>copyOnlineTextV12(document.getElementById(btn.dataset.mediaCopyTargetV14)?.value||"",btn)));
   document.querySelectorAll("[data-media-clear-target-v14]").forEach(btn=>btn.addEventListener("click",()=>{const el=document.getElementById(btn.dataset.mediaClearTargetV14);if(el?.value&&confirm("确认删除这个媒体链接？")){el.value="";btn.textContent="已删除";setTimeout(()=>{if(btn.isConnected)btn.textContent="删除";},1000);}}));
-  const mediaNotReadyV14=()=>alert("相册 / 拍照入口已加入。V2.2 尚未连接 Cloudinary 等图片储存服务，为避免图片写入 Google Sheet 超过 50,000 字限制，目前不会把本机照片直接存进库存同步资料。请暂时使用 Photo URL；连接媒体储存后即可永久上传。");
+  const mediaNotReadyV14=()=>alert("相册 / 拍照入口已加入。V2.3 尚未连接 Cloudinary 等图片储存服务，为避免图片写入 Google Sheet 超过 50,000 字限制，目前不会把本机照片直接存进库存同步资料。请暂时使用 Photo URL；连接媒体储存后即可永久上传。");
   document.getElementById("onlineStoreChoosePhotosV14")?.addEventListener("click",()=>document.getElementById("onlineStorePhotoPickerV14")?.click());
   document.getElementById("onlineStoreTakePhotoV14")?.addEventListener("click",()=>document.getElementById("onlineStoreCameraV14")?.click());
   document.getElementById("onlineStorePhotoPickerV14")?.addEventListener("change",mediaNotReadyV14);document.getElementById("onlineStoreCameraV14")?.addEventListener("change",mediaNotReadyV14);
