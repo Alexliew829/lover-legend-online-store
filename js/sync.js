@@ -32,7 +32,10 @@ let cloudLastErrorMessage = "";
 const CLOUD_FOREGROUND_CHECK_GAP = 1500;
 const CLOUD_BACKGROUND_REVISION_MS_V367 = 8000;
 const PROMOTION_LIGHT_SYNC_MS_V372 = 3000;
-const ONLINE_STORE_IMPORT_READ_ONLY_V19 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
+window.ONLINE_STORE_IMPORT_READ_ONLY_V20 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
+const ONLINE_STORE_IMPORT_READ_ONLY_V20 = window.ONLINE_STORE_IMPORT_READ_ONLY_V20;
+// V2.0: Online Store uses a dedicated pull-only adapter. It never runs inherited
+// Import repair/push/promotion/minimum-price code against the Import API.
 
 function getCloudConfig() {
   const saved = loadJSON(CLOUD_CONFIG_KEY, {});
@@ -199,7 +202,7 @@ function setupCloudSync() {
   // Online Store V1.9 never mirrors Import promotion state. Import promotion
   // belongs only to the Import system; Online Store has its own promotion data.
   window.clearInterval(promotionLightSyncTimerV372);
-  if (!ONLINE_STORE_IMPORT_READ_ONLY_V19) {
+  if (!ONLINE_STORE_IMPORT_READ_ONLY_V20) {
     promotionLightSyncTimerV372 = window.setInterval(() => {
       try { pollPromotionStateLightV372(); } catch (_) {}
     }, PROMOTION_LIGHT_SYNC_MS_V372);
@@ -281,49 +284,17 @@ function hasLocalAccessPasswordSettingsV10() {
 }
 
 async function ensureAccessPasswordSettingsFromCloudV10() {
-  if (hasLocalAccessPasswordSettingsV10()) return { ok:true, source:"local" };
-  if (!navigator.onLine) return { ok:false, offline:true };
-  if (accessPasswordBootstrapPromiseV10) return accessPasswordBootstrapPromiseV10;
-
-  accessPasswordBootstrapPromiseV10 = (async () => {
-    const data = await callGoogleApi({
-      action: "pull",
-      clientVersion: APP_VERSION,
-      schemaVersion: CLOUD_SCHEMA_VERSION,
-      knownRevision: 0,
-      hasLocalData: false,
-      forceFull: true
-    });
-
-    const remoteSettings = data && typeof data.settings === "object" ? data.settings : null;
-    const remoteHash = String(remoteSettings?.accessPasswordHash || "").trim();
-    if (!remoteHash) throw new Error("云端没有返回系统密码设置");
-
-    // Login bootstrap is deliberately read-only: only hydrate the two access fields.
-    // It must never overwrite products/imports/batches or create a dirty cloud queue.
-    const localSettings = loadJSON("importSystemSettings", {});
-    localStorage.setItem("importSystemSettings", JSON.stringify({
-      ...localSettings,
-      accessPasswordHash: remoteHash,
-      accessPasswordHint: String(remoteSettings?.accessPasswordHint || localSettings?.accessPasswordHint || "6个数字")
-    }));
-
-    window.dispatchEvent(new CustomEvent("lla-access-settings-ready-v10"));
-    return { ok:true, source:"cloud" };
-  })().catch(error => {
-    accessPasswordBootstrapPromiseV10 = null;
-    throw error;
-  });
-
-  return accessPasswordBootstrapPromiseV10;
+  // V2.0: Online Store password is completely independent from Import settings.
+  // The default 123456 / user-changed hash is stored in Online Store UI settings only.
+  return { ok:true, source:"online-local" };
 }
 window.ensureAccessPasswordSettingsFromCloudV10 = ensureAccessPasswordSettingsFromCloudV10;
 
 async function callGoogleApi(payload, attempt = 0) {
   // V1.9 strict boundary: Online Store may only READ the Import API. All Import
   // mutations (minimum price, cost, promotion, product edits, pushes) are blocked.
-  if (ONLINE_STORE_IMPORT_READ_ONLY_V19 && String(payload?.action || "") !== "pull") {
-    throw new Error("Online Store V1.9: Import API is read-only");
+  if (ONLINE_STORE_IMPORT_READ_ONLY_V20 && String(payload?.action || "") !== "pull") {
+    throw new Error("Online Store V2.0: Import API is read-only");
   }
   const controller = new AbortController();
   const timeoutId = window.setTimeout(() => controller.abort(), 25000);
@@ -597,6 +568,103 @@ window.pullLatestAfterSalesCommitV83 = pullLatestAfterSalesCommitV83;
 
 
 
+
+function sanitizeOnlineImportProductV20(product) {
+  const out = { ...(product || {}) };
+  // Import price protection belongs only to Import System.
+  delete out.minimumPrice;
+  delete out.minimumPriceManual;
+  delete out.minimumPriceUpdatedAt;
+  return out;
+}
+
+function normalizeOnlineImportProductsV20(products = []) {
+  const aliases = typeof BS_CANONICAL_ALIASES_V365 === "object" ? BS_CANONICAL_ALIASES_V365 : {
+    PZ0001:"BS0001", PZ0036:"BS0036", PZ0175:"BS0175", PZ0176:"BS0176", PZ0192:"BS0192"
+  };
+  const rows = Array.isArray(products) ? products : [];
+  const canonicalIds = new Set(rows.map(p => String(p?.id || "").trim().toUpperCase()));
+  const result = [];
+  const seen = new Set();
+  for (const raw of rows) {
+    const originalId = String(raw?.id || "").trim().toUpperCase();
+    if (!originalId) continue;
+    const mapped = aliases[originalId] || originalId;
+    // If both old PZ and canonical BS exist, keep the canonical row only.
+    if (aliases[originalId] && canonicalIds.has(mapped)) continue;
+    if (seen.has(mapped)) continue;
+    seen.add(mapped);
+    result.push(sanitizeOnlineImportProductV20({ ...raw, id:mapped }));
+  }
+  return result;
+}
+
+function buildOnlineSafeImportSettingsV20(remoteSettings = {}) {
+  // Online Store may inherit ONLY the VND pot-cost rule values required to
+  // interpret Import averageCost correctly. Promotion/manual-price/global Import
+  // settings never cross the boundary.
+  const r = remoteSettings?.minimumPriceRules && typeof remoteSettings.minimumPriceRules === "object"
+    ? remoteSettings.minimumPriceRules : {};
+  const allowed = ["vndPotUnder1m","vndPot1mTo4m","vndPot4mTo10m","vndPot10mPlus","vndPot4mPlus"];
+  const minimumPriceRules = {};
+  allowed.forEach(key => {
+    const value = Number(r[key]);
+    if (Number.isFinite(value) && value >= 0) minimumPriceRules[key] = value;
+  });
+  return { minimumPriceRules };
+}
+
+function applyOnlineImportReadOnlyDataV20(data) {
+  if (!Array.isArray(data?.products)) throw new Error("Import API 未返回产品资料");
+  const products = normalizeOnlineImportProductsV20(data.products);
+  const imports = Array.isArray(data.imports) ? data.imports : loadJSON("importSystemImports", []);
+  const batches = Array.isArray(data.batches) ? data.batches : loadJSON("importSystemBatches", []);
+  const safeImports = typeof replaceProductIdsDeepV364 === "function"
+    ? replaceProductIdsDeepV364(imports, BS_CANONICAL_ALIASES_V365) : imports;
+  const safeBatches = typeof replaceProductIdsDeepV364 === "function"
+    ? replaceProductIdsDeepV364(batches, BS_CANONICAL_ALIASES_V365) : batches;
+  localStorage.setItem("importSystemProducts", JSON.stringify(products));
+  localStorage.setItem("importSystemImports", JSON.stringify(safeImports));
+  localStorage.setItem("importSystemBatches", JSON.stringify(safeBatches));
+  localStorage.setItem("importSystemSettings", JSON.stringify(buildOnlineSafeImportSettingsV20(data.settings || {})));
+  if (typeof invalidateMinimumPriceOriginIndexV160 === "function") invalidateMinimumPriceOriginIndexV160();
+  if (typeof inventoryPreparedRowsCacheV321 !== "undefined") {
+    inventoryPreparedRowsCacheV321 = { rawProducts:null, settings:null, imports:null, batches:null, sales:null, rows:[] };
+  }
+  if (typeof inventoryLastRenderedPreparedRowsV321 !== "undefined") inventoryLastRenderedPreparedRowsV321 = null;
+}
+
+async function pullOnlineImportReadOnlyV20(forceFull = false) {
+  const config = getCloudConfig();
+  const localProducts = loadJSON("importSystemProducts", []);
+  const hasLocal = Array.isArray(localProducts) && localProducts.length > 0;
+  const data = await callGoogleApi({
+    action:"pull",
+    clientVersion:APP_VERSION,
+    schemaVersion:CLOUD_SCHEMA_VERSION,
+    knownRevision: forceFull ? 0 : (Number(config.revision) || 0),
+    hasLocalData: forceFull ? false : hasLocal,
+    forceFull: forceFull || !hasLocal
+  });
+  if (data?.unchanged) {
+    config.revision = Number(data.revision) || Number(config.revision) || 0;
+    config.lastSyncAt = new Date().toISOString();
+    saveCloudConfig(config);
+    renderCloudMeta(config);
+    return false;
+  }
+  applyOnlineImportReadOnlyDataV20(data || {});
+  config.revision = Number(data?.revision) || 0;
+  config.lastSyncAt = new Date().toISOString();
+  // Deliberately do NOT store Import bootstrap/write credentials in Online Store.
+  config.bootstrapToken = "";
+  config.bootstrapRevision = 0;
+  saveCloudConfig(config);
+  renderCloudMeta(config);
+  return true;
+}
+window.pullOnlineImportReadOnlyV20 = pullOnlineImportReadOnlyV20;
+
 async function runCloudSync() {
   if (!navigator.onLine) {
     setCloudState("failed");
@@ -612,15 +680,15 @@ async function runCloudSync() {
   cloudSyncRequestedWhileBusy = false;
 
   try {
-    // V1.9: Online Store's Import connection is pull-only. Even if inherited
-    // Import code marks a local mirror dirty, discard that queue and re-read
-    // canonical Import data instead of ever pushing it back.
-    if (ONLINE_STORE_IMPORT_READ_ONLY_V19) {
-      const q = getCloudQueue();
-      if (q.dirty) clearLegacyPendingCloudState();
-      if (!cloudInitialSyncComplete || !isCloudBootstrapComplete()) setCloudState("syncing");
-      const remoteUpdatedV19 = await pullLatestSnapshot(!isCloudBootstrapComplete());
-      if (remoteUpdatedV19) showLatestDataSyncedToast();
+    // V2.0: one read-only Pull only. No Import repair, push, promotion sync,
+    // password bootstrap, minimum-price update or write credential handling.
+    if (ONLINE_STORE_IMPORT_READ_ONLY_V20) {
+      clearLegacyPendingCloudState();
+      const onlineConfigV20 = getCloudConfig();
+      const onlineHasMirrorV20 = (loadJSON("importSystemProducts", []) || []).length > 0;
+      if (!cloudInitialSyncComplete || !onlineHasMirrorV20) setCloudState("syncing");
+      const remoteUpdatedV20 = await pullOnlineImportReadOnlyV20(!onlineHasMirrorV20 || !(Number(onlineConfigV20.revision) > 0));
+      if (remoteUpdatedV20) showLatestDataSyncedToast();
       cloudInitialSyncComplete = true;
       setCloudState("synced");
       return;
@@ -700,7 +768,7 @@ async function runCloudSync() {
     const finalQueueV338 = getCloudQueue();
     if (cloudInitialSyncComplete && !finalQueueV338.dirty && navigator.onLine) {
       setCloudState("synced");
-      if (getMinimumPricePendingV345()?.productId) window.setTimeout(retryPendingMinimumPriceV345, 250);
+      if (!ONLINE_STORE_IMPORT_READ_ONLY_V20 && getMinimumPricePendingV345()?.productId) window.setTimeout(retryPendingMinimumPriceV345, 250);
     }
     if (cloudSyncRequestedWhileBusy || finalQueueV338.dirty) {
       cloudSyncTimer = window.setTimeout(() => runCloudSync(), 40);
@@ -1464,7 +1532,7 @@ function applyRemoteData(data) {
     // falsely turn an active promotion off after a revision conflict.
     const safeRemoteSettingsV336 = sanitizeLegacySettingsV323(data.settings || {}, data.products || []);
     // V1.9: Import promotion/manual-price display state must never appear in Online Store.
-    if (ONLINE_STORE_IMPORT_READ_ONLY_V19) {
+    if (ONLINE_STORE_IMPORT_READ_ONLY_V20) {
       delete safeRemoteSettingsV336.promotionV183;
       delete safeRemoteSettingsV336.minimumPriceManualOverrides;
     }
