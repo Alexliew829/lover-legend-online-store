@@ -34,9 +34,9 @@ const CLOUD_BACKGROUND_REVISION_MS_V367 = 8000;
 const PROMOTION_LIGHT_SYNC_MS_V372 = 3000;
 window.ONLINE_STORE_IMPORT_READ_ONLY_V20 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
 const ONLINE_STORE_IMPORT_READ_ONLY_V20 = window.ONLINE_STORE_IMPORT_READ_ONLY_V20;
-// V2.3: Online Store uses a dedicated pull-only adapter. It never runs inherited
+// V2.4: Online Store uses a dedicated pull-only adapter. It never runs inherited
 // Import repair/push/promotion/minimum-price code against the Import API.
-// The mirror namespace is refreshed in V2.3 so no old pending price-write state can survive.
+// The mirror namespace is refreshed in V2.4 so no old pending price-write state can survive.
 
 function getCloudConfig() {
   const saved = loadJSON(CLOUD_CONFIG_KEY, {});
@@ -601,7 +601,12 @@ function normalizeOnlineImportProductsV20(products = [], remoteSettings = {}) {
     if (aliases[originalId] && canonicalIds.has(mapped)) continue;
     if (seen.has(mapped)) continue;
     seen.add(mapped);
+    // V2.4: start from the backup baseline, then let the current Import value win.
+    // Import remains the one and only source of truth after a successful live pull.
+    const backupMinimumV24 = typeof getOnlineImportBackupMinimumPriceV24 === "function"
+      ? getOnlineImportBackupMinimumPriceV24(mapped) : 0;
     let effectiveMinimum = Math.max(0, Number(raw?.minimumPrice) || 0);
+    if (!(effectiveMinimum > 0) && backupMinimumV24 > 0) effectiveMinimum = backupMinimumV24;
     try {
       if (promotion && typeof getEffectiveProductMinimumPriceV183 === "function") {
         effectiveMinimum = Math.max(0, Number(getEffectiveProductMinimumPriceV183(raw, promotion, rules, originIndex)) || effectiveMinimum);
@@ -651,26 +656,39 @@ function applyOnlineImportReadOnlyDataV20(data) {
   try { if (typeof window.refreshOnlineImportReadOnlyFieldsV21 === "function") window.refreshOnlineImportReadOnlyFieldsV21(); } catch (_) {}
 }
 
+let onlineReadOnlyUnchangedChecksV24 = 0;
+let onlineReadOnlyLastFullPullAtV24 = 0;
+const ONLINE_READONLY_FORCE_FULL_AFTER_UNCHANGED_V24 = 3;
+const ONLINE_READONLY_FORCE_FULL_GAP_MS_V24 = 24000;
+
 async function pullOnlineImportReadOnlyV20(forceFull = false) {
   const config = getCloudConfig();
   const localProducts = loadJSON("importSystemProducts", []);
   const hasLocal = Array.isArray(localProducts) && localProducts.length > 0;
+  const nowV24 = Date.now();
+  const safetyFullV24 = !forceFull && hasLocal &&
+    onlineReadOnlyUnchangedChecksV24 >= ONLINE_READONLY_FORCE_FULL_AFTER_UNCHANGED_V24 &&
+    nowV24 - onlineReadOnlyLastFullPullAtV24 >= ONLINE_READONLY_FORCE_FULL_GAP_MS_V24;
+  const effectiveForceFullV24 = Boolean(forceFull || !hasLocal || safetyFullV24);
   const data = await callGoogleApi({
     action:"pull",
     clientVersion:APP_VERSION,
     schemaVersion:CLOUD_SCHEMA_VERSION,
-    knownRevision: forceFull ? 0 : (Number(config.revision) || 0),
-    hasLocalData: forceFull ? false : hasLocal,
-    forceFull: forceFull || !hasLocal
+    knownRevision: effectiveForceFullV24 ? 0 : (Number(config.revision) || 0),
+    hasLocalData: effectiveForceFullV24 ? false : hasLocal,
+    forceFull: effectiveForceFullV24
   });
+  if (effectiveForceFullV24) onlineReadOnlyLastFullPullAtV24 = nowV24;
   window.ONLINE_STORE_IMPORT_API_VERSION_V23 = String(data?.clientVersion || data?.apiVersion || window.ONLINE_STORE_IMPORT_API_VERSION_V23 || "");
   if (data?.unchanged) {
+    onlineReadOnlyUnchangedChecksV24 += 1;
     config.revision = Number(data.revision) || Number(config.revision) || 0;
     config.lastSyncAt = new Date().toISOString();
     saveCloudConfig(config);
     renderCloudMeta(config);
     return false;
   }
+  onlineReadOnlyUnchangedChecksV24 = 0;
   applyOnlineImportReadOnlyDataV20(data || {});
   config.revision = Number(data?.revision) || 0;
   config.lastSyncAt = new Date().toISOString();
@@ -1021,7 +1039,7 @@ window.retryPendingMinimumPriceV345=retryPendingMinimumPriceV345;
 async function updateProductMinimumPriceFast(productId, minimumPrice, updatedAt, minimumPriceManual = true, retryCountV341 = 0) {
   if (ONLINE_STORE_IMPORT_READ_ONLY_V20) {
     setMinimumPricePendingV345(null);
-    throw new Error("Online Store V2.3：Import 最低售价为只读，不能从 Online Store 修改。");
+    throw new Error("Online Store V2.4：Import 最低售价为只读，不能从 Online Store 修改。");
   }
   if (!isCloudWriteCredentialCurrentV341()) {
     await pullLatestSnapshot(false);
@@ -1117,7 +1135,7 @@ window.updateProductMinimumPriceFast = updateProductMinimumPriceFast;
 
 
 async function updateProductAverageCostFastV358(productId, averageCost, minimumPrice, updatedAt, reason, retryCountV358 = 0) {
-  if (ONLINE_STORE_IMPORT_READ_ONLY_V20) throw new Error("Online Store V2.3：Import 平均成本为只读。");
+  if (ONLINE_STORE_IMPORT_READ_ONLY_V20) throw new Error("Online Store V2.4：Import 平均成本为只读。");
   if (!isCloudWriteCredentialCurrentV341()) await pullLatestSnapshot(false);
   const config = getCloudConfig();
   if (!navigator.onLine) throw new Error("目前离线，平均成本尚未同步到 Google Sheet。");
@@ -1174,7 +1192,7 @@ async function fetchAverageCostManualHistoryV359(limit = 500) {
 window.fetchAverageCostManualHistoryV359 = fetchAverageCostManualHistoryV359;
 
 async function updatePromotionSettingsFastV185(promotion, retryCountV372 = 0) {
-  if (ONLINE_STORE_IMPORT_READ_ONLY_V20) throw new Error("Online Store V2.3：Import 促销设置为只读。");
+  if (ONLINE_STORE_IMPORT_READ_ONLY_V20) throw new Error("Online Store V2.4：Import 促销设置为只读。");
   if (!navigator.onLine) throw new Error("目前离线，促销设置尚未同步。");
   if (!isCloudBootstrapComplete()) throw new Error("首次同步尚未完成，请稍后再试。");
   await waitForCloudIdleV83();

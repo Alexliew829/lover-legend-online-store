@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-v2.3-identity-isolated";
+const CACHE = "lover-legend-online-store-V2.4-identity-isolated";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=23-online-readonly-price-sync",
-  "./css/style.css?v=23-online-readonly-price-sync",
-  "./js/common.js?v=23-online-readonly-price-sync",
-  "./js/sync.js?v=23-online-readonly-price-sync",
-  "./js/app.js?v=23-online-readonly-price-sync",
-  "./manifest.json?v=23-online-readonly-price-sync",
+  "./index.html?v=24-backup-minimum-price-live-refresh",
+  "./css/style.css?v=24-backup-minimum-price-live-refresh",
+  "./js/common.js?v=24-backup-minimum-price-live-refresh",
+  "./js/sync.js?v=24-backup-minimum-price-live-refresh",
+  "./js/app.js?v=24-backup-minimum-price-live-refresh",
+  "./manifest.json?v=24-backup-minimum-price-live-refresh",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -42,11 +42,11 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=23-online-readonly-price-sync", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=24-backup-minimum-price-live-refresh", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=23-online-readonly-price-sync")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=24-backup-minimum-price-live-refresh")) || (await caches.match("./index.html")))
     );
     return;
   }
