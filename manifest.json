@@ -1,8 +1,8 @@
 {
   "name": "线上商店管理系统",
   "short_name": "Online Store",
-  "description": "Lover Legend Gardening · Online Store Management Admin V2.5 · Import V37.2 Live Read-Only Stock/Cost/Initial Minimum Price",
-  "start_url": "/lover-legend-online-store/?v=2.4",
+  "description": "Lover Legend Gardening · Online Store Management Admin V2.5 · Import V40.2 Live Read-Only Stock/Cost/Initial Minimum Price",
+  "start_url": "/lover-legend-online-store/?v=2.5",
   "scope": "/lover-legend-online-store/",
   "display": "standalone",
   "background_color": "#fff7ed",
@@ -40,5 +40,5 @@
     "standalone"
   ],
   "prefer_related_applications": false,
-  "version": "2.4"
+  "version": "2.5"
 }

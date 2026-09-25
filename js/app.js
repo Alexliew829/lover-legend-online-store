@@ -4273,7 +4273,8 @@ function getAverageCostLabelV205(product, originIndex = null) {
 }
 
 function getEffectiveProductMinimumPriceV333(product, configuredRules = null, originIndex = null) {
-  const storedPrice = Math.max(0, Number(product?.minimumPrice) || 0);
+  const storedPrice = Math.max(0, Number(product?.importInitialMinimumPrice ?? product?.minimumPrice) || 0);
+  if (typeof ONLINE_STORE_IMPORT_READ_ONLY_V20 !== "undefined" && ONLINE_STORE_IMPORT_READ_ONLY_V20) return storedPrice;
   const manual = isMinimumPriceManualV160(product);
   const promotion = getPromotionSettingsV183();
   const productId = String(product?.id || "").trim().toUpperCase();
@@ -5289,6 +5290,10 @@ function isMinimumPriceManualV160(product, configuredOverrides = null) {
 }
 
 function normalizeProductMinimumPriceV160(product, configuredRules = null, configuredOverrides = null, originIndex = null) {
+  if (typeof ONLINE_STORE_IMPORT_READ_ONLY_V20 !== "undefined" && ONLINE_STORE_IMPORT_READ_ONLY_V20) {
+    const storedInitial = Math.max(0, Number(product?.importInitialMinimumPrice ?? product?.minimumPrice) || 0);
+    return { ...(product || {}), minimumPrice:storedInitial, importInitialMinimumPrice:storedInitial, minimumPriceManual:false };
+  }
   const hydratedProductV341 = hydrateProductMinimumPriceManualV341(product, configuredOverrides);
   const minimumPriceManual = hydratedProductV341?.minimumPriceManual === true;
   const storedPrice = Math.max(0, Number(hydratedProductV341?.minimumPrice) || 0);
@@ -16033,6 +16038,7 @@ function normalizeMinimumPriceInput(value) {
 }
 
 async function editDisplayedMinimumPriceV199(productId) {
+  if (typeof ONLINE_STORE_IMPORT_READ_ONLY_V20 !== "undefined" && ONLINE_STORE_IMPORT_READ_ONLY_V20) return;
   // V34.3: direct minimum-price edits are always the product's manual minimum price.
   // Manual prices have highest priority and are never changed by Profit Management.
   return editProductMinimumPrice(String(productId || "").trim());
@@ -16061,6 +16067,7 @@ function applyMinimumPriceOptimisticViewV359(product) {
 }
 
 async function editProductMinimumPrice(productId) {
+  if (typeof ONLINE_STORE_IMPORT_READ_ONLY_V20 !== "undefined" && ONLINE_STORE_IMPORT_READ_ONLY_V20) return;
   const id = String(productId || "").trim();
   const products = getProducts();
   const productIndex = products.findIndex(product => String(product.id || "") === id);
@@ -16208,6 +16215,7 @@ async function editProductMinimumPrice(productId) {
 }
 
 function bindDashboardMinimumPriceLongPress() {
+  if (typeof ONLINE_STORE_IMPORT_READ_ONLY_V20 !== "undefined" && ONLINE_STORE_IMPORT_READ_ONLY_V20) return;
   const list = document.getElementById("inventoryList");
   if (!list || list.dataset.minimumPriceLongPressBound === "1") return;
   list.dataset.minimumPriceLongPressBound = "1";
@@ -16779,6 +16787,7 @@ function setupInventoryModule() {
 }
 
 function bindInventoryMinimumPriceLongPress() {
+  if (typeof ONLINE_STORE_IMPORT_READ_ONLY_V20 !== "undefined" && ONLINE_STORE_IMPORT_READ_ONLY_V20) return;
   const list = document.getElementById("inventoryManagementList");
   if (!list || list.dataset.minimumPriceLongPressBound === "1") return;
   list.dataset.minimumPriceLongPressBound = "1";
@@ -17862,6 +17871,13 @@ function getOriginalCostSummaryRows() {
 }
 
 function getMinimumPriceDisplayStateV315(product) {
+  if (typeof ONLINE_STORE_IMPORT_READ_ONLY_V20 !== "undefined" && ONLINE_STORE_IMPORT_READ_ONLY_V20) {
+    const price = Math.max(0, Number(product?.importInitialMinimumPrice ?? product?.minimumPrice) || 0);
+    let info;
+    try { info = getProductMinimumProfitV205({ ...(product || {}), minimumPrice:price, importInitialMinimumPrice:price }); }
+    catch (_) { info = {price,profit:0,profitRate:0,promotionApplies:false}; }
+    return {manual:false,protectedManual:true,state:"manual",className:"minimum-price-manual-v315",label:"初始最低售价",price,profitInfo:info};
+  }
   const manual = isMinimumPriceManualV160(product);
   const info = getProductMinimumProfitV205(product);
   const protectedManual = manual && !info.promotionApplies;
@@ -19235,7 +19251,7 @@ function setupInventoryMasterV299(){
 
 // ================= Lover Legend Online Store V2.5 =================
 const ONLINE_STORE_SETTINGS_KEY_V10 = "onlineStoreV10"; // legacy key inside Import settings; read only for one-time migration
-const ONLINE_STORE_VERSION_V12 = "2.2";
+const ONLINE_STORE_VERSION_V12 = "2.5";
 const ONLINE_STORE_UI_SETTINGS_KEY_V12 = "onlineStoreUiSettingsV12"; // legacy key inside Import settings; read only for one-time migration
 const ONLINE_STORE_STATE_STORAGE_KEY_V18 = "llaOnlineStoreV22::state";
 const ONLINE_STORE_UI_STORAGE_KEY_V18 = "llaOnlineStoreV22::ui";
@@ -19273,9 +19289,9 @@ function applyOnlineStoreBrandingV12(v=getOnlineStoreUiSettingsV12()){const main
 
 function onlineStoreDataBoundaryV18(){
   return {
-    importReadOnly:["productId","productName","englishName","stock","averageCost","minimumPrice"],
+    importReadOnly:["productId","productName","englishName","stock","averageCost","initialMinimumPrice"],
     onlineWritable:["regularPrice","promotionPrice","publishing","rooms","media","orders","customers","affiliate"],
-    importWriteBlocked:["stock","averageCost","minimumPrice","minimumPriceManual","originalCost","importNumber","batch"]
+    importWriteBlocked:["stock","averageCost","initialMinimumPrice","minimumPrice","minimumPriceManual","originalCost","importNumber","batch"]
   };
 }
 
@@ -19296,7 +19312,7 @@ function getOnlineStoreConfigV10(productId){
   const raw=state.products[id];
   const cfg=normalizeOnlineStoreConfigV10(id,raw);
   // V2.5 strict boundary: Online Store state stores sales-only fields.
-  // Import products provide ID / name / stock / average cost / minimum price read-only.
+  // Import V40.2 products provide ID / name / stock / average cost / initial minimum price read-only.
   return cfg;
 }
 function normalizeOnlineStoreConfigV10(productId,raw){
@@ -19424,7 +19440,7 @@ function setOnlineStoreEditorValuesV10(productId,preserveRoomV16=false){
   const avgHintV19=document.getElementById("onlineStoreAverageCostHintV19");
   const vndV19=typeof isVndProductV205==="function"&&isVndProductV205(product,getMinimumPriceOriginIndexV160());
   if(avgLabelV19)avgLabelV19.textContent=vndV19?"平均成本（Import · VND不含盆）":"平均成本（Import）";
-  if(avgHintV19)avgHintV19.textContent=vndV19?"只读：VND 平均成本不含花盆；下方花盆成本按 Import V37.2 规则另行自动带入。":"只读：来自 Import V37.2 的真实平均成本。";
+  if(avgHintV19)avgHintV19.textContent=vndV19?"只读：VND 平均成本不含花盆；下方花盆成本按 Import V40.2 规则另行自动带入。":"只读：来自 Import V40.2 的真实平均成本。";
   setVal("onlineStoreMinimumPriceV11",formatOnlineMoneyInputV12(Math.max(0,Number(product.minimumPrice)||0)));
   setVal("onlineStorePriceFloorV21",formatOnlineMoneyInputV12(calculateOnlineProtectionFloorV21(product).floor));
   setVal("onlineStoreRandomQtyV10",config.randomQty?String(config.randomQty):"");
@@ -19525,12 +19541,12 @@ function getOnlineStoreLiveCostConfigV14(product){
   const shippingEl=document.getElementById("onlineStoreShippingCostV14");
   const editorOpen=onlineStoreSelectedProductIdV10===String(product?.id||"").trim().toUpperCase();
   const shipping=editorOpen&&shippingEl?Math.max(0,parseOnlineNumberV12(shippingEl.value)):Math.max(0,Number(saved.shippingCost)||0);
-  // V2.5: pot cost is controlled by Import V37.2. VND averageCost excludes the pot,
+  // V2.5: pot cost is controlled by Import V40.2. VND averageCost excludes the pot,
   // so Online adds the Import-derived pot cost as a separate read-only cost line.
   const pot=getOnlineStoreAutomaticPotCostV14(product);
   return {shipping,pot};
 }
-function getImportBaseMinimumPriceV21(product){return Math.max(0,Number(product?.minimumPrice)||0);}
+function getImportBaseMinimumPriceV21(product){return Math.max(0,Number(product?.importInitialMinimumPrice ?? product?.minimumPrice)||0);}
 function calculateOnlineProtectionFloorV21(product){
   const baseMinimum=getImportBaseMinimumPriceV21(product);
   const pricing=getOnlineStoreUiSettingsV12().pricing||{};
@@ -19775,7 +19791,7 @@ function renderOnlineStoreHistoryV14(){const host=document.getElementById("onlin
 function setupOnlineStoreHistoryV14(){document.getElementById("onlineStoreHistorySearchBtnV14")?.addEventListener("click",renderOnlineStoreHistoryV14);document.getElementById("onlineStoreHistoryClearBtnV14")?.addEventListener("click",()=>{["onlineStoreHistorySearchV14","onlineStoreHistoryStartV14","onlineStoreHistoryEndV14"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";});const t=document.getElementById("onlineStoreHistoryTypeV14");if(t)t.value="all";renderOnlineStoreHistoryV14();});document.getElementById("onlineStoreHistoryPageV14")?.addEventListener("click",e=>{const b=e.target.closest("[data-history-copy-v14]");if(b)copyOnlineTextV12(b.dataset.historyCopyV14,b);});document.querySelector('.nav-btn[data-page="onlineStoreHistoryPageV14"]')?.addEventListener("click",()=>setTimeout(renderOnlineStoreHistoryV14,0));}
 function setupPageJumpControlsV14(){const top=document.getElementById("jumpTopV14"),bottom=document.getElementById("jumpBottomV14");top?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));bottom?.addEventListener("click",()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:"smooth"}));const refresh=()=>{const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);const ratio=window.scrollY/max;if(top)top.hidden=ratio<.12;if(bottom)bottom.hidden=ratio>.88;};window.addEventListener("scroll",refresh,{passive:true});setTimeout(refresh,0);}
 
-// ================= Online Store V2.2 Settings =================
+// ================= Online Store V2.5 Settings =================
 function setupOnlineStoreSettingsV12(){
   const current=getOnlineStoreUiSettingsV12();
   window.__onlineStoreSettingsDirtyV21=false;
@@ -19788,7 +19804,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"2.2",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"2.5",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19803,7 +19819,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"2.2",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"2.5",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;

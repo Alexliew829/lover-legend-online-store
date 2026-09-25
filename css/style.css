@@ -6695,3 +6695,22 @@ html.online-store-app-v25 .minimum-price-manual-v315 *,
 html.online-store-app-v25 .product-stock-minimum-price-gain-v268 strong,
 html.online-store-app-v25 .product-stock-minimum-price-loss-v268 strong,
 html.online-store-app-v25 .online-min-price-v13 { color:#0b68c9!important; }
+
+/* Online Store V2.5 corrected: Import V40.2 initial minimum price is display-only. */
+.online-store-app-v25 .inventory-minimum-price-btn,
+.online-store-app-v25 .inventory-manage-minimum-price-btn,
+.online-store-app-v25 .product-stock-minimum-price-btn,
+.online-store-app-v25 .master-price-main-v266 {
+  pointer-events: none !important;
+  cursor: default !important;
+  user-select: text;
+}
+.online-store-app-v25 .inventory-minimum-price-btn,
+.online-store-app-v25 .inventory-manage-minimum-price-btn,
+.online-store-app-v25 .product-stock-minimum-price-btn,
+.online-store-app-v25 .master-price-main-v266,
+.online-store-app-v25 .inventory-minimum-price-btn *,
+.online-store-app-v25 .inventory-manage-minimum-price-btn *,
+.online-store-app-v25 .product-stock-minimum-price-btn * {
+  color: #0b68c9 !important;
+}

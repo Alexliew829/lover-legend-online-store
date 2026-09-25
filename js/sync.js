@@ -572,10 +572,11 @@ window.pullLatestAfterSalesCommitV83 = pullLatestAfterSalesCommitV83;
 
 function sanitizeOnlineImportProductV20(product) {
   const out = { ...(product || {}) };
-  // V2.5: in the Online read-only mirror, product.minimumPrice intentionally
-  // stores Import's locked Initial Minimum Price only. Current/Promotion minimum
-  // price is never mirrored. Manual colour/status remains Import-only.
+  // V2.5 corrected for Import V40.2: product.minimumPrice inside Online Store is
+  // ONLY a local mirror of Import settings.initialMinimumPricesV376. It is never
+  // the current minimumPrice, promotion price, or an editable Online value.
   out.minimumPrice = Math.max(0, Number(out.minimumPrice) || 0);
+  out.importInitialMinimumPrice = Math.max(0, Number(out.importInitialMinimumPrice ?? out.minimumPrice) || 0);
   delete out.minimumPriceManual;
   delete out.minimumPriceUpdatedAt;
   return out;
@@ -589,8 +590,14 @@ function normalizeOnlineImportProductsV20(products = [], remoteSettings = {}) {
   const canonicalIds = new Set(rows.map(p => String(p?.id || "").trim().toUpperCase()));
   const result = [];
   const seen = new Set();
-  const liveInitial = remoteSettings?.initialMinimumPricesV376 && typeof remoteSettings.initialMinimumPricesV376 === "object"
+  const liveInitialRaw = remoteSettings?.initialMinimumPricesV376 && typeof remoteSettings.initialMinimumPricesV376 === "object"
     ? remoteSettings.initialMinimumPricesV376 : {};
+  const liveInitial = new Map();
+  Object.entries(liveInitialRaw).forEach(([key, rawValue]) => {
+    const canonical = String(key || "").trim().toUpperCase();
+    const parsed = Number(String(rawValue ?? "").replace(/,/g, ""));
+    if (canonical && Number.isFinite(parsed) && parsed >= 0) liveInitial.set(canonical, parsed);
+  });
   for (const raw of rows) {
     const originalId = String(raw?.id || "").trim().toUpperCase();
     if (!originalId) continue;
@@ -599,12 +606,13 @@ function normalizeOnlineImportProductsV20(products = [], remoteSettings = {}) {
     if (seen.has(mapped)) continue;
     seen.add(mapped);
 
-    // V2.5 RULE: Online reads ONLY Import's locked Initial Minimum Price value.
-    // Changes to current minimumPrice or Import promotion must not affect Online.
-    let initialMinimum = Math.max(0, Number(liveInitial[mapped] ?? liveInitial[originalId]) || 0);
-    if (!(initialMinimum > 0) && typeof getOnlineImportBackupInitialMinimumPriceV25 === "function") {
-      initialMinimum = getOnlineImportBackupInitialMinimumPriceV25(mapped);
-    }
+    // V2.5 corrected RULE: read ONLY Import V40.2 settings.initialMinimumPricesV376.
+    // Do not fall back to product.minimumPrice, promotion values, or an old backup.
+    // If Import has no formal initial value for a product yet, keep 0 rather than
+    // silently substituting a different price source.
+    const initialMinimum = liveInitial.has(mapped)
+      ? liveInitial.get(mapped)
+      : (liveInitial.has(originalId) ? liveInitial.get(originalId) : 0);
     result.push(sanitizeOnlineImportProductV20({
       ...raw,
       id:mapped,
@@ -638,10 +646,24 @@ function buildOnlineSafeImportSettingsV20(remoteSettings = {}) {
     const id = String(key || "").trim().toUpperCase();
     if (!id) return;
     const mapped = aliases[id] || id;
-    const value = Number(rawValue);
+    const value = Number(String(rawValue ?? "").replace(/,/g, ""));
     if (Number.isFinite(value) && value >= 0) initialMinimumPricesV376[mapped] = value;
   });
-  return { minimumPriceRules, initialMinimumPricesV376 };
+  const sourceLocks = remoteSettings?.initialMinimumPriceLockedV380 && typeof remoteSettings.initialMinimumPriceLockedV380 === "object"
+    ? remoteSettings.initialMinimumPriceLockedV380 : {};
+  const initialMinimumPriceLockedV380 = {};
+  Object.entries(sourceLocks).forEach(([key, locked]) => {
+    const id = String(key || "").trim().toUpperCase();
+    if (!id || locked !== true) return;
+    const mapped = aliases[id] || id;
+    initialMinimumPriceLockedV380[mapped] = true;
+  });
+  return {
+    minimumPriceRules,
+    initialMinimumPricesV376,
+    initialMinimumPriceLockedV380,
+    initialMinimumPriceBaselineVersionV378:String(remoteSettings?.initialMinimumPriceBaselineVersionV378 || "")
+  };
 }
 
 function applyOnlineImportReadOnlyDataV20(data) {
@@ -664,6 +686,9 @@ function applyOnlineImportReadOnlyDataV20(data) {
     inventoryPreparedRowsCacheV321 = { rawProducts:null, settings:null, imports:null, batches:null, sales:null, rows:[] };
   }
   if (typeof inventoryLastRenderedPreparedRowsV321 !== "undefined") inventoryLastRenderedPreparedRowsV321 = null;
+  try { if (typeof renderDashboard === "function") renderDashboard(); } catch (_) {}
+  try { if (typeof renderInventoryManagementList === "function") renderInventoryManagementList(); } catch (_) {}
+  try { if (typeof renderOnlineStoreProductListV10 === "function") renderOnlineStoreProductListV10(); } catch (_) {}
   try { if (typeof window.refreshOnlineImportReadOnlyFieldsV21 === "function") window.refreshOnlineImportReadOnlyFieldsV21(); } catch (_) {}
 }
 
@@ -1146,7 +1171,7 @@ window.updateProductMinimumPriceFast = updateProductMinimumPriceFast;
 
 
 async function updateProductAverageCostFastV358(productId, averageCost, minimumPrice, updatedAt, reason, retryCountV358 = 0) {
-  if (ONLINE_STORE_IMPORT_READ_ONLY_V20) throw new Error("Online Store V2.5：Import 平均成本为只读。");
+  if (ONLINE_STORE_IMPORT_READ_ONLY_V20) throw new Error("Online Store V2.5：Import V40.2 平均成本为只读。");
   if (!isCloudWriteCredentialCurrentV341()) await pullLatestSnapshot(false);
   const config = getCloudConfig();
   if (!navigator.onLine) throw new Error("目前离线，平均成本尚未同步到 Google Sheet。");
@@ -1203,7 +1228,7 @@ async function fetchAverageCostManualHistoryV359(limit = 500) {
 window.fetchAverageCostManualHistoryV359 = fetchAverageCostManualHistoryV359;
 
 async function updatePromotionSettingsFastV185(promotion, retryCountV372 = 0) {
-  if (ONLINE_STORE_IMPORT_READ_ONLY_V20) throw new Error("Online Store V2.5：Import 促销设置为只读。");
+  if (ONLINE_STORE_IMPORT_READ_ONLY_V20) throw new Error("Online Store V2.5：Import V40.2 促销设置为只读。");
   if (!navigator.onLine) throw new Error("目前离线，促销设置尚未同步。");
   if (!isCloudBootstrapComplete()) throw new Error("首次同步尚未完成，请稍后再试。");
   await waitForCloudIdleV83();

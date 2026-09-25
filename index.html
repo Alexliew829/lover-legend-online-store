@@ -14,7 +14,7 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=25-import-initial-minimum-readonly" rel="manifest"/>
+<link href="./manifest.json?v=25-import40-2-initial-readonly-r2" rel="manifest"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
 <link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
@@ -46,12 +46,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=25-import-initial-minimum-readonly" rel="preload"/>
-<link href="./css/style.css?v=25-import-initial-minimum-readonly" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=25-import-initial-minimum-readonly" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=25-import-initial-minimum-readonly"></script>
-<script defer="" src="./js/sync.js?v=25-import-initial-minimum-readonly"></script>
-<script defer="" src="./js/app.js?v=25-import-initial-minimum-readonly"></script>
+<link as="style" href="./css/style.css?v=25-import40-2-initial-readonly-r2" rel="preload"/>
+<link href="./css/style.css?v=25-import40-2-initial-readonly-r2" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=25-import40-2-initial-readonly-r2" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=25-import40-2-initial-readonly-r2"></script>
+<script defer="" src="./js/sync.js?v=25-import40-2-initial-readonly-r2"></script>
+<script defer="" src="./js/app.js?v=25-import40-2-initial-readonly-r2"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog">
@@ -85,7 +85,7 @@
 <div class="app-header-main-title">线上商店管理系统</div>
 <div class="app-header-subtitle">Online Store Management Admin</div>
 <div class="app-header-brand">Lover Legend Gardening</div>
-<div class="app-header-version">Online Store V2.5 · Import Base 37.2 Stable</div>
+<div class="app-header-version">Online Store V2.5 · Import Base 40.2 Stable</div>
 </div>
 <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red" src="./assets/images/logo-red.jpg"/>
 </div>
@@ -226,11 +226,11 @@
 <div><span>未分配库存</span><strong id="onlineStoreUnallocatedV10">0</strong></div>
 </div>
 <div class="online-store-form-grid-v10 online-store-price-foundation-v11">
-<label><span id="onlineStoreAverageCostLabelV19">平均成本（Import）</span><input id="onlineStoreAverageCostV11" placeholder="由 Import / Inventory System 自动读取" readonly="" type="text"/><small class="field-hint-v12" id="onlineStoreAverageCostHintV19">只读：来自 Import V37.2 的真实平均成本。</small></label>
-<label>Import 最低售价 (RM)<input id="onlineStoreMinimumPriceV11" placeholder="由 Import / Inventory System 自动读取" readonly="" type="text"/><small class="field-hint-v12">只读：Import 是最低售价唯一主控；Import 促销或最低售价更新会单向同步到这里。</small></label>
-<label>Online 销售保护底线 (RM)<input id="onlineStorePriceFloorV21" placeholder="自动计算" readonly="" type="text"/><small class="field-hint-v12">自动：以 Import 最低售价为基准，再加入 Affiliate、Payment Fee、包装与配送等 Online 专属费用。</small></label>
+<label><span id="onlineStoreAverageCostLabelV19">平均成本（Import）</span><input id="onlineStoreAverageCostV11" placeholder="由 Import / Inventory System 自动读取" readonly="" type="text"/><small class="field-hint-v12" id="onlineStoreAverageCostHintV19">只读：来自 Import V40.2 的真实平均成本。</small></label>
+<label>Import 初始最低售价 (RM)<input id="onlineStoreMinimumPriceV11" placeholder="由 Import / Inventory System 自动读取" readonly="" type="text"/><small class="field-hint-v12">只读：直接读取 Import V40.2 的 initialMinimumPrice；只有 Import 初始最低售价变动时才同步，Online Store 不可修改。</small></label>
+<label>Online 销售保护底线 (RM)<input id="onlineStorePriceFloorV21" placeholder="自动计算" readonly="" type="text"/><small class="field-hint-v12">自动：以 Import 初始最低售价为基准，再加入 Affiliate、Payment Fee、包装与配送等 Online 专属费用。</small></label>
 <label>运费 / 配送成本 (RM)<input id="onlineStoreShippingCostV14" inputmode="decimal" placeholder="由销售规则带入" readonly="" type="text"/><small class="field-hint-v12">只读：用于销售利润参考，不回写 Import。</small></label>
-<label>花盆成本 (RM)<input id="onlineStorePotCostV14" inputmode="decimal" placeholder="由 Import / 销售规则带入" readonly="" type="text"/><small class="field-hint-v12">只读：VND 产品按 Import V37.2 花盆规则自动带入；Online Store 不修改成本。</small></label>
+<label>花盆成本 (RM)<input id="onlineStorePotCostV14" inputmode="decimal" placeholder="由 Import / 销售规则带入" readonly="" type="text"/><small class="field-hint-v12">只读：VND 产品按 Import V40.2 花盆规则自动带入；Online Store 不修改成本。</small></label>
 </div>
 <div class="muted online-store-price-note-v11">Import 最低售价与平均成本在 Online Store 全部只读；Online 只用来做售价、促销保护、利润与利润率计算，绝不回写 Import。</div>
 <div class="online-store-warning-v10 online-price-floor-warning-v21" hidden id="onlineStorePriceFloorWarningV21"></div>
