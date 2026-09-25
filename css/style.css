@@ -6683,15 +6683,15 @@ body.system-media-preview-open-v305{overflow:hidden}
 #onlineStoreMinimumPriceV11,#onlineStorePriceFloorV21{color:#0b68c9!important;font-weight:900!important;background:#f4f8ff!important;}
 .online-price-floor-warning-v21{margin-top:10px;color:#b42318!important;border-color:#f3a6a0!important;background:#fff4f3!important;font-weight:800;}
 
-/* Online Store V2.4 — Import minimum price is always a blue read-only reference. */
-html.online-store-app-v24 [data-minimum-price-state-v324],
-html.online-store-app-v24 [data-minimum-price-state-v324] *,
-html.online-store-app-v24 .minimum-price-gain-v302,
-html.online-store-app-v24 .minimum-price-gain-v302 *,
-html.online-store-app-v24 .minimum-price-loss-v302,
-html.online-store-app-v24 .minimum-price-loss-v302 *,
-html.online-store-app-v24 .minimum-price-manual-v315,
-html.online-store-app-v24 .minimum-price-manual-v315 *,
-html.online-store-app-v24 .product-stock-minimum-price-gain-v268 strong,
-html.online-store-app-v24 .product-stock-minimum-price-loss-v268 strong,
-html.online-store-app-v24 .online-min-price-v13 { color:#0b68c9!important; }
+/* Online Store V2.5 — Import Initial Minimum Price is always a blue read-only reference. */
+html.online-store-app-v25 [data-minimum-price-state-v324],
+html.online-store-app-v25 [data-minimum-price-state-v324] *,
+html.online-store-app-v25 .minimum-price-gain-v302,
+html.online-store-app-v25 .minimum-price-gain-v302 *,
+html.online-store-app-v25 .minimum-price-loss-v302,
+html.online-store-app-v25 .minimum-price-loss-v302 *,
+html.online-store-app-v25 .minimum-price-manual-v315,
+html.online-store-app-v25 .minimum-price-manual-v315 *,
+html.online-store-app-v25 .product-stock-minimum-price-gain-v268 strong,
+html.online-store-app-v25 .product-stock-minimum-price-loss-v268 strong,
+html.online-store-app-v25 .online-min-price-v13 { color:#0b68c9!important; }
