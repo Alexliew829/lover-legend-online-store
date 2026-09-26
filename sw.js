@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-V2.8-import40-2-professional-readonly";
+const CACHE = "lover-legend-online-store-V2.9-import41-8-professional-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=28-professional-clean-readonly",
-  "./css/style.css?v=28-professional-clean-readonly",
-  "./js/common.js?v=28-professional-clean-readonly",
-  "./js/sync.js?v=28-professional-clean-readonly",
-  "./js/app.js?v=28-professional-clean-readonly",
-  "./manifest.json?v=28-professional-clean-readonly",
+  "./index.html?v=29-polished-ui",
+  "./css/style.css?v=29-polished-ui",
+  "./js/common.js?v=29-polished-ui",
+  "./js/sync.js?v=29-polished-ui",
+  "./js/app.js?v=29-polished-ui",
+  "./manifest.json?v=29-polished-ui",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -42,11 +42,11 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=28-professional-clean-readonly", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=29-polished-ui", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=28-professional-clean-readonly")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=29-polished-ui")) || (await caches.match("./index.html")))
     );
     return;
   }
