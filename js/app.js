@@ -2730,6 +2730,12 @@ function repairLegacyImportDates() {
   }
 }
 
+function updateAdminTopbarTitleV28(target){
+  const map={dashboardPage:"首页",onlineStorePage:"商品管理",ordersPageV27:"订单管理",shippingPageV27:"物流管理",marketingPageV27:"营销管理",financePageV27:"财务管理",affiliatePageV27:"联盟管理",storePreviewPage:"前台预览",onlineStoreHistoryPageV14:"历史查询",settingsPage:"设置"};
+  const el=document.getElementById("adminCurrentPageTitleV28");
+  if(el)el.textContent=map[target]||"线上商店管理";
+}
+
 function setupNavigation() {
   const buttons = document.querySelectorAll(".nav-btn");
   const pages = document.querySelectorAll(".page");
@@ -2784,6 +2790,7 @@ function setupNavigation() {
 
       button.classList.add("active");
       document.getElementById(target)?.classList.add("active");
+      updateAdminTopbarTitleV28(target);
 
       if (target === "importPage") {
         const batchSearch = document.getElementById("batchSearch");
@@ -3672,7 +3679,7 @@ function renderSystemInformationV203() {
   const stock = active.reduce((sum, item) => sum + (Number(item?.stock) || 0), 0);
   const config = typeof getCloudConfig === "function" ? getCloudConfig() : {};
   const set = (id, text) => { const el=document.getElementById(id); if(el) el.textContent=text; };
-  set("systemInfoVersionV203", "V2.7");
+  set("systemInfoVersionV203", "V2.8");
   set("systemInfoApiVersionV203", systemHealthV203.apiOk === true ? `V${systemHealthV203.apiVersion || APP_VERSION}` : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoGoogleSheetV203", systemHealthV203.apiOk === true ? "已连接 Google Web App" : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoLastSyncV203", formatSystemDateTimeV203(config.lastSyncAt) || "尚未同步");
@@ -18971,7 +18978,7 @@ function showDataToolsStatus(message, isError = false) {
 
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js?v=27-professional-admin-room-first").then(reg=>reg.update()).catch(error => {
+    navigator.serviceWorker.register("./sw.js?v=28-professional-clean-readonly").then(reg=>reg.update()).catch(error => {
       console.error("Service Worker registration failed:", error);
     });
   }
@@ -19173,7 +19180,7 @@ function setupInventoryMasterV299(){
 }
 
 
-// ================= Lover Legend Online Store V2.7 =================
+// ================= Lover Legend Online Store V2.8 =================
 const ONLINE_STORE_SETTINGS_KEY_V10 = "onlineStoreV10"; // legacy key inside Import settings; read only for one-time migration
 const ONLINE_STORE_VERSION_V12 = "2.5";
 const ONLINE_STORE_UI_SETTINGS_KEY_V12 = "onlineStoreUiSettingsV12"; // legacy key inside Import settings; read only for one-time migration
@@ -19313,17 +19320,27 @@ function renderOnlineStoreProductListV10(){
     if(filter==="configured"&&!configured)return false;
     if(filter==="published"&&!roomPublished)return false;
     if(filter==="unpublished"&&roomPublished)return false;
-    if(q&&!normalizeSearchTextV262(productSearchTextV262(p)).includes(q))return false;
+    const searchHaystack=normalizeSearchTextV262([id,String(p?.name||""),productEnglishNameV262(p),String(p?.category||"")].join(" "));
+    if(q&&!searchHaystack.includes(q))return false;
     return counts.unallocated>0||roomAllocated>0;
   }).sort((a,b)=>String(a.id||"").localeCompare(String(b.id||""),undefined,{numeric:true}));
   host.innerHTML=rows.map(p=>{
     const id=String(p.id||"").trim().toUpperCase();
     const config=getOnlineStoreConfigV10(id),counts=getOnlineStoreCountsV10(p,config),allocated=onlineStoreRoomAllocatedV27(config,room),englishName=productEnglishNameV262(p);
+    const avgCost=Math.max(0,Number(p?.averageCost)||0);
+    const baseMinimum=getImportBaseMinimumPriceV21(p);
+    const vndProduct=typeof isVndProductV205==="function"&&isVndProductV205(p,getMinimumPriceOriginIndexV160());
     return `<article class="online-store-product-card-v10 room-product-card-v27" data-online-product-v10="${escapeHTML(id)}">
       <div class="online-store-product-main-v10">
         <div class="online-store-product-title-v12"><button type="button" class="copy-text-btn-v12 online-store-product-id-v10" data-online-copy-v12="${escapeHTML(id)}">${escapeHTML(id)}</button><button type="button" class="copy-text-btn-v12 online-store-product-name-v10" data-online-copy-v12="${escapeHTML(p.name||"")}">${escapeHTML(p.name||"")}</button></div>
         ${englishName?`<button type="button" class="copy-text-btn-v12 online-store-product-english-v12" data-online-copy-v12="${escapeHTML(englishName)}">${escapeHTML(englishName)}</button>`:""}
-        <div class="room-product-meta-v27"><span><i>真实库存</i><strong>${formatNumber(counts.stock)}</strong></span><span><i>本房已分配</i><strong>${formatNumber(allocated)}</strong></span><span><i>可分配</i><strong>${formatNumber(Math.max(0,counts.unallocated))}</strong></span></div>
+        <div class="room-product-meta-v27 room-product-meta-v28">
+          <span><i>真实库存</i><strong>${formatNumber(counts.stock)}</strong></span>
+          <span><i>可分配</i><strong>${formatNumber(Math.max(0,counts.unallocated))}</strong></span>
+          <span><i>${vndProduct?"平均成本（VND不含盆）":"平均成本"}</i><strong>${formatMoney(avgCost,"RM ")}</strong></span>
+          <span class="minimum-readonly-v28"><i>最低售价基准</i><strong>${formatMoney(baseMinimum,"RM ")}</strong></span>
+          <span><i>本房已分配</i><strong>${formatNumber(allocated)}</strong></span>
+        </div>
       </div>
       <button type="button" class="primary-btn online-store-manage-btn-v12" data-online-manage-v10="${escapeHTML(id)}">选择产品</button>
     </article>`;
@@ -19688,7 +19705,7 @@ function setupOnlineStoreV10(){
   document.getElementById("onlineStoreRandomPhotoListV14")?.addEventListener("click",e=>{const idx=Number(e.target.closest("[data-photo-index-v14]")?.dataset.photoIndexV14);if(!Number.isInteger(idx))return;const ta=document.getElementById("onlineStoreRandomPhotosV10");const arr=String(ta?.value||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(e.target.closest("[data-photo-copy-v14]")){copyOnlineTextV12(arr[idx]||"",e.target.closest("[data-photo-copy-v14]"));return;}if(e.target.closest("[data-photo-delete-v14]")&&confirm("确认删除这张代表照片链接？")){arr.splice(idx,1);ta.value=arr.join("\n");renderOnlineStorePhotoListV14();}});
   document.querySelectorAll("[data-media-copy-target-v14]").forEach(btn=>btn.addEventListener("click",()=>copyOnlineTextV12(document.getElementById(btn.dataset.mediaCopyTargetV14)?.value||"",btn)));
   document.querySelectorAll("[data-media-clear-target-v14]").forEach(btn=>btn.addEventListener("click",()=>{const el=document.getElementById(btn.dataset.mediaClearTargetV14);if(el?.value&&confirm("确认删除这个媒体链接？")){el.value="";btn.textContent="已删除";setTimeout(()=>{if(btn.isConnected)btn.textContent="删除";},1000);}}));
-  const mediaNotReadyV14=()=>alert("相册 / 拍照入口已加入。V2.7 尚未连接 Cloudinary 等图片储存服务，为避免图片写入 Google Sheet 超过 50,000 字限制，目前不会把本机照片直接存进库存同步资料。请暂时使用 Photo URL；连接媒体储存后即可永久上传。");
+  const mediaNotReadyV14=()=>alert("相册 / 拍照入口已加入。V2.8 尚未连接 Cloudinary 等图片储存服务，为避免图片写入 Google Sheet 超过 50,000 字限制，目前不会把本机照片直接存进库存同步资料。请暂时使用 Photo URL；连接媒体储存后即可永久上传。");
   document.getElementById("onlineStoreChoosePhotosV14")?.addEventListener("click",()=>document.getElementById("onlineStorePhotoPickerV14")?.click());
   document.getElementById("onlineStoreTakePhotoV14")?.addEventListener("click",()=>document.getElementById("onlineStoreCameraV14")?.click());
   document.getElementById("onlineStorePhotoPickerV14")?.addEventListener("change",mediaNotReadyV14);document.getElementById("onlineStoreCameraV14")?.addEventListener("change",mediaNotReadyV14);
@@ -19734,7 +19751,7 @@ function setupOnlineStoreHistoryV14(){document.getElementById("onlineStoreHistor
 function setupPageJumpControlsV14(){const top=document.getElementById("jumpTopV14"),bottom=document.getElementById("jumpBottomV14");top?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));bottom?.addEventListener("click",()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:"smooth"}));const refresh=()=>{const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);const ratio=window.scrollY/max;if(top)top.hidden=ratio<.12;if(bottom)bottom.hidden=ratio>.88;};window.addEventListener("scroll",refresh,{passive:true});setTimeout(refresh,0);}
 
 
-// ================= Online Store V2.7 Professional Admin =================
+// ================= Online Store V2.8 Professional Admin =================
 function updateShopPerformanceV27(){
   const state=getOnlineStoreStateV10();
   const configured=Object.values(state?.products||{}).filter(onlineStoreIsConfiguredV10).length;
@@ -19764,7 +19781,7 @@ function setupOnlineStoreAdminV27(){
   document.querySelectorAll('.nav-btn[data-page="onlineStorePage"]').forEach(btn=>btn.addEventListener("click",()=>setTimeout(()=>{renderOnlineStoreProductListV10();},0)));
   updateShopPerformanceV27();
 }
-// ================= Online Store V2.7 Settings =================
+// ================= Online Store V2.8 Settings =================
 function setupOnlineStoreSettingsV12(){
   const current=getOnlineStoreUiSettingsV12();
   window.__onlineStoreSettingsDirtyV21=false;
@@ -19811,3 +19828,18 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("settingsPage")?.addEventListener("change",e=>{if(e.isTrusted&&e.target?.matches("input:not([type=\"file\"]),select,textarea"))window.__onlineStoreSettingsDirtyV21=true;});
   ["onlineStoreTargetMarginV12","onlineStoreDiscountRateV12","onlineStoreAffiliateRateV12","onlineStoreGatewayFeeV12","onlineStorePackagingCostV12"].forEach(id=>document.getElementById(id)?.addEventListener("blur",e=>{if(String(e.target.value||"").trim())e.target.value=formatOnlineMoneyInputV12(parseOnlineNumberV12(e.target.value));}));
 }
+
+
+// V2.8: Import-sourced product numbers are display-only in Online Store.
+// Stock, average cost, initial/current minimum price and other Import master numbers
+// must never be edited or written back from this application.
+function enforceOnlineImportNumericReadOnlyV28(){
+  ["onlineStoreAverageCostV11","onlineStoreMinimumPriceV11","onlineStorePriceFloorV21","onlineStorePotCostV14"].forEach(id=>{
+    const el=document.getElementById(id); if(!el)return;
+    el.readOnly=true; el.setAttribute("aria-readonly","true"); el.classList.add("import-number-readonly-v28");
+  });
+  document.querySelectorAll('[data-master-edit-v356="minimumPrice"],[data-master-edit-v356="averageCost"],[data-master-edit-v356="stock"]').forEach(el=>{
+    el.removeAttribute("data-master-edit-v356"); el.removeAttribute("title"); el.classList.add("import-number-readonly-v28");
+  });
+}
+window.addEventListener("DOMContentLoaded",()=>{enforceOnlineImportNumericReadOnlyV28();updateAdminTopbarTitleV28(document.querySelector('.nav-btn.active')?.dataset?.page||"dashboardPage");});
