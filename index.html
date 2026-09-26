@@ -14,7 +14,7 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=30-seller-center-ui" rel="manifest"/>
+<link href="./manifest.json?v=31-interaction-fix" rel="manifest"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
 <link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
@@ -46,12 +46,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=30-seller-center-ui" rel="preload"/>
-<link href="./css/style.css?v=30-seller-center-ui" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=30-seller-center-ui" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=30-seller-center-ui"></script>
-<script defer="" src="./js/sync.js?v=30-seller-center-ui"></script>
-<script defer="" src="./js/app.js?v=30-seller-center-ui"></script>
+<link as="style" href="./css/style.css?v=31-interaction-fix" rel="preload"/>
+<link href="./css/style.css?v=31-interaction-fix" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=31-interaction-fix" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=31-interaction-fix"></script>
+<script defer="" src="./js/sync.js?v=31-interaction-fix"></script>
+<script defer="" src="./js/app.js?v=31-interaction-fix"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog">
@@ -97,7 +97,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V3.0</div>
+  <div class="sidebar-version-v27">Online Store V3.1</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -107,7 +107,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V3.0 · Import Base V41.8 · Import Data Read-Only</small>
+      <small>Online Store V3.1 · Import Base V41.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -245,13 +245,13 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V3.0 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
+<div class="muted">Online Store V3.1 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V3.0</span>
+<span class="online-store-version-v10">V3.1</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
-  <button type="button" class="active">商品总览</button>
+  <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
   <button type="button" data-product-room-tab-v30="vip">VIP Room</button>
   <button type="button" data-product-room-tab-v30="premium">Premium</button>
   <button type="button" data-product-room-tab-v30="entry">Starter</button>
@@ -651,27 +651,29 @@
 
 <section class="page" id="ordersPageV27">
   <div class="module-page-head-v27"><div><h2>订单管理</h2><p>Orders · 订单状态、履约与售后集中处理。</p></div><button type="button" class="secondary-btn">导出订单</button></div>
-  <nav class="module-tabs-v30 order-tabs-v30"><button class="active" type="button">全部</button><button type="button">待付款</button><button type="button">待发货</button><button type="button">已发货</button><button type="button">已完成</button><button type="button">已取消</button><button type="button">售后</button></nav>
-  <div class="order-status-strip-v29"><button type="button"><span>待付款</span><strong>0</strong></button><button type="button" class="attention"><span>待发货</span><strong>0</strong></button><button type="button"><span>已发货</span><strong>0</strong></button><button type="button" class="success"><span>已完成</span><strong>0</strong></button><button type="button"><span>已取消</span><strong>0</strong></button><button type="button" class="danger"><span>配送失败</span><strong>0</strong></button></div>
-  <section class="panel seller-list-panel-v30"><div class="seller-filter-row-v30"><input type="search" placeholder="搜索订单号、顾客、产品编号或产品名"><select><option>全部状态</option><option>待付款</option><option>待发货</option><option>已发货</option><option>已完成</option></select><button type="button" class="secondary-btn">筛选</button></div><div class="empty-state">目前暂无 Online Store 订单</div></section>
+  <nav class="module-tabs-v30 order-tabs-v30" id="orderTabsV31"><button class="active" type="button" data-order-status-v31="all">全部</button><button type="button" data-order-status-v31="pending-payment">待付款</button><button type="button" data-order-status-v31="to-ship">待发货</button><button type="button" data-order-status-v31="shipped">已发货</button><button type="button" data-order-status-v31="completed">已完成</button><button type="button" data-order-status-v31="canceled">已取消</button><button type="button" data-order-status-v31="aftersales">售后</button></nav>
+  <div class="order-status-strip-v29"><button type="button" data-order-status-v31="pending-payment"><span>待付款</span><strong>0</strong></button><button type="button" class="attention" data-order-status-v31="to-ship"><span>待发货</span><strong>0</strong></button><button type="button" data-order-status-v31="shipped"><span>已发货</span><strong>0</strong></button><button type="button" class="success" data-order-status-v31="completed"><span>已完成</span><strong>0</strong></button><button type="button" data-order-status-v31="canceled"><span>已取消</span><strong>0</strong></button><button type="button" class="danger" data-order-status-v31="failed-delivery"><span>配送失败</span><strong>0</strong></button></div>
+  <section class="panel seller-list-panel-v30" id="ordersListPanelV31"><div class="seller-filter-row-v30"><input id="ordersSearchV31" type="search" placeholder="搜索订单号、顾客、产品编号或产品名"><select id="ordersStatusFilterV31"><option value="all">全部状态</option><option value="pending-payment">待付款</option><option value="to-ship">待发货</option><option value="shipped">已发货</option><option value="completed">已完成</option><option value="canceled">已取消</option><option value="aftersales">售后</option><option value="failed-delivery">配送失败</option></select><button type="button" class="secondary-btn" id="ordersFilterButtonV31">筛选</button></div><div class="empty-state" id="ordersEmptyStateV31">目前暂无 Online Store 订单</div></section>
   <section class="panel aftersales-placeholder-v29"><div><strong>退款 / 售后</strong><p>售后记录绑定原订单；沟通优先通过 WhatsApp，系统保存正式状态、原因、金额与备注。</p></div><button type="button" class="secondary-btn">WhatsApp 顾客</button></section>
 </section>
 <section class="page" id="shippingPageV27">
-  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V3.0 UI</span></div>
-  <nav class="module-tabs-v30"><button class="active" type="button">配送方式</button><button type="button">运费估算</button><button type="button">发货记录</button><button type="button">配送异常</button></nav>
-  <div class="module-card-grid-v27 seller-module-grid-v30"><article><strong>West Malaysia Courier</strong><p>Line Clear / City-Link 等本地配送。</p><span class="status-success-v29">可设置</span></article><article><strong>Klang Valley</strong><p>Lalamove · 顾客承担实际配送费。</p><span class="status-info-v29">可设置</span></article><article><strong>Pickup / Meetup</strong><p>门店自取或约定地点交收。</p><span>RM 0.00</span></article><article><strong>Singapore</strong><p>Private Driver · 商品付款与实际运费分开。</p><span class="status-info-v29">预留</span></article></div>
-  <section class="panel freight-estimator-shell-v30"><div class="dashboard-block-head-v30"><div><strong>Freight Estimate</strong><small>后续接入尺寸、重量与目的地区域计算；当前仅建立操作位置。</small></div><span class="module-status-v27">下一阶段接公式</span></div><div class="freight-input-grid-v30"><input placeholder="Length (cm)" disabled><input placeholder="Width (cm)" disabled><input placeholder="Height (cm)" disabled><input placeholder="Weight (kg)" disabled><select disabled><option>Destination Zone</option></select><button type="button" class="secondary-btn" disabled>计算运费</button></div></section>
+  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V3.1 UI</span></div>
+  <nav class="module-tabs-v30" id="shippingTabsV31"><button class="active" type="button" data-module-tab-v31="shipping-methods">配送方式</button><button type="button" data-module-tab-v31="freight-estimate">运费估算</button><button type="button" data-module-tab-v31="shipping-records">发货记录</button><button type="button" data-module-tab-v31="shipping-issues">配送异常</button></nav>
+  <div class="module-card-grid-v27 seller-module-grid-v30" id="shippingMethodsPanelV31"><article><strong>West Malaysia Courier</strong><p>Line Clear / City-Link 等本地配送。</p><span class="status-success-v29">可设置</span></article><article><strong>Klang Valley</strong><p>Lalamove · 顾客承担实际配送费。</p><span class="status-info-v29">可设置</span></article><article><strong>Pickup / Meetup</strong><p>门店自取或约定地点交收。</p><span>RM 0.00</span></article><article><strong>Singapore</strong><p>Private Driver · 商品付款与实际运费分开。</p><span class="status-info-v29">预留</span></article></div>
+  <section class="panel freight-estimator-shell-v30" id="freightEstimatePanelV31" hidden><div class="dashboard-block-head-v30"><div><strong>Freight Estimate</strong><small>后续接入尺寸、重量与目的地区域计算；当前仅建立操作位置。</small></div><span class="module-status-v27">下一阶段接公式</span></div><div class="freight-input-grid-v30"><input placeholder="Length (cm)" disabled><input placeholder="Width (cm)" disabled><input placeholder="Height (cm)" disabled><input placeholder="Weight (kg)" disabled><select disabled><option>Destination Zone</option></select><button type="button" class="secondary-btn" disabled>计算运费</button></div></section>
+  <section class="panel module-tab-placeholder-v31" id="shippingPlaceholderV31" hidden><div class="empty-state">暂无资料</div></section>
 </section>
 <section class="page" id="marketingPageV27">
   <div class="module-page-head-v27"><div><h2>营销管理</h2><p>Marketing · Promotion、Campaign 与顾客增长工具。</p></div><span class="module-status-v27">功能逐步开放</span></div>
-  <nav class="module-tabs-v30"><button class="active" type="button">营销工具</button><button type="button">活动管理</button><button type="button">Coupon</button><button type="button">Affiliate</button></nav>
-  <div class="module-card-grid-v27 seller-module-grid-v30"><article><strong>Promotion</strong><p>线上促销与 Promotion Price。</p><span class="status-info-v29">规划中</span></article><article><strong>Campaign</strong><p>主题活动与商品曝光。</p><span>Coming Soon</span></article><article><strong>Coupon</strong><p>优惠券、新客优惠与特定商品优惠。</p><span>Coming Soon</span></article><article><strong>Holiday Promotion</strong><p>Holiday Mode 期间的营业提示与活动。</p><span>Coming Soon</span></article></div>
+  <nav class="module-tabs-v30" id="marketingTabsV31"><button class="active" type="button" data-module-tab-v31="marketing-tools">营销工具</button><button type="button" data-module-tab-v31="campaigns">活动管理</button><button type="button" data-module-tab-v31="coupon">Coupon</button><button type="button" data-module-tab-v31="affiliate">Affiliate</button></nav>
+  <div class="module-card-grid-v27 seller-module-grid-v30" id="marketingToolsPanelV31"><article><strong>Promotion</strong><p>线上促销与 Promotion Price。</p><span class="status-info-v29">规划中</span></article><article><strong>Campaign</strong><p>主题活动与商品曝光。</p><span>Coming Soon</span></article><article><strong>Coupon</strong><p>优惠券、新客优惠与特定商品优惠。</p><span>Coming Soon</span></article><article><strong>Holiday Promotion</strong><p>Holiday Mode 期间的营业提示与活动。</p><span>Coming Soon</span></article></div>
+  <section class="panel module-tab-placeholder-v31" id="marketingPlaceholderV31" hidden><div class="empty-state">Coming Soon</div></section>
 </section>
 <section class="page" id="financePageV27">
   <div class="module-page-head-v27"><div><h2>财务管理</h2><p>Finance · 收入、费用、退款、佣金与净收入。</p></div><button type="button" class="secondary-btn">导出</button></div>
-  <nav class="module-tabs-v30"><button class="active" type="button">财务概览</button><button type="button">交易</button><button type="button">退款</button><button type="button">费用</button><button type="button">结算</button></nav>
-  <div class="module-summary-grid-v27 finance-equation-v30"><article><span>商品收入</span><strong>RM 0.00</strong></article><i>−</i><article><span>平台 / Payment Fee</span><strong>RM 0.00</strong></article><i>−</i><article><span>Affiliate / Refund</span><strong>RM 0.00</strong></article><i>=</i><article class="net"><span>净收入</span><strong>RM 0.00</strong></article></div>
-  <section class="panel seller-list-panel-v30"><div class="seller-filter-row-v30"><input type="date"><input type="date"><select><option>全部交易类型</option><option>收入</option><option>退款</option><option>费用</option></select><button type="button" class="secondary-btn">筛选</button></div><div class="empty-state">订单与支付模块启用后自动汇总交易记录</div></section>
+  <nav class="module-tabs-v30" id="financeTabsV31"><button class="active" type="button" data-module-tab-v31="finance-overview">财务概览</button><button type="button" data-module-tab-v31="transactions">交易</button><button type="button" data-module-tab-v31="refunds">退款</button><button type="button" data-module-tab-v31="fees">费用</button><button type="button" data-module-tab-v31="settlements">结算</button></nav>
+  <div class="module-summary-grid-v27 finance-equation-v30" id="financeSummaryV31"><article><span>商品收入</span><strong>RM 0.00</strong></article><i>−</i><article><span>平台 / Payment Fee</span><strong>RM 0.00</strong></article><i>−</i><article><span>Affiliate / Refund</span><strong>RM 0.00</strong></article><i>=</i><article class="net"><span>净收入</span><strong>RM 0.00</strong></article></div>
+  <section class="panel seller-list-panel-v30" id="financeListPanelV31"><div class="seller-filter-row-v30"><input type="date"><input type="date"><select><option>全部交易类型</option><option>收入</option><option>退款</option><option>费用</option></select><button type="button" class="secondary-btn">筛选</button></div><div class="empty-state" id="financeEmptyStateV31">订单与支付模块启用后自动汇总交易记录</div></section>
 </section>
 <section class="page" id="affiliatePageV27">
   <div class="module-page-head-v27"><div><h2>联盟管理</h2><p>Affiliate Management</p></div><span class="module-status-v27 coming-soon">Coming Soon</span></div>
@@ -763,7 +765,7 @@
 <button class="primary-btn" id="saveHolidayModeV29" type="button">保存 Holiday Mode</button>
 </section>
 <section class="panel settings-section-v12 password-security-v16">
-<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V3.0 界面开发阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
+<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V3.1 界面开发阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
 <div class="password-protection-row-v16">
   <div><strong>后台密码保护</strong><small id="onlineStorePasswordStateV16">检查中...</small></div>
   <button class="primary-btn" id="onlineStorePasswordToggleV16" type="button">检查中...</button>
@@ -1057,7 +1059,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V3.0</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V3.1</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1078,7 +1080,7 @@
 <aside class="admin-assist-v27" aria-label="辅助信息">
   <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V3.0</p><small>Import Base 41.8 Stable</small></section>
+  <section><strong>当前版本</strong><p>Online Store V3.1</p><small>Import Base 41.8 Stable</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>

@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-V3.0-import41-8-professional-readonly";
+const CACHE = "lover-legend-online-store-V3.1-import41-8-professional-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=30-seller-center-ui",
-  "./css/style.css?v=30-seller-center-ui",
-  "./js/common.js?v=30-seller-center-ui",
-  "./js/sync.js?v=30-seller-center-ui",
-  "./js/app.js?v=30-seller-center-ui",
-  "./manifest.json?v=30-seller-center-ui",
+  "./index.html?v=31-interaction-fix",
+  "./css/style.css?v=31-interaction-fix",
+  "./js/common.js?v=31-interaction-fix",
+  "./js/sync.js?v=31-interaction-fix",
+  "./js/app.js?v=31-interaction-fix",
+  "./manifest.json?v=31-interaction-fix",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -42,11 +42,11 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=30-seller-center-ui", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=31-interaction-fix", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=30-seller-center-ui")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=31-interaction-fix")) || (await caches.match("./index.html")))
     );
     return;
   }

@@ -6853,3 +6853,24 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 .room-product-load-state-v30{display:flex;align-items:center;justify-content:center;gap:8px;min-height:110px;color:#6f7d74}.room-product-load-state-v30.error{color:#a82c25}
 @media(max-width:1180px){.dashboard-command-center-v30{grid-template-columns:1fr}.seller-module-grid-v30{grid-template-columns:repeat(2,minmax(0,1fr))}.freight-input-grid-v30{grid-template-columns:repeat(3,minmax(0,1fr))}.finance-equation-v30{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-equation-v30>i{display:none}}
 @media(max-width:760px){.admin-system-row-v29{flex-wrap:wrap}.dashboard-task-grid-v30{grid-template-columns:repeat(2,minmax(0,1fr))}.dashboard-quick-grid-v30{grid-template-columns:1fr 1fr}.seller-filter-row-v30{grid-template-columns:1fr}.seller-module-grid-v30{grid-template-columns:1fr}.freight-input-grid-v30{grid-template-columns:repeat(2,minmax(0,1fr))}.module-tabs-v30{margin-left:-4px;margin-right:-4px}}
+
+/* ================= Online Store V3.1 interaction + polish ================= */
+@media (min-width: 981px){
+  .admin-brand-v29 .admin-brand-logo-v29:first-child{transform:translateX(10px)}
+  .admin-brand-v29 .admin-brand-logo-v29:last-child{transform:translateX(-10px)}
+}
+.module-tabs-v30 button:not(:disabled){cursor:pointer}
+.module-tabs-v30 button:not(:disabled):hover{background:#eef8f1;color:#12643d}
+.room-first-card-v27{cursor:pointer}
+.room-first-card-v27:hover{border-color:#70b990;box-shadow:0 6px 18px rgba(31,93,58,.08)}
+.order-status-strip-v29 button{cursor:pointer}
+.order-status-strip-v29 button.selected-v31{outline:2px solid #2f8a5b;outline-offset:1px}
+.search-start-hint-v31{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:120px;padding:28px 18px;text-align:center}
+.search-start-hint-v31 small{font-size:12px;color:#77857d;font-weight:600}
+.module-tab-placeholder-v31{min-height:160px;display:flex;align-items:center;justify-content:center}
+.module-tab-placeholder-v31[hidden]{display:none!important}
+@media(max-width:620px){
+  .module-tabs-v30{overflow-x:auto;white-space:nowrap;scrollbar-width:thin}
+  .module-tabs-v30 button{flex:0 0 auto}
+  .admin-brand-v29 .admin-brand-logo-v29:first-child,.admin-brand-v29 .admin-brand-logo-v29:last-child{transform:none}
+}
