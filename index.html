@@ -14,7 +14,7 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=26-import40-2-initial-fallback-current" rel="manifest"/>
+<link href="./manifest.json?v=27-professional-admin-room-first" rel="manifest"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
 <link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
@@ -46,12 +46,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=26-import40-2-initial-fallback-current" rel="preload"/>
-<link href="./css/style.css?v=26-import40-2-initial-fallback-current" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=26-import40-2-initial-fallback-current" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=26-import40-2-initial-fallback-current"></script>
-<script defer="" src="./js/sync.js?v=26-import40-2-initial-fallback-current"></script>
-<script defer="" src="./js/app.js?v=26-import40-2-initial-fallback-current"></script>
+<link as="style" href="./css/style.css?v=27-professional-admin-room-first" rel="preload"/>
+<link href="./css/style.css?v=27-professional-admin-room-first" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=27-professional-admin-room-first" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=27-professional-admin-room-first"></script>
+<script defer="" src="./js/sync.js?v=27-professional-admin-room-first"></script>
+<script defer="" src="./js/app.js?v=27-professional-admin-room-first"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog">
@@ -77,7 +77,28 @@
       if (saved && input) input.value = saved;
     } catch (_) {}
   </script>
-<div class="app-shell">
+<div class="app-shell admin-layout-v27">
+<aside class="admin-sidebar-v27" aria-label="后台导航">
+  <div class="sidebar-brand-v27">
+    <div class="sidebar-mark-v27">LL</div>
+    <div><strong>Lover Legend</strong><small>Online Store Admin</small></div>
+  </div>
+  <nav class="sidebar-nav-v27">
+    <div class="sidebar-group-label-v27">经营管理</div>
+    <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span class="sidebar-icon-v27">⌂</span><span>首页</span></a>
+    <a class="nav-btn" data-page="onlineStorePage" href="./?page=products"><span class="sidebar-icon-v27">▦</span><span>商品管理</span></a>
+    <a class="nav-btn" data-page="ordersPageV27" href="./?page=orders"><span class="sidebar-icon-v27">▤</span><span>订单管理</span></a>
+    <a class="nav-btn" data-page="shippingPageV27" href="./?page=shipping"><span class="sidebar-icon-v27">🚚</span><span>物流管理</span></a>
+    <a class="nav-btn" data-page="marketingPageV27" href="./?page=marketing"><span class="sidebar-icon-v27">◎</span><span>营销管理</span></a>
+    <a class="nav-btn" data-page="financePageV27" href="./?page=finance"><span class="sidebar-icon-v27">RM</span><span>财务管理</span></a>
+    <a class="nav-btn" data-page="affiliatePageV27" href="./?page=affiliate"><span class="sidebar-icon-v27">↗</span><span>联盟管理</span></a>
+    <div class="sidebar-group-label-v27">系统</div>
+    <a class="nav-btn" data-page="storePreviewPage" href="./?page=preview"><span class="sidebar-icon-v27">◉</span><span>前台预览</span></a>
+    <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
+    <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
+  </nav>
+  <div class="sidebar-version-v27">Online Store V2.7</div>
+</aside>
 <header class="app-header-wrap">
 <div class="app-header-card">
 <img alt="Lover Legend green logo" class="app-header-logo app-header-logo-green" src="./assets/images/logo-green.jpg"/>
@@ -85,15 +106,20 @@
 <div class="app-header-main-title">线上商店管理系统</div>
 <div class="app-header-subtitle">Online Store Management Admin</div>
 <div class="app-header-brand">Lover Legend Gardening</div>
-<div class="app-header-version">Online Store V2.6 · Import Base 40.2 Stable</div>
+<div class="app-header-version">Online Store V2.7 · Import Base 40.2 Stable</div>
 </div>
 <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red" src="./assets/images/logo-red.jpg"/>
+<div class="header-tools-v27">
+  <button class="lang-toggle-v27 active" id="langChineseV27" type="button">中文</button>
+  <button class="lang-toggle-v27" id="langEnglishV27" type="button">English</button>
+  <button class="store-preview-shortcut-v27 nav-btn" data-page="storePreviewPage" type="button">查看商店</button>
+</div>
 </div>
 </header>
 <main class="content">
 <section class="page active" id="dashboardPage">
 <div class="section-title-row dashboard-title-row-v204">
-<h2>Dashboard / 首页</h2>
+<div><h2>首页</h2><div class="dashboard-kicker-v27">Shop Performance · 商店经营动态</div></div>
 <div aria-live="polite" class="system-health-row-v204">
 <button aria-expanded="false" class="import-anomaly-status-button-v202" id="importAnomalyStatusButtonV202" type="button">
 <span aria-hidden="true" class="import-anomaly-status-dot-v202 checking" id="importAnomalyStatusDotV202"></span>
@@ -103,7 +129,13 @@
 <button class="secondary-btn import-anomaly-refresh-v202" id="refreshImportAnomalyV201" type="button">重新检查</button>
 </div>
 </div>
-<section aria-live="polite" class="dashboard-sync-card">
+<section class="shop-performance-v27" aria-label="商店表现">
+  <article><span>今日销售额</span><strong id="shopSalesTodayV27">RM 0.00</strong><small>Orders · Today</small></article>
+  <article><span>今日订单</span><strong id="shopOrdersTodayV27">0</strong><small>Paid / Pending</small></article>
+  <article><span>已设置商品</span><strong id="shopConfiguredProductsV27">0</strong><small>Online Products</small></article>
+  <article><span>待处理事项</span><strong id="shopPendingTasksV27">0</strong><small>Action Required</small></article>
+</section>
+<section aria-live="polite" class="dashboard-sync-card compact-sync-v27">
 <div class="dashboard-sync-status syncing" id="googleSyncStatus">
 <span aria-hidden="true" class="dashboard-sync-icon">↻</span>
 <strong class="dashboard-sync-text">同步中...</strong>
@@ -138,9 +170,9 @@
 </div>
 <div class="import-anomaly-list-v201" id="importAnomalyListV201"></div>
 </section>
-<section class="panel">
+<section class="panel dashboard-import-panel-v27">
 <div class="section-title-row inventory-title-row">
-<h3>库存管理</h3>
+<h3>Import 库存概览</h3>
 <div class="inventory-title-summary">
 <span class="inventory-filter-stock"><i class="desktop-label-v265">当前库存：</i><i class="mobile-label-v265">库存：</i><strong id="inventoryFilteredStock">0</strong></span>
 <span class="inventory-filter-value"><i class="desktop-label-v265">库存成本：</i><i class="mobile-label-v265">成本：</i><strong id="inventoryFilteredValue">RM 0.00</strong></span>
@@ -197,13 +229,22 @@
 <section class="panel online-store-panel-v10">
 <div class="section-title-row online-store-title-row-v10">
 <div>
-<h2>线上商店管理系统</h2>
-<div class="muted">Online Store V2.6 · Import 库存 / 成本 / 初始最低售价只读 · Online 只负责销售</div>
+<h2>商品管理</h2>
+<div class="muted">Online Store V2.7 · Import 库存 / 成本 / 最低售价基准只读 · Online 只负责销售</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V37.2 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V2.6</span>
+<span class="online-store-version-v10">V2.7</span>
 </div>
-<div class="online-store-search-row-v10">
+<section class="room-first-hub-v27" id="roomFirstHubV27">
+  <div class="room-first-head-v27"><div><strong>先当前商品房间</strong><small>选择房间后，再从 Import 可用库存中选择产品。</small></div><button class="ghost-btn" id="roomFirstBackV27" type="button" hidden>重新选择房间</button></div>
+  <div class="room-first-grid-v27">
+    <button class="room-first-card-v27 vip" data-room-first-v27="vip" type="button"><span class="room-first-icon-v27">◆</span><strong>贵宾室</strong><small>VIP Room</small><em>藏家级别 · 专属浏览</em></button>
+    <button class="room-first-card-v27 premium" data-room-first-v27="premium" type="button"><span class="room-first-icon-v27">✦</span><strong>精品馆</strong><small>Premium</small><em>高品质精选商品</em></button>
+    <button class="room-first-card-v27 starter" data-room-first-v27="entry" type="button"><span class="room-first-icon-v27">●</span><strong>入门首选</strong><small>Starter</small><em>一物一拍 / One-of-a-Kind · 随机发货 / Random</em></button>
+  </div>
+  <div class="selected-room-banner-v27" id="selectedRoomBannerV27" hidden></div>
+</section>
+<div class="online-store-search-row-v10 room-product-tools-v27" hidden id="roomProductToolsV27">
 <input aria-label="搜索产品" autocomplete="off" class="search-input text-left-input" id="onlineStoreSearchV10" placeholder="输入产品编号、中文名或英文名"/>
 <select aria-label="筛选 Online Store 商品状态" id="onlineStoreFilterV10">
 <option value="all">全部产品</option>
@@ -212,7 +253,7 @@
 <option value="unpublished">未上架</option>
 </select>
 </div>
-<div class="online-store-product-list-v10" id="onlineStoreProductListV10"></div>
+<div class="online-store-product-list-v10 room-product-list-v27" id="onlineStoreProductListV10" hidden></div>
 </section>
 <section class="panel online-store-editor-v10" hidden="" id="onlineStoreEditorV10">
 <div class="online-store-editor-head-v10">
@@ -222,7 +263,7 @@
 <div class="online-store-allocation-grid-v10">
 <div><span>真实总库存</span><strong id="onlineStoreRealStockV10">0</strong></div>
 <div><span>随机发货分配</span><strong id="onlineStoreRandomAllocatedV10">0</strong></div>
-<div><span>一物一拍 / 单株精选</span><strong id="onlineStoreUniqueAllocatedV10">0</strong></div>
+<div><span>一物一拍 / One-of-a-Kind</span><strong id="onlineStoreUniqueAllocatedV10">0</strong></div>
 <div><span>未分配库存</span><strong id="onlineStoreUnallocatedV10">0</strong></div>
 </div>
 <div class="online-store-form-grid-v10 online-store-price-foundation-v11">
@@ -237,13 +278,13 @@
 <div class="online-store-warning-v10" hidden="" id="onlineStoreAllocationWarningV10"></div>
 <div class="online-room-selector-v16" id="onlineRoomSelectorV16">
   <div class="online-room-selector-head-v16">
-    <div><strong>选择商品房间</strong><small>一次只处理一间房；保存并关闭后再选择下一间。</small></div>
+    <div><strong>当前商品房间</strong><small>一次只处理一间房；保存并关闭后再选择下一间。</small></div>
     <span id="onlineRoomAvailableV16">可分配库存：0</span>
   </div>
   <div class="online-room-choice-grid-v16">
     <button type="button" class="room-choice-v16 room-vip-v16" data-room-open-v16="vip"><strong>贵宾室 / VIP Room</strong><small>藏家级别</small><span data-room-status-v16="vip"></span></button>
-    <button type="button" class="room-choice-v16 room-premium-v16" data-room-open-v16="premium"><strong>高端精品</strong><small>Guest Mode</small><span data-room-status-v16="premium"></span></button>
-    <button type="button" class="room-choice-v16 room-entry-v16" data-room-open-v16="entry"><strong>入门精选</strong><small>一物一拍 / 随机发货</small><span data-room-status-v16="entry"></span></button>
+    <button type="button" class="room-choice-v16 room-premium-v16" data-room-open-v16="premium"><strong>精品馆 / Premium</strong><small>高端精品</small><span data-room-status-v16="premium"></span></button>
+    <button type="button" class="room-choice-v16 room-entry-v16" data-room-open-v16="entry"><strong>入门首选 / Starter</strong><small>One-of-a-Kind / Random</small><span data-room-status-v16="entry"></span></button>
   </div>
 </div>
 <div class="online-room-toolbar-v16" id="onlineRoomToolbarV16" hidden>
@@ -253,8 +294,8 @@
 <div class="online-store-block-v10" id="onlineRoomRandomBlockV16">
 <div class="online-store-block-head-v10">
 <div>
-<strong>入门精选 · 随机发货</strong>
-<small>入门精选的销售方式之一；与“一物一拍 / 单株精选”可同时从真实库存分配。</small>
+<strong>入门首选 / Starter · 随机发货 / Random</strong>
+<small>Starter 的销售方式之一；与 One-of-a-Kind 可同时从真实库存分配。</small>
 </div>
 <label class="online-store-switch-v10"><input id="onlineStoreRandomPublishedV10" type="checkbox"/> 上架</label>
 </div>
@@ -293,19 +334,19 @@
 <div class="online-store-block-v10" id="onlineRoomEntryBlockV16">
 <div class="online-store-block-head-v10">
 <div>
-<strong>入门精选 · 一物一拍 / 单株精选</strong>
-<small>与随机发货同属“入门精选”；子编号只属于 Online Store，不建立新的库存 Product ID。</small>
+<strong>入门首选 / Starter · 一物一拍 / One-of-a-Kind</strong>
+<small>与 Random 同属 Starter；子编号只属于 Online Store，不建立新的库存 Product ID。</small>
 </div>
 <button class="secondary-btn" id="onlineStoreAddUniqueV10" type="button">＋ 新增一棵</button>
 </div>
 <div class="online-store-unique-list-v10" id="onlineStoreUniqueListV10"></div>
 </div>
 <div class="online-store-block-v10" id="onlineRoomPremiumBlockV16">
-<div class="online-store-block-head-v10"><div><strong>高端精品</strong><small>独立等级；最终售价由人工设置，系统只计算成本、利润与利润率。</small></div><button class="secondary-btn" id="onlineStoreAddPremiumV14" type="button">＋ 新增一棵</button></div>
+<div class="online-store-block-head-v10"><div><strong>精品馆 / Premium</strong><small>独立等级；最终售价由人工设置，系统只计算成本、利润与利润率。</small></div><button class="secondary-btn" id="onlineStoreAddPremiumV14" type="button">＋ 新增一棵</button></div>
 <div class="online-store-unique-list-v10" id="onlineStorePremiumListV14"></div>
 </div>
 <div class="online-store-block-v10" id="onlineRoomVipBlockV16">
-<div class="online-store-block-head-v10"><div><strong>藏家级别</strong><small>独立等级；最终售价由人工设置，可搭配普通区域或贵宾厅 / VIP Room 浏览权限。</small></div><button class="secondary-btn" id="onlineStoreAddCollectorV14" type="button">＋ 新增一棵</button></div>
+<div class="online-store-block-head-v10"><div><strong>贵宾室 / VIP Room</strong><small>独立等级；最终售价由人工设置，可搭配普通区域或贵宾厅 / VIP Room 浏览权限。</small></div><button class="secondary-btn" id="onlineStoreAddCollectorV14" type="button">＋ 新增一棵</button></div>
 <div class="online-store-unique-list-v10" id="onlineStoreCollectorListV14"></div>
 </div>
 <div class="online-store-save-bar-v10">
@@ -586,8 +627,41 @@
 </details>
 </section>
 
+<section class="page" id="ordersPageV27">
+  <div class="module-page-head-v27"><div><h2>订单管理</h2><p>Orders · 集中处理 Online Store 订单状态。</p></div><span class="module-status-v27">基础页面</span></div>
+  <div class="module-summary-grid-v27"><article><span>待付款</span><strong>0</strong></article><article><span>已付款</span><strong>0</strong></article><article><span>备货中</span><strong>0</strong></article><article><span>已完成</span><strong>0</strong></article></div>
+  <section class="panel module-placeholder-v27"><strong>订单列表 / Orders</strong><p>订单流程页面位置已建立。后续接入付款、库存锁定、取消、退款与订单明细。</p><div class="empty-state">目前暂无 Online Store 订单</div></section>
+</section>
+<section class="page" id="shippingPageV27">
+  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送、运单与履约管理。</p></div><span class="module-status-v27">基础页面</span></div>
+  <section class="panel module-placeholder-v27"><strong>配送方式</strong><div class="shipping-mode-grid-v27"><span>West Malaysia · Courier</span><span>Klang Valley · Lalamove</span><span>自取 / Meetup</span><span>Singapore · Private Driver</span></div><p>后续连接订单后，在这里管理待发货、运单号、配送费用与完成状态。</p></section>
+</section>
+<section class="page" id="marketingPageV27">
+  <div class="module-page-head-v27"><div><h2>营销管理</h2><p>Marketing · Online Promotion、活动与推广入口。</p></div><span class="module-status-v27">基础页面</span></div>
+  <div class="module-card-grid-v27"><article><strong>Promotion</strong><p>线上促销活动与 Promotion Price 管理。</p><span>规划中</span></article><article><strong>Campaign</strong><p>主题活动、曝光与分享入口。</p><span>规划中</span></article><article><strong>Affiliate</strong><p>联盟推广入口已独立预留。</p><span>Coming Soon</span></article></div>
+</section>
+<section class="page" id="financePageV27">
+  <div class="module-page-head-v27"><div><h2>财务管理</h2><p>Finance · 营业额、费用、佣金、退款与净收入。</p></div><span class="module-status-v27">基础页面</span></div>
+  <div class="module-summary-grid-v27"><article><span>今日收入</span><strong>RM 0.00</strong></article><article><span>Payment Fee</span><strong>RM 0.00</strong></article><article><span>Affiliate</span><strong>RM 0.00</strong></article><article><span>净收入</span><strong>RM 0.00</strong></article></div>
+  <section class="panel module-placeholder-v27"><strong>Finance Overview</strong><p>页面位置已建立；待订单与支付模块启用后自动汇总。</p></section>
+</section>
+<section class="page" id="affiliatePageV27">
+  <div class="module-page-head-v27"><div><h2>联盟管理</h2><p>Affiliate Management</p></div><span class="module-status-v27 coming-soon">Coming Soon</span></div>
+  <div class="module-card-grid-v27 disabled-module-v27"><article><strong>推广伙伴</strong><p>Affiliate Partners</p></article><article><strong>推广链接</strong><p>Affiliate Links</p></article><article><strong>佣金设置</strong><p>Commission Settings</p></article><article><strong>推广订单</strong><p>Affiliate Orders</p></article><article><strong>待结算佣金</strong><p>Pending Commission</p></article><article><strong>已结算佣金</strong><p>Paid Commission</p></article></div>
+</section>
+<section class="page" id="morePageV27">
+  <div class="module-page-head-v27"><div><h2>更多</h2><p>More</p></div></div>
+  <div class="more-menu-v27">
+    <button class="nav-btn" data-page="shippingPageV27" type="button">物流管理 <small>Shipping</small></button>
+    <button class="nav-btn" data-page="financePageV27" type="button">财务管理 <small>Finance</small></button>
+    <button class="nav-btn" data-page="affiliatePageV27" type="button">联盟管理 <small>Affiliate · Coming Soon</small></button>
+    <button class="nav-btn" data-page="storePreviewPage" type="button">前台预览 <small>Store Preview</small></button>
+    <button class="nav-btn" data-page="onlineStoreHistoryPageV14" type="button">历史查询 <small>History</small></button>
+    <button class="nav-btn" data-page="settingsPage" type="button">设置 <small>Settings</small></button>
+  </div>
+</section>
 <section class="page" id="storePreviewPage">
-  <section class="panel store-preview-panel-v13">
+<section class="panel store-preview-panel-v13">
     <div class="section-title-row store-preview-head-v13">
       <div><h2>前台预览 / Store Preview</h2><div class="muted">模拟顾客浏览画面；这里只是后台预览，不会显示成本、利润或真实库存数量。</div></div>
       <button class="secondary-btn" id="refreshStorePreviewV13" type="button">重新预览</button>
@@ -699,7 +773,7 @@
 </label>
 <label>随机发货最低数量
             <input id="onlineStoreRandomMinimumV16" inputmode="numeric" placeholder="例如 5" type="text"/>
-<small class="field-hint-v12">默认 5 棵；少于此数量不能进入“入门精选 → 随机发货”。</small>
+<small class="field-hint-v12">默认 5 棵；少于此数量不能进入“入门首选 / Starter → 随机发货 / Random”。</small>
 </label>
 </div>
 <div class="settings-action-row-v12 paired-settings-actions-v14">
@@ -945,7 +1019,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V2.6</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V2.7</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V37.2 · Live Read-Only</strong></div>
@@ -963,16 +1037,18 @@
 </section>
 </section>
 </main>
-<nav aria-label="Main Navigation" class="bottom-nav">
-<a class="nav-btn active" data-page="dashboardPage" href="./?page=home">
-<span>🏠</span><small>首页</small>
-</a>
-<a class="nav-btn" data-page="onlineStorePage" href="./?page=online-store">
-<span>🛍️</span><small>Online Store</small>
-</a>
-<a class="nav-btn" data-page="storePreviewPage" href="./?page=preview"><span>👁️</span><small>前台预览</small></a>
-<a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span>🧾</span><small>历史查询</small></a>
-<a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span>⚙️</span><small>设置</small></a></nav>
+<aside class="admin-assist-v27" aria-label="辅助信息">
+  <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
+  <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
+  <section><strong>当前版本</strong><p>Online Store V2.7</p><small>Import Base 40.2 Stable</small></section>
+</aside>
+<nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
+<a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>
+<a class="nav-btn" data-page="onlineStorePage" href="./?page=products"><span>▦</span><small>商品</small></a>
+<a class="nav-btn" data-page="ordersPageV27" href="./?page=orders"><span>▤</span><small>订单</small></a>
+<a class="nav-btn" data-page="marketingPageV27" href="./?page=marketing"><span>◎</span><small>营销</small></a>
+<a class="nav-btn" data-page="morePageV27" href="./?page=more"><span>•••</span><small>更多</small></a>
+</nav>
 <div class="page-jump-controls-v14" aria-label="页面快速导航"><button id="jumpTopV14" type="button">↑ 到顶部</button><button id="jumpBottomV14" type="button">↓ 到底部</button></div>
 </div>
 </body>

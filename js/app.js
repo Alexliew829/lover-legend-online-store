@@ -110,12 +110,19 @@ document.addEventListener("DOMContentLoaded", () => {
   setupSettings();
   setupInventoryMasterV299();
   setupOnlineStoreV10();
+  setupOnlineStoreAdminV27();
   const requestedPageV210 = String(new URLSearchParams(window.location.search).get("page") || "").trim().toLowerCase();
   const deepLinkPageMapV210 = {
     home: "dashboardPage",
     dashboard: "dashboardPage",
     import: "importPage",
-    products: "importPage",
+    products: "onlineStorePage",
+    orders: "ordersPageV27",
+    shipping: "shippingPageV27",
+    marketing: "marketingPageV27",
+    finance: "financePageV27",
+    affiliate: "affiliatePageV27",
+    more: "morePageV27",
     history: "onlineStoreHistoryPageV14",
     settings: "settingsPage",
     supplier: "supplierPage",
@@ -137,7 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupGlobalMobilePullDownClear();
   registerServiceWorker();
   setupCloudSync();
-  setupSalesInventoryReminder();
   setupDataOperationSafety();
 });
 
@@ -3666,7 +3672,7 @@ function renderSystemInformationV203() {
   const stock = active.reduce((sum, item) => sum + (Number(item?.stock) || 0), 0);
   const config = typeof getCloudConfig === "function" ? getCloudConfig() : {};
   const set = (id, text) => { const el=document.getElementById(id); if(el) el.textContent=text; };
-  set("systemInfoVersionV203", "V2.6");
+  set("systemInfoVersionV203", "V2.7");
   set("systemInfoApiVersionV203", systemHealthV203.apiOk === true ? `V${systemHealthV203.apiVersion || APP_VERSION}` : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoGoogleSheetV203", systemHealthV203.apiOk === true ? "已连接 Google Web App" : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoLastSyncV203", formatSystemDateTimeV203(config.lastSyncAt) || "尚未同步");
@@ -3689,7 +3695,7 @@ function renderSystemInformationV203() {
   set("systemInfoImportCountV203", formatNumber(imports.length));
 }
 
-async function runSystemHealthCheckV203({ refreshSales = true } = {}) {
+async function runSystemHealthCheckV203({ refreshSales = false } = {}) {
   if (systemHealthV203.checking) return;
   systemHealthV203.checking = true;
   renderImportAnomalyCenterV201();
@@ -3710,7 +3716,6 @@ async function runSystemHealthCheckV203({ refreshSales = true } = {}) {
         schemaVersion:String(data?.schemaVersion || ""),
         error:"", restoreJob:data?.restoreJob || null
       };
-      if (refreshSales) await refreshSalesInventoryFeedV77({silent:true});
     }
   } catch (error) {
     systemHealthV203 = { checked:true, checking:true, apiOk:false, apiVersion:"", schemaVersion:"", error:String(error?.message || error), restoreJob:null };
@@ -3779,32 +3784,6 @@ function getImportAnomaliesV201() {
   }
   if (cloudLastErrorMessage) {
     issues.push({severity:"critical", type:"sync-error", title:"最近同步失败", detail:String(cloudLastErrorMessage), action:"请先检查网络和 Google Web App，再按重新检查。"});
-  }
-  // V36.7: Sales feed is a read-only reminder channel. A mobile browser can transiently
-  // fail a JSONP request even while Import cloud sync is healthy. Do not keep the whole
-  // Import System in a red "needs check" state merely because an old/processed Sales feed
-  // snapshot exists. Only a currently known pending Sales inventory task can escalate the
-  // Sales feed outage into the anomaly center. Background checks continue normally.
-  const knownPendingSalesRowsV367 = (salesInventoryPendingV77 || []).filter(item => !item?.v82Processed);
-  if (systemHealthV203.checked && salesInventoryFeedLastErrorV203 && knownPendingSalesRowsV367.length) {
-    const salesFeedErrorV226 = String(salesInventoryFeedLastErrorV203 || "");
-    const salesFeedTimeoutV226 = /提醒读取超时/i.test(salesFeedErrorV226);
-    const repeatedFailureV226 = salesInventoryFeedFailureCountV226 >= 3;
-    if (salesFeedTimeoutV226 && !repeatedFailureV226) {
-      issues.push({
-        severity:"warning", type:"sales-feed-timeout",
-        title:"Sales → Import 提醒读取超时",
-        detail:`${salesFeedErrorV226}（本次检查已自动重试 1 次）`,
-        action:"Sales 提醒状态暂时未取得；可稍后重新检查。这里只读取状态，不会处理库存，也不会重复扣库存。"
-      });
-    } else {
-      issues.push({
-        severity:"critical", type:"sales-feed",
-        title:repeatedFailureV226 ? "Sales → Import 连续读取失败" : "Sales → Import 连接异常",
-        detail:salesFeedErrorV226,
-        action:"已有 Sales 库存待处理，但当前无法刷新 Sales 状态；请检查 Sales System Web App 连接。重新检查只读取状态，不会处理库存。"
-      });
-    }
   }
   const restoreJob = systemHealthV203.restoreJob || getLocalRestoreJob?.();
   if (restoreJob?.state === "failed") {
@@ -3886,14 +3865,7 @@ function getImportAnomaliesV201() {
     });
   });
 
-  if (salesInventoryFeedLoadedV77) {
-    const pendingRows = (salesInventoryPendingV77 || []).filter(item => !item?.v82Processed);
-    const pendingGroups = salesCardGroupsV104(pendingRows);
-    if (pendingGroups.length) {
-      const qty = pendingRows.reduce((sum, item) => sum + Math.max(0, Number(item?.remainingQty) || 0), 0);
-      issues.unshift({severity:"warning", type:"sales-pending", title:`${pendingGroups.length} 张 Sales 销售卡库存待处理`, detail:`涉及 ${pendingRows.length} 项产品，待处理数量 ${formatNumber(qty)}。`, action:"请先处理 Sales → Import 库存，再继续其他库存调整。"});
-    }
-  }
+
 
   return issues;
 }
@@ -18999,63 +18971,11 @@ function showDataToolsStatus(message, isError = false) {
 
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js?v=22-online-identity-isolated").then(reg=>reg.update()).catch(error => {
+    navigator.serviceWorker.register("./sw.js?v=27-professional-admin-room-first").then(reg=>reg.update()).catch(error => {
       console.error("Service Worker registration failed:", error);
     });
   }
 }
-
-
-// V19.8 Shared quick navigation.  It deliberately observes only page/result
-// containers; it must never watch or mutate the history filter controls.
-(function(){
-  function setupHistoryScrollButton(){
-    if(document.getElementById("historyScrollToggleV86")) return;
-    const btn=document.createElement("button");
-    btn.id="historyScrollToggleV86";
-    btn.className="history-scroll-toggle-v86";
-    btn.type="button";
-    btn.textContent="↓ 到底部";
-    document.body.appendChild(btn);
-
-    const isNearBottom=()=>window.scrollY+window.innerHeight>=document.documentElement.scrollHeight-80;
-    const updateLabel=()=>{const label=isNearBottom()?"↑ 回顶部":"↓ 到底部";if(btn.textContent!==label)btn.textContent=label;};
-    btn.onclick=function(){
-      if(!isNearBottom()){
-        window.scrollTo({top:document.documentElement.scrollHeight,behavior:"smooth"});
-      }else{
-        window.scrollTo({top:0,behavior:"smooth"});
-      }
-      window.setTimeout(updateLabel,350);
-    };
-
-    const updateVisibility=()=>{
-      const history=document.getElementById("historyPage");
-      const dashboard=document.getElementById("dashboardPage");
-      const historyVisible=history && history.classList.contains("active");
-      const dashboardVisible=dashboard && dashboard.classList.contains("active");
-      const historyResult=document.getElementById("historyResult");
-      const hasResult=historyResult && !historyResult.querySelector(":scope > .empty-state");
-      const hasInventory=inventoryVisibleProductsV153.length>0;
-      btn.classList.toggle("show",!!((historyVisible&&hasResult)||(dashboardVisible&&hasInventory)));
-      updateLabel();
-    };
-
-    const historyResult=document.getElementById("historyResult");
-    if(historyResult){
-      new MutationObserver(updateVisibility).observe(historyResult,{childList:true,subtree:true});
-    }
-    document.querySelectorAll(".bottom-nav button, .bottom-nav a").forEach(item=>{
-      item.addEventListener("click",()=>window.setTimeout(updateVisibility,0));
-    });
-    window.addEventListener("scroll",updateLabel,{passive:true});
-    window.addEventListener("resize",updateLabel,{passive:true});
-    updateVisibility();
-  }
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",setupHistoryScrollButton);
-  }else setupHistoryScrollButton();
-})();
 
 
 // ================= V26.6 bilingual product master =================
@@ -19253,7 +19173,7 @@ function setupInventoryMasterV299(){
 }
 
 
-// ================= Lover Legend Online Store V2.6 =================
+// ================= Lover Legend Online Store V2.7 =================
 const ONLINE_STORE_SETTINGS_KEY_V10 = "onlineStoreV10"; // legacy key inside Import settings; read only for one-time migration
 const ONLINE_STORE_VERSION_V12 = "2.5";
 const ONLINE_STORE_UI_SETTINGS_KEY_V12 = "onlineStoreUiSettingsV12"; // legacy key inside Import settings; read only for one-time migration
@@ -19358,56 +19278,64 @@ function getOnlineStoreCountsV10(product,config){
 function onlineStoreIsConfiguredV10(config){
   return Boolean(config&&(config.randomQty>0||config.regularPrice>0||config.promotionPrice>0||config.randomPublished||config.randomPhotos?.length||config.randomVideo||config.uniqueItems?.length));
 }
+let onlineStoreSelectedRoomV27="";
+function onlineStoreRoomAllocatedV27(config,room){
+  const items=Array.isArray(config?.uniqueItems)?config.uniqueItems:[];
+  if(room==="vip") return items.filter(x=>x.tier==="collector"&&String(x.status||"available")!=="sold").length;
+  if(room==="premium") return items.filter(x=>x.tier==="premium"&&String(x.status||"available")!=="sold").length;
+  if(room==="entry") return Math.max(0,Math.floor(Number(config?.randomQty)||0))+items.filter(x=>x.tier==="entry"&&String(x.status||"available")!=="sold").length;
+  return 0;
+}
+function onlineStoreRoomLabelV27(room){return room==="vip"?"贵宾室 / VIP Room":room==="premium"?"精品馆 / Premium":room==="entry"?"入门首选 / Starter":"选择房间";}
 function renderOnlineStoreProductListV10(){
   const host=document.getElementById("onlineStoreProductListV10");
   if(!host)return;
+  const tools=document.getElementById("roomProductToolsV27");
+  const back=document.getElementById("roomFirstBackV27");
+  const banner=document.getElementById("selectedRoomBannerV27");
+  const room=onlineStoreSelectedRoomV27;
+  if(!room){
+    host.hidden=true;if(tools)tools.hidden=true;if(back)back.hidden=true;if(banner)banner.hidden=true;
+    host.innerHTML="";return;
+  }
+  host.hidden=false;if(tools)tools.hidden=false;if(back)back.hidden=false;
+  if(banner){banner.hidden=false;banner.innerHTML=`<strong>${escapeHTML(onlineStoreRoomLabelV27(room))}</strong><span>先选择产品，再进入该房间管理售价、成本、媒体与上架状态。</span>`;}
   const q=normalizeSearchTextV262(document.getElementById("onlineStoreSearchV10")?.value||"");
   const filter=String(document.getElementById("onlineStoreFilterV10")?.value||"all");
-  const state=getOnlineStoreStateV10();
   const products=getProducts().filter(p=>!p?.inventoryArchived);
   const rows=products.filter(p=>{
     const id=String(p?.id||"").trim().toUpperCase();
     const config=getOnlineStoreConfigV10(id);
-    const configured=onlineStoreIsConfiguredV10(config);
-    const published=Boolean(config.randomPublished||config.uniqueItems.some(x=>x.published&&x.status!=="sold"));
+    const counts=getOnlineStoreCountsV10(p,config);
+    const roomAllocated=onlineStoreRoomAllocatedV27(config,room);
+    const roomPublished=room==="entry"?Boolean(config.randomPublished||(config.uniqueItems||[]).some(x=>x.tier==="entry"&&x.published&&x.status!=="sold")):(config.uniqueItems||[]).some(x=>(room==="premium"?x.tier==="premium":x.tier==="collector")&&x.published&&x.status!=="sold");
+    const configured=roomAllocated>0||roomPublished;
     if(filter==="configured"&&!configured)return false;
-    if(filter==="published"&&!published)return false;
-    if(filter==="unpublished"&&published)return false;
+    if(filter==="published"&&!roomPublished)return false;
+    if(filter==="unpublished"&&roomPublished)return false;
     if(q&&!normalizeSearchTextV262(productSearchTextV262(p)).includes(q))return false;
-    return true;
+    return counts.unallocated>0||roomAllocated>0;
   }).sort((a,b)=>String(a.id||"").localeCompare(String(b.id||""),undefined,{numeric:true}));
   host.innerHTML=rows.map(p=>{
     const id=String(p.id||"").trim().toUpperCase();
-    const config=getOnlineStoreConfigV10(id);
-    const counts=getOnlineStoreCountsV10(p,config);
-    const configured=onlineStoreIsConfiguredV10(config);
-    const englishName=productEnglishNameV262(p);
-    return `<article class="online-store-product-card-v10 ${configured?"online-store-configured-v10":""}" data-online-product-v10="${escapeHTML(id)}">
+    const config=getOnlineStoreConfigV10(id),counts=getOnlineStoreCountsV10(p,config),allocated=onlineStoreRoomAllocatedV27(config,room),englishName=productEnglishNameV262(p);
+    return `<article class="online-store-product-card-v10 room-product-card-v27" data-online-product-v10="${escapeHTML(id)}">
       <div class="online-store-product-main-v10">
-        <div class="online-store-product-title-v12">
-          <button type="button" class="copy-text-btn-v12 online-store-product-id-v10" data-online-copy-v12="${escapeHTML(id)}" title="点击复制产品编号">${escapeHTML(id)}</button>
-          <button type="button" class="copy-text-btn-v12 online-store-product-name-v10" data-online-copy-v12="${escapeHTML(p.name||"")}" title="点击复制产品名称">${escapeHTML(p.name||"")}</button>
-        </div>
-        ${englishName?`<button type="button" class="copy-text-btn-v12 online-store-product-english-v12" data-online-copy-v12="${escapeHTML(englishName)}" title="点击复制英文名">${escapeHTML(englishName)}</button>`:""}
-        <div class="online-store-product-meta-v10 online-store-inventory-meta-v12">
-          <span><i>当前库存</i><strong>${formatNumber(counts.stock)}</strong></span>
-          <span><i>平均成本</i><strong>${formatMoney(Number(p.averageCost)||0,"RM ")}</strong></span>
-          <span><i>${getImportMinimumPriceLabelV26(p)}</i><strong class="online-min-price-v13">${formatMoney(getImportBaseMinimumPriceV21(p),"RM ")}</strong></span>
-          <span><i>随机发货</i><strong>${formatNumber(counts.random)}</strong></span>
-          <span><i>一物一拍</i><strong>${formatNumber(counts.unique)}</strong></span>
-          <span><i>未分配</i><strong>${formatNumber(Math.max(0,counts.unallocated))}</strong></span>
-        </div>
+        <div class="online-store-product-title-v12"><button type="button" class="copy-text-btn-v12 online-store-product-id-v10" data-online-copy-v12="${escapeHTML(id)}">${escapeHTML(id)}</button><button type="button" class="copy-text-btn-v12 online-store-product-name-v10" data-online-copy-v12="${escapeHTML(p.name||"")}">${escapeHTML(p.name||"")}</button></div>
+        ${englishName?`<button type="button" class="copy-text-btn-v12 online-store-product-english-v12" data-online-copy-v12="${escapeHTML(englishName)}">${escapeHTML(englishName)}</button>`:""}
+        <div class="room-product-meta-v27"><span><i>真实库存</i><strong>${formatNumber(counts.stock)}</strong></span><span><i>本房已分配</i><strong>${formatNumber(allocated)}</strong></span><span><i>可分配</i><strong>${formatNumber(Math.max(0,counts.unallocated))}</strong></span></div>
       </div>
-      <button type="button" class="secondary-btn online-store-manage-btn-v12" data-online-manage-v10="${escapeHTML(id)}">${configured?"管理 · 已设置":"管理"}</button>
+      <button type="button" class="primary-btn online-store-manage-btn-v12" data-online-manage-v10="${escapeHTML(id)}">选择产品</button>
     </article>`;
-  }).join("")||'<div class="empty-state">暂无符合产品</div>';
+  }).join("")||'<div class="empty-state">这个房间目前没有可选择的产品</div>';
 }
+
 let onlineStoreRoomV16="";
 let onlineStoreRoomSourceV16="parent";
 let onlineStoreRoomDirtyV16=false;
 function getOnlineRoomBlocksV16(){return {random:document.getElementById("onlineRoomRandomBlockV16"),entry:document.getElementById("onlineRoomEntryBlockV16"),premium:document.getElementById("onlineRoomPremiumBlockV16"),vip:document.getElementById("onlineRoomVipBlockV16")};}
 function getOnlineRoomStatsV16(){const p=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10),c=getOnlineStoreConfigV10(onlineStoreSelectedProductIdV10),counts=getOnlineStoreCountsV10(p,c),items=c.uniqueItems||[];return {counts,entryItems:items.filter(x=>x.tier==="entry"&&x.status!=="sold").length,premiumItems:items.filter(x=>x.tier==="premium"&&x.status!=="sold").length,vipItems:items.filter(x=>x.tier==="collector"&&x.status!=="sold").length,random:c.randomQty||0};}
-function renderOnlineRoomChooserV16(){updateOnlineRoomFocusV17();const selector=document.getElementById("onlineRoomSelectorV16"),toolbar=document.getElementById("onlineRoomToolbarV16"),save=document.querySelector(".online-store-save-bar-v10");if(selector)selector.hidden=Boolean(onlineStoreRoomV16);if(toolbar)toolbar.hidden=!onlineStoreRoomV16;if(save)save.hidden=!onlineStoreRoomV16;const blocks=getOnlineRoomBlocksV16();Object.values(blocks).forEach(b=>{if(b)b.hidden=true;});const st=getOnlineRoomStatsV16(),free=Math.max(0,st.counts.unallocated),min=getOnlineStoreUiSettingsV12().allocation.randomMinimumQty||5;const av=document.getElementById("onlineRoomAvailableV16");if(av)av.textContent=`可分配库存：${free}`;const rules={vip:{existing:st.vipItems,can:st.vipItems>0||free>0,label:st.vipItems>0?`已分配 ${st.vipItems}`:(free>0?"可进入":"无可分配库存")},premium:{existing:st.premiumItems,can:st.premiumItems>0||free>0,label:st.premiumItems>0?`已分配 ${st.premiumItems}`:(free>0?"可进入":"无可分配库存")},entry:{existing:st.entryItems+st.random,can:(st.entryItems+st.random)>0||free>0,label:(st.entryItems+st.random)>0?`已分配 ${st.entryItems+st.random}`:(free>0?"可进入":"无可分配库存")}};document.querySelectorAll("[data-room-open-v16]").forEach(btn=>{const k=btn.dataset.roomOpenV16,r=rules[k];btn.disabled=!r.can;const span=btn.querySelector(`[data-room-status-v16="${k}"]`);if(span)span.textContent=r.label;});if(!onlineStoreRoomV16)return;const title=document.getElementById("onlineRoomCurrentTitleV16"),hint=document.getElementById("onlineRoomCurrentHintV16"),actions=document.getElementById("onlineRoomToolbarActionsV16");if(onlineStoreRoomV16==="vip"){if(blocks.vip)blocks.vip.hidden=false;if(title)title.textContent="贵宾室 / VIP Room · 藏家级别";if(hint)hint.textContent="一次只处理贵宾室。";if(actions)actions.innerHTML='<button type="button" class="secondary-btn" data-room-switch-v16="premium">进入高端精品</button><button type="button" class="ghost-btn" data-room-close-v16>关闭房间</button>';}else if(onlineStoreRoomV16==="premium"){if(blocks.premium)blocks.premium.hidden=false;if(title)title.textContent="高端精品 · Guest Mode";if(hint)hint.textContent=onlineStoreRoomSourceV16==="entry"?"从入门精选进入；贵宾室暂不可直接进入。":"可处理高端精品。";if(actions)actions.innerHTML=`<button type="button" class="secondary-btn" data-room-switch-v16="vip" ${onlineStoreRoomSourceV16==="entry"?'disabled title="请先关闭当前房间，再从母产品重新进入贵宾室"':''}>进入贵宾室</button><button type="button" class="secondary-btn" data-room-switch-v16="entry">进入入门精选</button><button type="button" class="ghost-btn" data-room-close-v16>关闭房间</button>`;}else if(onlineStoreRoomV16==="entry"){if(blocks.entry)blocks.entry.hidden=false;if(title)title.textContent="入门精选 · 一物一拍 / 单株精选";if(hint)hint.textContent="默认处理一物一拍；随机发货需达到最低数量。";const randomCan=st.random>0||free>=min;if(actions)actions.innerHTML=`<button type="button" class="secondary-btn" data-room-random-v16 ${randomCan?'':`disabled title="随机发货默认至少 ${min} 棵可分配库存"`}>随机发货${randomCan?'':`（至少 ${min} 棵）`}</button><button type="button" class="secondary-btn" data-room-switch-v16="premium">进入高端精品</button><button type="button" class="ghost-btn" data-room-close-v16>关闭房间</button>`;}else if(onlineStoreRoomV16==="random"){if(blocks.random)blocks.random.hidden=false;if(blocks.entry)blocks.entry.hidden=false;if(title)title.textContent="入门精选 · 随机发货";if(hint)hint.textContent=`随机发货最低数量：${min} 棵。`;if(actions)actions.innerHTML='<button type="button" class="secondary-btn" data-room-entry-v16>返回一物一拍</button><button type="button" class="secondary-btn" data-room-switch-v16="premium">进入高端精品</button><button type="button" class="ghost-btn" data-room-close-v16>关闭房间</button>';}
+function renderOnlineRoomChooserV16(){updateOnlineRoomFocusV17();const selector=document.getElementById("onlineRoomSelectorV16"),toolbar=document.getElementById("onlineRoomToolbarV16"),save=document.querySelector(".online-store-save-bar-v10");if(selector)selector.hidden=Boolean(onlineStoreRoomV16);if(toolbar)toolbar.hidden=!onlineStoreRoomV16;if(save)save.hidden=!onlineStoreRoomV16;const blocks=getOnlineRoomBlocksV16();Object.values(blocks).forEach(b=>{if(b)b.hidden=true;});const st=getOnlineRoomStatsV16(),free=Math.max(0,st.counts.unallocated),min=getOnlineStoreUiSettingsV12().allocation.randomMinimumQty||5;const av=document.getElementById("onlineRoomAvailableV16");if(av)av.textContent=`可分配库存：${free}`;const rules={vip:{existing:st.vipItems,can:st.vipItems>0||free>0,label:st.vipItems>0?`已分配 ${st.vipItems}`:(free>0?"可进入":"无可分配库存")},premium:{existing:st.premiumItems,can:st.premiumItems>0||free>0,label:st.premiumItems>0?`已分配 ${st.premiumItems}`:(free>0?"可进入":"无可分配库存")},entry:{existing:st.entryItems+st.random,can:(st.entryItems+st.random)>0||free>0,label:(st.entryItems+st.random)>0?`已分配 ${st.entryItems+st.random}`:(free>0?"可进入":"无可分配库存")}};document.querySelectorAll("[data-room-open-v16]").forEach(btn=>{const k=btn.dataset.roomOpenV16,r=rules[k];btn.disabled=!r.can;const span=btn.querySelector(`[data-room-status-v16="${k}"]`);if(span)span.textContent=r.label;});if(!onlineStoreRoomV16)return;const title=document.getElementById("onlineRoomCurrentTitleV16"),hint=document.getElementById("onlineRoomCurrentHintV16"),actions=document.getElementById("onlineRoomToolbarActionsV16");if(onlineStoreRoomV16==="vip"){if(blocks.vip)blocks.vip.hidden=false;if(title)title.textContent="贵宾室 / VIP Room";if(hint)hint.textContent="一次只处理贵宾室。";if(actions)actions.innerHTML='<button type="button" class="secondary-btn" data-room-switch-v16="premium">进入精品馆</button><button type="button" class="ghost-btn" data-room-close-v16>关闭房间</button>';}else if(onlineStoreRoomV16==="premium"){if(blocks.premium)blocks.premium.hidden=false;if(title)title.textContent="精品馆 / Premium";if(hint)hint.textContent=onlineStoreRoomSourceV16==="entry"?"从入门首选进入；贵宾室暂不可直接进入。":"可处理精品馆商品。";if(actions)actions.innerHTML=`<button type="button" class="secondary-btn" data-room-switch-v16="vip" ${onlineStoreRoomSourceV16==="entry"?'disabled title="请先关闭当前房间，再从母产品重新进入贵宾室"':''}>进入贵宾室</button><button type="button" class="secondary-btn" data-room-switch-v16="entry">进入入门首选</button><button type="button" class="ghost-btn" data-room-close-v16>关闭房间</button>`;}else if(onlineStoreRoomV16==="entry"){if(blocks.entry)blocks.entry.hidden=false;if(title)title.textContent="入门首选 / Starter · 一物一拍 / One-of-a-Kind";if(hint)hint.textContent="默认处理一物一拍 / One-of-a-Kind；Random 需达到最低数量。";const randomCan=st.random>0||free>=min;if(actions)actions.innerHTML=`<button type="button" class="secondary-btn" data-room-random-v16 ${randomCan?'':`disabled title="随机发货默认至少 ${min} 棵可分配库存"`}>随机发货${randomCan?'':`（至少 ${min} 棵）`}</button><button type="button" class="secondary-btn" data-room-switch-v16="premium">进入精品馆</button><button type="button" class="ghost-btn" data-room-close-v16>关闭房间</button>`;}else if(onlineStoreRoomV16==="random"){if(blocks.random)blocks.random.hidden=false;if(blocks.entry)blocks.entry.hidden=false;if(title)title.textContent="入门首选 / Starter · 随机发货 / Random";if(hint)hint.textContent=`随机发货最低数量：${min} 棵。`;if(actions)actions.innerHTML='<button type="button" class="secondary-btn" data-room-entry-v16>返回 One-of-a-Kind</button><button type="button" class="secondary-btn" data-room-switch-v16="premium">进入精品馆</button><button type="button" class="ghost-btn" data-room-close-v16>关闭房间</button>';}
 }
 function confirmRoomLeaveV16(){if(!onlineStoreRoomDirtyV16)return true;return window.confirm("当前房间有未保存资料。\
 \
@@ -19493,7 +19421,7 @@ function renderOnlineStoreUniqueItemsV10(items){
   const productName=String(product?.name||"");
   const englishName=productEnglishNameV262(product);
   const renderCard=item=>{
-    const tierLabel={entry:"入门精选",premium:"高端精品",collector:"藏家级别"}[item.tier]||"入门精选";
+    const tierLabel={entry:"入门首选 / Starter",premium:"精品馆 / Premium",collector:"贵宾室 / VIP Room"}[item.tier]||"入门首选 / Starter";
     return `<article class="online-store-unique-card-v10" data-item-id-v10="${escapeHTML(item.id)}" data-tier-v14="${escapeHTML(item.tier)}">
     <div class="online-store-unique-head-v10">
       <div class="online-store-unique-title-v12">
@@ -19520,9 +19448,9 @@ function renderOnlineStoreUniqueItemsV10(items){
   </article>`;
   };
   const groups={entry:list.filter(x=>x.tier==="entry"),premium:list.filter(x=>x.tier==="premium"),collector:list.filter(x=>x.tier==="collector")};
-  entryHost.innerHTML=groups.entry.map(renderCard).join("")||'<div class="empty-state">尚未建立入门精选的一物一拍 / 单株精选</div>';
-  if(premiumHost)premiumHost.innerHTML=groups.premium.map(renderCard).join("")||'<div class="empty-state">尚未建立高端精品</div>';
-  if(collectorHost)collectorHost.innerHTML=groups.collector.map(renderCard).join("")||'<div class="empty-state">尚未建立藏家级别</div>';
+  entryHost.innerHTML=groups.entry.map(renderCard).join("")||'<div class="empty-state">尚未建立入门首选的一物一拍 / One-of-a-Kind</div>';
+  if(premiumHost)premiumHost.innerHTML=groups.premium.map(renderCard).join("")||'<div class="empty-state">尚未建立精品馆商品</div>';
+  if(collectorHost)collectorHost.innerHTML=groups.collector.map(renderCard).join("")||'<div class="empty-state">尚未建立贵宾室商品</div>';
   updateOnlineStoreProfitDisplaysV13();
 }
 function nextOnlineStoreItemIdV10(){
@@ -19539,7 +19467,7 @@ function updateOnlineStoreAllocationSummaryV10(){
   const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=formatNumber(v)};
   set("onlineStoreRealStockV10",c.stock);set("onlineStoreRandomAllocatedV10",c.random);set("onlineStoreUniqueAllocatedV10",c.unique);set("onlineStoreUnallocatedV10",Math.max(0,c.unallocated));
   const warning=document.getElementById("onlineStoreAllocationWarningV10");
-  if(warning){warning.hidden=c.unallocated>=0;warning.textContent=c.unallocated<0?`分配超过真实库存 ${Math.abs(c.unallocated)} 棵。请减少随机发货或一物一拍 / 单株精选数量后再保存。`:"";}
+  if(warning){warning.hidden=c.unallocated>=0;warning.textContent=c.unallocated<0?`分配超过真实库存 ${Math.abs(c.unallocated)} 棵。请减少随机发货或一物一拍 / One-of-a-Kind 数量后再保存。`:"";}
   return c;
 }
 function getImportInitialMinimumPriceV26(product){return Math.max(0,Number(product?.importInitialMinimumPrice)||0);}
@@ -19654,14 +19582,14 @@ function renderStorePreviewV13(){
     const cfg=normalizeOnlineStoreConfigV10(id,state.products[id]);
     if(cfg.randomPublished&&cfg.randomQty>0){
       const price=cfg.promotionPrice>0?cfg.promotionPrice:cfg.regularPrice;
-      if(price>0)cards.push({id,name:String(product.name||""),english:productEnglishNameV262(product),price,regular:cfg.regularPrice,promo:cfg.promotionPrice,photo:cfg.randomPhotos?.[0]||"",tier:"入门精选",vip:false});
+      if(price>0)cards.push({id,name:String(product.name||""),english:productEnglishNameV262(product),price,regular:cfg.regularPrice,promo:cfg.promotionPrice,photo:cfg.randomPhotos?.[0]||"",tier:"入门首选 / Starter",vip:false});
     }
     cfg.uniqueItems.filter(x=>x.published&&x.status!=="sold").forEach(item=>{
       const vip=item.accessZone==="vip";
       if(vip&&audience!=="vip")return;
       const price=item.promotionPrice>0?item.promotionPrice:item.regularPrice;
       if(price<=0)return;
-      const tier={entry:"入门精选",premium:"高端精品",collector:"藏家级别"}[item.tier]||"入门精选";
+      const tier={entry:"入门首选 / Starter",premium:"精品馆 / Premium",collector:"贵宾室 / VIP Room"}[item.tier]||"入门首选 / Starter";
       cards.push({id:item.id,name:String(product.name||""),english:productEnglishNameV262(product),price,regular:item.regularPrice,promo:item.promotionPrice,photo:item.photo||"",tier,vip});
     });
   });
@@ -19698,7 +19626,7 @@ function saveOnlineStoreEditorV10(){
   const c=getOnlineStoreCountsV10(product,config);
   if(c.unallocated<0){window.alert(`不能保存：Online Store 已分配 ${c.random+c.unique} 棵，但真实库存只有 ${c.stock} 棵。`);return;}
   const randomMinimumV16=getOnlineStoreUiSettingsV12().allocation.randomMinimumQty||5;
-  if(config.randomQty>0&&config.randomQty<randomMinimumV16){window.alert(`不能保存：随机发货最低需要 ${randomMinimumV16} 棵。\n\n目前只分配 ${config.randomQty} 棵；可改用入门精选的一物一拍 / 单株精选。`);return;}
+  if(config.randomQty>0&&config.randomQty<randomMinimumV16){window.alert(`不能保存：随机发货最低需要 ${randomMinimumV16} 棵。\n\n目前只分配 ${config.randomQty} 棵；可改用入门首选的一物一拍 / One-of-a-Kind。`);return;}
   if(config.promotionPrice>0&&config.regularPrice>0&&config.promotionPrice>config.regularPrice){if(!window.confirm("Promotion Price 高于 Regular Price。仍然保存吗？"))return;}
   const priceChecksV21=[];
   if(config.regularPrice>0)priceChecksV21.push(["随机发货 Online Regular Price",config.regularPrice]);
@@ -19706,13 +19634,13 @@ function saveOnlineStoreEditorV10(){
   (config.uniqueItems||[]).forEach(item=>{if(item.regularPrice>0)priceChecksV21.push([`${item.id} Online Regular Price`,item.regularPrice]);if(item.promotionPrice>0)priceChecksV21.push([`${item.id} Promotion Price`,item.promotionPrice]);});
   const belowFloorV21=priceChecksV21.find(([,value])=>onlineProtectionFloor>0&&Number(value)<onlineProtectionFloor);
   if(belowFloorV21){window.alert(`${belowFloorV21[0]} RM ${formatOnlineMoneyInputV12(belowFloorV21[1])} 低于 Online 销售保护底线 RM ${formatOnlineMoneyInputV12(onlineProtectionFloor)}。\n\nImport 最低售价基准与平均成本都是只读；请调整 Online 售价后再保存。`);return;}
-  if(!window.confirm(`确认保存 Online Store 设置？\n\n产品：${onlineStoreSelectedProductIdV10} ${product.name||""}\nImport 最低售价基准（只读）：RM ${formatOnlineMoneyInputV12(importMinimumPrice)}\nOnline 销售保护底线：RM ${formatOnlineMoneyInputV12(onlineProtectionFloor)}\n随机发货：${c.random}\n一物一拍 / 单株精选：${c.unique}\n未分配：${Math.max(0,c.unallocated)}\n\n确认后才会保存。`))return;
+  if(!window.confirm(`确认保存 Online Store 设置？\n\n产品：${onlineStoreSelectedProductIdV10} ${product.name||""}\nImport 最低售价基准（只读）：RM ${formatOnlineMoneyInputV12(importMinimumPrice)}\nOnline 销售保护底线：RM ${formatOnlineMoneyInputV12(onlineProtectionFloor)}\n随机发货：${c.random}\n一物一拍 / One-of-a-Kind：${c.unique}\n未分配：${Math.max(0,c.unallocated)}\n\n确认后才会保存。`))return;
   if(saveBtn){saveBtn.textContent="保存中...";saveBtn.disabled=true;}
   try{
     // V2.6: Import / Inventory System is the only real product + stock + average-cost + Initial Minimum Price source.
     // Online Store saves only store-specific configuration and NEVER writes the Import product collection here.
     const state=getOnlineStoreStateV10();state.products[onlineStoreSelectedProductIdV10]={...config,updatedAt:new Date().toISOString()};saveOnlineStoreStateV10(state);
-    addOnlineStoreHistoryV14("product",onlineStoreSelectedProductIdV10,product.name||"",`保存商品设置；随机发货 ${c.random}，一物一拍/单株精选 ${c.unique}，未分配 ${Math.max(0,c.unallocated)}；Import最低售价 RM ${formatOnlineMoneyInputV12(importMinimumPrice)}；Online保护底线 RM ${formatOnlineMoneyInputV12(onlineProtectionFloor)}`);
+    addOnlineStoreHistoryV14("product",onlineStoreSelectedProductIdV10,product.name||"",`保存商品设置；随机发货 ${c.random}，一物一拍/One-of-a-Kind ${c.unique}，未分配 ${Math.max(0,c.unallocated)}；Import最低售价 RM ${formatOnlineMoneyInputV12(importMinimumPrice)}；Online保护底线 RM ${formatOnlineMoneyInputV12(onlineProtectionFloor)}`);
     const status=document.getElementById("onlineStoreSaveStatusV10");if(status)status.textContent="";
     if(saveBtn){saveBtn.textContent="已保存";setTimeout(()=>{if(saveBtn.isConnected)saveBtn.textContent="保存并关闭";},1600);}
     renderOnlineStoreProductListV10();updateOnlineStoreAllocationSummaryV10();updateOnlineStoreProfitDisplaysV13();renderStorePreviewV13();
@@ -19728,12 +19656,12 @@ function setupOnlineStoreV10(){
     // V2.6: refresh Import read-only stock/cost/Initial Minimum Price before repainting Online Store.
     if(typeof window.refreshLatestCloudData==="function") Promise.resolve(window.refreshLatestCloudData()).catch(()=>{}).finally(()=>{renderOnlineStoreProductListV10();if(onlineStoreSelectedProductIdV10)setOnlineStoreEditorValuesV10(onlineStoreSelectedProductIdV10);});
   });
-  list?.addEventListener("click",e=>{const copy=e.target.closest("[data-online-copy-v12]");if(copy){e.preventDefault();e.stopPropagation();copyOnlineTextV12(copy.dataset.onlineCopyV12,copy);return;}const btn=e.target.closest("[data-online-manage-v10]");if(btn)setOnlineStoreEditorValuesV10(btn.dataset.onlineManageV10)});
+  list?.addEventListener("click",e=>{const copy=e.target.closest("[data-online-copy-v12]");if(copy){e.preventDefault();e.stopPropagation();copyOnlineTextV12(copy.dataset.onlineCopyV12,copy);return;}const btn=e.target.closest("[data-online-manage-v10]");if(btn){setOnlineStoreEditorValuesV10(btn.dataset.onlineManageV10);if(onlineStoreSelectedRoomV27)openOnlineRoomV16(onlineStoreSelectedRoomV27,"room-first");}});
   document.getElementById("onlineStoreEditorV10")?.addEventListener("click",e=>{const copy=e.target.closest("[data-online-copy-v12]");if(copy){e.preventDefault();copyOnlineTextV12(copy.dataset.onlineCopyV12,copy);}});
   document.getElementById("onlineStoreMasterIdV10")?.addEventListener("click",e=>copyOnlineTextV12(onlineStoreSelectedProductIdV10,e.currentTarget));
   document.getElementById("onlineStoreMasterNameV10")?.addEventListener("click",e=>{const p=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);copyOnlineTextV12(p?.name||"",e.currentTarget);});
   document.getElementById("onlineStoreMasterEnglishV12")?.addEventListener("click",e=>{const p=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);copyOnlineTextV12(productEnglishNameV262(p),e.currentTarget);});
-  document.getElementById("onlineStoreCloseEditorV10")?.addEventListener("click",()=>{if(!confirmRoomLeaveV16())return;const e=document.getElementById("onlineStoreEditorV10");if(e)e.hidden=true;onlineStoreSelectedProductIdV10="";onlineStoreRoomV16="";onlineStoreRoomDirtyV16=false;updateOnlineRoomFocusV17();});
+  document.getElementById("onlineStoreCloseEditorV10")?.addEventListener("click",()=>{if(!confirmRoomLeaveV16())return;const e=document.getElementById("onlineStoreEditorV10");if(e)e.hidden=true;onlineStoreSelectedProductIdV10="";onlineStoreRoomV16="";onlineStoreRoomDirtyV16=false;updateOnlineRoomFocusV17();renderOnlineStoreProductListV10();document.getElementById("roomFirstHubV27")?.scrollIntoView({behavior:"smooth",block:"start"});});
   const addTierItemV14=tier=>{if(!onlineStoreSelectedProductIdV10)return;const items=collectOnlineStoreUniqueItemsV10();const id=nextOnlineStoreItemIdV10();items.push({id,tier,regularPrice:0,promotionPrice:0,photo:"",video:"",accessZone:"standard",published:false,status:"available"});renderOnlineStoreUniqueItemsV10(items);updateOnlineStoreAllocationSummaryV10();onlineStoreRoomDirtyV16=true;};
   document.getElementById("onlineStoreAddUniqueV10")?.addEventListener("click",()=>addTierItemV14("entry"));
   document.getElementById("onlineStoreAddPremiumV14")?.addEventListener("click",()=>addTierItemV14("premium"));
@@ -19760,7 +19688,7 @@ function setupOnlineStoreV10(){
   document.getElementById("onlineStoreRandomPhotoListV14")?.addEventListener("click",e=>{const idx=Number(e.target.closest("[data-photo-index-v14]")?.dataset.photoIndexV14);if(!Number.isInteger(idx))return;const ta=document.getElementById("onlineStoreRandomPhotosV10");const arr=String(ta?.value||"").split(/\r?\n/).map(x=>x.trim()).filter(Boolean);if(e.target.closest("[data-photo-copy-v14]")){copyOnlineTextV12(arr[idx]||"",e.target.closest("[data-photo-copy-v14]"));return;}if(e.target.closest("[data-photo-delete-v14]")&&confirm("确认删除这张代表照片链接？")){arr.splice(idx,1);ta.value=arr.join("\n");renderOnlineStorePhotoListV14();}});
   document.querySelectorAll("[data-media-copy-target-v14]").forEach(btn=>btn.addEventListener("click",()=>copyOnlineTextV12(document.getElementById(btn.dataset.mediaCopyTargetV14)?.value||"",btn)));
   document.querySelectorAll("[data-media-clear-target-v14]").forEach(btn=>btn.addEventListener("click",()=>{const el=document.getElementById(btn.dataset.mediaClearTargetV14);if(el?.value&&confirm("确认删除这个媒体链接？")){el.value="";btn.textContent="已删除";setTimeout(()=>{if(btn.isConnected)btn.textContent="删除";},1000);}}));
-  const mediaNotReadyV14=()=>alert("相册 / 拍照入口已加入。V2.6 尚未连接 Cloudinary 等图片储存服务，为避免图片写入 Google Sheet 超过 50,000 字限制，目前不会把本机照片直接存进库存同步资料。请暂时使用 Photo URL；连接媒体储存后即可永久上传。");
+  const mediaNotReadyV14=()=>alert("相册 / 拍照入口已加入。V2.7 尚未连接 Cloudinary 等图片储存服务，为避免图片写入 Google Sheet 超过 50,000 字限制，目前不会把本机照片直接存进库存同步资料。请暂时使用 Photo URL；连接媒体储存后即可永久上传。");
   document.getElementById("onlineStoreChoosePhotosV14")?.addEventListener("click",()=>document.getElementById("onlineStorePhotoPickerV14")?.click());
   document.getElementById("onlineStoreTakePhotoV14")?.addEventListener("click",()=>document.getElementById("onlineStoreCameraV14")?.click());
   document.getElementById("onlineStorePhotoPickerV14")?.addEventListener("change",mediaNotReadyV14);document.getElementById("onlineStoreCameraV14")?.addEventListener("change",mediaNotReadyV14);
@@ -19805,7 +19733,38 @@ function renderOnlineStoreHistoryV14(){const host=document.getElementById("onlin
 function setupOnlineStoreHistoryV14(){document.getElementById("onlineStoreHistorySearchBtnV14")?.addEventListener("click",renderOnlineStoreHistoryV14);document.getElementById("onlineStoreHistoryClearBtnV14")?.addEventListener("click",()=>{["onlineStoreHistorySearchV14","onlineStoreHistoryStartV14","onlineStoreHistoryEndV14"].forEach(id=>{const e=document.getElementById(id);if(e)e.value="";});const t=document.getElementById("onlineStoreHistoryTypeV14");if(t)t.value="all";renderOnlineStoreHistoryV14();});document.getElementById("onlineStoreHistoryPageV14")?.addEventListener("click",e=>{const b=e.target.closest("[data-history-copy-v14]");if(b)copyOnlineTextV12(b.dataset.historyCopyV14,b);});document.querySelector('.nav-btn[data-page="onlineStoreHistoryPageV14"]')?.addEventListener("click",()=>setTimeout(renderOnlineStoreHistoryV14,0));}
 function setupPageJumpControlsV14(){const top=document.getElementById("jumpTopV14"),bottom=document.getElementById("jumpBottomV14");top?.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));bottom?.addEventListener("click",()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:"smooth"}));const refresh=()=>{const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);const ratio=window.scrollY/max;if(top)top.hidden=ratio<.12;if(bottom)bottom.hidden=ratio>.88;};window.addEventListener("scroll",refresh,{passive:true});setTimeout(refresh,0);}
 
-// ================= Online Store V2.6 Settings =================
+
+// ================= Online Store V2.7 Professional Admin =================
+function updateShopPerformanceV27(){
+  const state=getOnlineStoreStateV10();
+  const configured=Object.values(state?.products||{}).filter(onlineStoreIsConfiguredV10).length;
+  const set=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
+  set("shopConfiguredProductsV27",formatNumber(configured));
+  set("shopOrdersTodayV27","0");set("shopSalesTodayV27","RM 0.00");set("shopPendingTasksV27","0");
+}
+function setupOnlineStoreAdminV27(){
+  const chooseRoom=room=>{
+    if(onlineStoreRoomDirtyV16&&!confirmRoomLeaveV16())return;
+    const editor=document.getElementById("onlineStoreEditorV10");if(editor)editor.hidden=true;
+    onlineStoreSelectedProductIdV10="";onlineStoreRoomV16="";onlineStoreRoomDirtyV16=false;updateOnlineRoomFocusV17();
+    onlineStoreSelectedRoomV27=room;
+    document.querySelectorAll("[data-room-first-v27]").forEach(b=>b.classList.toggle("active",b.dataset.roomFirstV27===room));
+    renderOnlineStoreProductListV10();
+    document.getElementById("selectedRoomBannerV27")?.scrollIntoView({behavior:"smooth",block:"nearest"});
+  };
+  document.querySelectorAll("[data-room-first-v27]").forEach(btn=>btn.addEventListener("click",()=>chooseRoom(btn.dataset.roomFirstV27)));
+  document.getElementById("roomFirstBackV27")?.addEventListener("click",()=>{onlineStoreSelectedRoomV27="";document.getElementById("onlineStoreSearchV10").value="";document.querySelectorAll("[data-room-first-v27]").forEach(b=>b.classList.remove("active"));renderOnlineStoreProductListV10();document.getElementById("roomFirstHubV27")?.scrollIntoView({behavior:"smooth",block:"start"});});
+  document.getElementById("langChineseV27")?.addEventListener("click",()=>{});
+  document.getElementById("langEnglishV27")?.addEventListener("click",()=>{
+    const existing=document.getElementById("englishComingSoonV27");if(existing)existing.remove();
+    const box=document.createElement("div");box.id="englishComingSoonV27";box.className="english-coming-soon-v27";box.innerHTML='<div><strong>English Version</strong><span>Coming Soon</span><small>中文版完成并稳定后，再一次复制完整功能到 English。</small><button type="button">关闭</button></div>';
+    document.body.appendChild(box);box.querySelector("button")?.addEventListener("click",()=>box.remove());box.addEventListener("click",e=>{if(e.target===box)box.remove();});
+  });
+  document.querySelectorAll('.nav-btn[data-page="dashboardPage"]').forEach(btn=>btn.addEventListener("click",()=>setTimeout(updateShopPerformanceV27,0)));
+  document.querySelectorAll('.nav-btn[data-page="onlineStorePage"]').forEach(btn=>btn.addEventListener("click",()=>setTimeout(()=>{renderOnlineStoreProductListV10();},0)));
+  updateShopPerformanceV27();
+}
+// ================= Online Store V2.7 Settings =================
 function setupOnlineStoreSettingsV12(){
   const current=getOnlineStoreUiSettingsV12();
   window.__onlineStoreSettingsDirtyV21=false;
@@ -19818,7 +19777,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"2.5",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"2.7",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19833,7 +19792,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"2.5",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"2.7",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;
