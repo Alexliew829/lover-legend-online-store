@@ -2334,8 +2334,8 @@ function setupAccessLock() {
 
   if (!lock || !form || !input || !status) return;
 
-  // V2.9 UI/UX build phase: password protection is intentionally disabled.
-  // Keep the password module for later re-enable, but never block entry in V2.9.
+  // V3.0 UI/UX build phase: password protection is intentionally disabled.
+  // Keep the password module for later re-enable, but never block entry in V3.0.
   if (ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED || getOnlineStoreUiSettingsV12().security?.passwordEnabled === false) {
     unlockAccessLock(lock, input, status);
     return;
@@ -19298,6 +19298,29 @@ function onlineStoreRoomAllocatedV27(config,room){
   return 0;
 }
 function onlineStoreRoomLabelV27(room){return room==="vip"?"贵宾室 / VIP Room":room==="premium"?"精品馆 / Premium":room==="entry"?"入门首选 / Starter":"选择房间";}
+let onlineStoreProductRefreshBusyV30=false;
+let onlineStoreProductRefreshLastAtV30=0;
+function getOnlineStoreImportProductsV30(){
+  const sources=[];
+  try{const a=getProducts();if(Array.isArray(a))sources.push(a);}catch(_){}
+  try{if(typeof loadJSONReadOnlyV317==="function"){const a=loadJSONReadOnlyV317("importSystemProducts",[]);if(Array.isArray(a))sources.push(a);}}catch(_){}
+  try{if(typeof loadJSON==="function"){const a=loadJSON("importSystemProducts",[]);if(Array.isArray(a))sources.push(a);}}catch(_){}
+  const byId=new Map();
+  for(const list of sources){for(const raw of list){const id=String(raw?.id||"").trim().toUpperCase();if(!id)continue;const prev=byId.get(id)||{};byId.set(id,{...prev,...raw,id});}}
+  return [...byId.values()].filter(p=>!p?.inventoryArchived);
+}
+async function refreshOnlineStoreImportProductsV30(force=false){
+  const now=Date.now();
+  if(onlineStoreProductRefreshBusyV30||(!force&&now-onlineStoreProductRefreshLastAtV30<4000))return false;
+  onlineStoreProductRefreshBusyV30=true;onlineStoreProductRefreshLastAtV30=now;
+  try{
+    if(typeof window.refreshLatestCloudData==="function") await Promise.resolve(window.refreshLatestCloudData());
+    else if(typeof window.pullOnlineImportReadOnlyV20==="function") await Promise.resolve(window.pullOnlineImportReadOnlyV20(true));
+    return true;
+  }catch(_){return false;}finally{onlineStoreProductRefreshBusyV30=false;}
+}
+window.getOnlineStoreImportProductsV30=getOnlineStoreImportProductsV30;
+window.refreshOnlineStoreImportProductsV30=refreshOnlineStoreImportProductsV30;
 function renderOnlineStoreProductListV10(){
   const host=document.getElementById("onlineStoreProductListV10");
   if(!host)return;
@@ -19313,7 +19336,7 @@ function renderOnlineStoreProductListV10(){
   if(banner){banner.hidden=false;banner.innerHTML=`<strong>${escapeHTML(onlineStoreRoomLabelV27(room))}</strong><span>先选择产品，再进入该房间管理售价、成本、媒体与上架状态。</span>`;}
   const q=normalizeSearchTextV262(document.getElementById("onlineStoreSearchV10")?.value||"");
   const filter=String(document.getElementById("onlineStoreFilterV10")?.value||"all");
-  const products=getProducts().filter(p=>!p?.inventoryArchived);
+  const products=getOnlineStoreImportProductsV30();
   const rows=products.filter(p=>{
     const id=String(p?.id||"").trim().toUpperCase();
     const config=getOnlineStoreConfigV10(id);
@@ -19328,6 +19351,11 @@ function renderOnlineStoreProductListV10(){
     if(q&&!searchHaystack.includes(q))return false;
     return counts.unallocated>0||roomAllocated>0;
   }).sort((a,b)=>String(a.id||"").localeCompare(String(b.id||""),undefined,{numeric:true}));
+  if(!products.length){
+    host.innerHTML='<div class="room-product-load-state-v30">正在读取 Import V41.8 产品资料…</div>';
+    refreshOnlineStoreImportProductsV30(false).then(()=>renderOnlineStoreProductListV10());
+    return;
+  }
   host.innerHTML=rows.map(p=>{
     const id=String(p.id||"").trim().toUpperCase();
     const config=getOnlineStoreConfigV10(id),counts=getOnlineStoreCountsV10(p,config),allocated=onlineStoreRoomAllocatedV27(config,room),englishName=productEnglishNameV262(p);
@@ -19348,7 +19376,7 @@ function renderOnlineStoreProductListV10(){
       </div>
       <button type="button" class="primary-btn online-store-manage-btn-v12" data-online-manage-v10="${escapeHTML(id)}">选择产品</button>
     </article>`;
-  }).join("")||'<div class="empty-state">这个房间目前没有可选择的产品</div>';
+  }).join("")||(q?'<div class="empty-state">找不到符合搜索条件的产品。请确认产品名称/编号，或按“重新检查”同步 Import 后再试。</div>':'<div class="empty-state">这个房间目前没有可分配产品</div>');
 }
 
 let onlineStoreRoomV16="";
@@ -19671,7 +19699,7 @@ function saveOnlineStoreEditorV10(){
 }
 function setupOnlineStoreV10(){
   const search=document.getElementById("onlineStoreSearchV10"),filter=document.getElementById("onlineStoreFilterV10"),list=document.getElementById("onlineStoreProductListV10"),unique=document.getElementById("onlineStoreUniqueListV10"),premium=document.getElementById("onlineStorePremiumListV14"),collector=document.getElementById("onlineStoreCollectorListV14");
-  search?.addEventListener("input",()=>renderOnlineStoreProductListV10());
+  search?.addEventListener("input",()=>{renderOnlineStoreProductListV10();if(!getOnlineStoreImportProductsV30().length)refreshOnlineStoreImportProductsV30(false).then(()=>renderOnlineStoreProductListV10());});
   filter?.addEventListener("change",()=>renderOnlineStoreProductListV10());
   document.querySelector('.nav-btn[data-page="onlineStorePage"]')?.addEventListener("click",()=>{
     // V2.6: refresh Import read-only stock/cost/Initial Minimum Price before repainting Online Store.
@@ -19820,7 +19848,7 @@ function setupOnlineStoreSettingsV12(){
       alert("Online Store Restore 完成。Import 库存、成本与最低售价没有被修改。");
     }catch(err){alert(`Restore 失败：${err?.message||err}`);}
   });
-  const refreshPasswordUiV16=()=>{const ui=getOnlineStoreUiSettingsV12(),enabled=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED?false:(ui.security?.passwordEnabled!==false),state=document.getElementById("onlineStorePasswordStateV16"),btn=document.getElementById("onlineStorePasswordToggleV16"),info=document.getElementById("systemInfoPasswordV16");if(state){state.textContent=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED?"已禁用 · V2.9 界面开发阶段":(enabled?"已开启":"已关闭（测试模式）");state.classList.toggle("warning-red-v16",!enabled);}if(btn){btn.textContent=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED?"暂时禁用":(enabled?"关闭密码":"开启密码");btn.disabled=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED;btn.classList.toggle("danger-outline-btn",enabled&&!ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED);}if(info){info.textContent=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED?"已禁用 · V2.9":"已关闭 · 测试模式";info.classList.toggle("warning-red-v16",!enabled);}};
+  const refreshPasswordUiV16=()=>{const ui=getOnlineStoreUiSettingsV12(),enabled=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED?false:(ui.security?.passwordEnabled!==false),state=document.getElementById("onlineStorePasswordStateV16"),btn=document.getElementById("onlineStorePasswordToggleV16"),info=document.getElementById("systemInfoPasswordV16");if(state){state.textContent=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED?"已禁用 · V3.0 界面开发阶段":(enabled?"已开启":"已关闭（测试模式）");state.classList.toggle("warning-red-v16",!enabled);}if(btn){btn.textContent=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED?"暂时禁用":(enabled?"关闭密码":"开启密码");btn.disabled=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED;btn.classList.toggle("danger-outline-btn",enabled&&!ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED);}if(info){info.textContent=ONLINE_STORE_V29_FORCE_PASSWORD_DISABLED?"已禁用 · V3.0":"已关闭 · 测试模式";info.classList.toggle("warning-red-v16",!enabled);}};
   refreshPasswordUiV16();
   document.getElementById("onlineStorePasswordToggleV16")?.addEventListener("click",e=>{const ui=getOnlineStoreUiSettingsV12(),enabled=ui.security?.passwordEnabled!==false;if(enabled){if(!confirm("关闭 Online Store 后台密码保护？\
 \
@@ -19849,7 +19877,7 @@ function enforceOnlineImportNumericReadOnlyV28(){
 window.addEventListener("DOMContentLoaded",()=>{enforceOnlineImportNumericReadOnlyV28();updateAdminTopbarTitleV28(document.querySelector('.nav-btn.active')?.dataset?.page||"dashboardPage");});
 
 
-// ================= Online Store V2.9 UI/UX helpers =================
+// ================= Online Store V3.0 UI/UX helpers =================
 const ONLINE_STORE_HOLIDAY_KEY_V29 = "onlineStoreHolidayModeV29";
 function setupHolidayModeV29(){
   const toggle=document.getElementById("onlineStoreHolidayModeV29"),start=document.getElementById("onlineStoreHolidayStartV29"),end=document.getElementById("onlineStoreHolidayEndV29"),msg=document.getElementById("onlineStoreHolidayMessageV29"),save=document.getElementById("saveHolidayModeV29");
@@ -19871,3 +19899,15 @@ function enhanceActionButtonStatesV29(){
   refresh?.addEventListener("click",()=>{refresh.classList.add("is-busy-v29");setTimeout(()=>refresh.classList.remove("is-busy-v29"),1800);},{capture:true});
 }
 window.addEventListener("DOMContentLoaded",()=>{setupHolidayModeV29();enhanceActionButtonStatesV29();});
+
+
+// V3.0: reusable action-state helper for admin buttons.
+function setAdminButtonStateV30(button,state,label){
+  if(!button)return;
+  button.classList.remove("is-busy-v29","is-success-v29","is-error-v29");
+  if(state==="busy")button.classList.add("is-busy-v29");
+  if(state==="success")button.classList.add("is-success-v29");
+  if(state==="error")button.classList.add("is-error-v29");
+  if(label)button.textContent=label;
+}
+window.setAdminButtonStateV30=setAdminButtonStateV30;
