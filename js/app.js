@@ -20375,3 +20375,351 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
   const mother=document.getElementById('onlineStoreMotherRegularPriceV33');if(mother)mother.value=cfg.motherRegularPrice?formatOnlineMoneyInputV12(cfg.motherRegularPrice):'';
   renderOnlineStoreUniqueItemsV10(cfg.uniqueItems||[]);
 };
+
+/* ================================================================
+   Online Store V3.4 - Clean single-tree workbench
+   - One mother product, only online-listed physical trees get child IDs.
+   - Child IDs can be allocated across Premium / VIP / Starter.
+   - Every child keeps its own price, bonsai size, media and package data.
+   - Sold source is recorded internally; storefront only sees Sold.
+   - Product + package information stay on one page with an elevator nav.
+   ================================================================ */
+
+function v34TierLabel(tier){return ({entry:'入门首选',premium:'精品馆',collector:'贵宾室'}[String(tier||'')]||'精品馆');}
+function v34StatusLabel(status){return status==='sold'?'Sold':'在售';}
+function v34Num(v){const n=parseOnlineNumberV12(v);return Number.isFinite(n)&&n>0?n:0;}
+function v34Text(v){return String(v==null?'':v).trim();}
+function v34Esc(v){return escapeHTML(String(v==null?'':v));}
+function v34FirstPhoto(item){const a=Array.isArray(item?.photos)?item.photos:[];return v34Text(a[0]||item?.photo||'');}
+function v34PackageSuggestion(item){
+  return {
+    length:v34Num(item?.crownSpread)+5,
+    width:v34Num(item?.overallWidth)+5,
+    height:v34Num(item?.pottedHeight)+8
+  };
+}
+function v34CurrentDefaultTier(){
+  const room=String(typeof onlineStoreSelectedRoomV27!=='undefined'?onlineStoreSelectedRoomV27:'');
+  return room==='vip'?'collector':room==='entry'?'entry':'premium';
+}
+
+function ensureV34Workbench(){
+  const editor=document.getElementById('onlineStoreEditorV10');
+  if(!editor||document.getElementById('v34Workbench'))return;
+  editor.classList.add('v34-editor-clean');
+
+  const details=document.getElementById('onlineProductDetailsV33');
+  const foundation=editor.querySelector('.online-store-price-foundation-v11');
+  const priceNote=editor.querySelector('.online-store-price-note-v11');
+  const floorWarning=document.getElementById('onlineStorePriceFloorWarningV21');
+  const allocationWarning=document.getElementById('onlineStoreAllocationWarningV10');
+  const randomBlock=document.getElementById('onlineRoomRandomBlockV16');
+  const saveBar=editor.querySelector('.online-store-save-bar-v10');
+  if(!details||!saveBar)return;
+
+  const wrap=document.createElement('div');
+  wrap.id='v34Workbench';
+  wrap.className='v34-workbench';
+  wrap.innerHTML=`
+    <nav class="v34-elevator" aria-label="商品编辑快速导航">
+      <strong>电梯直达</strong>
+      <button type="button" data-v34-jump="v34ProductDetails">商品资料</button>
+      <button type="button" data-v34-jump="v34SingleTrees">单棵盆景</button>
+      <button type="button" data-v34-jump="v34RandomWrap">随机发货</button>
+      <button type="button" data-v34-jump="v34CostWrap">价格保护</button>
+      <button type="button" data-v34-jump="v34SaveWrap">保存</button>
+    </nav>
+    <div class="v34-main">
+      <section id="v34ProductDetails" class="v34-section"></section>
+      <section id="v34SingleTrees" class="v34-section"></section>
+      <details id="v34RandomWrap" class="v34-section v34-fold"><summary><span>随机发货 / Random</span><small>只有随机发货需要输入分配数量；独立盆景每个子编号数量固定为 1。</small></summary><div class="v34-fold-body"></div></details>
+      <details id="v34CostWrap" class="v34-section v34-fold"><summary><span>价格保护与 Online 成本</span><small>Import 平均成本、最低售价保持只读；需要时才展开查看。</small></summary><div class="v34-fold-body"></div></details>
+      <div id="v34SaveWrap"></div>
+    </div>`;
+  details.parentNode.insertBefore(wrap,details);
+  document.getElementById('v34ProductDetails').appendChild(details);
+
+  const single=document.getElementById('v34SingleTrees');
+  single.innerHTML=`
+    <div class="v34-section-head">
+      <div><strong>单棵盆景 / Individual Trees</strong><small>只为实际拿到线上销售的盆景建立子编号；未上线库存不会预先生成编号。</small></div>
+      <div class="v34-add-row"><select id="v34NewTreeTier" aria-label="新盆景分配区域"><option value="premium">精品馆</option><option value="collector">贵宾室</option><option value="entry">入门首选</option></select><button type="button" class="primary-btn" id="v34AddTree">＋ 新增上架盆景</button></div>
+    </div>
+    <div class="v34-tree-table-head"><span>照片</span><span>子编号</span><span>区域</span><span>售价</span><span>状态</span><span>数量</span><span></span></div>
+    <div id="v34TreeList" class="v34-tree-list"></div>`;
+
+  if(randomBlock)document.querySelector('#v34RandomWrap .v34-fold-body').appendChild(randomBlock);
+  if(foundation)document.querySelector('#v34CostWrap .v34-fold-body').appendChild(foundation);
+  if(priceNote)document.querySelector('#v34CostWrap .v34-fold-body').appendChild(priceNote);
+  if(floorWarning)document.querySelector('#v34CostWrap .v34-fold-body').appendChild(floorWarning);
+  if(allocationWarning)document.querySelector('#v34CostWrap .v34-fold-body').appendChild(allocationWarning);
+  document.getElementById('v34SaveWrap').appendChild(saveBar);
+
+  ['onlineRoomSelectorV16','onlineRoomToolbarV16','onlineRoomEntryBlockV16','onlineRoomPremiumBlockV16','onlineRoomVipBlockV16'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  // V3.4 price warning is contextual: never flash red before the user actually sets a selling price.
+  if(floorWarning)floorWarning.hidden=true;
+}
+
+function v34MediaRows(kind,values){
+  const list=(Array.isArray(values)?values:[]).slice(0,5);
+  const label=kind==='photos'?'照片':'视频';
+  const placeholder=kind==='photos'?'粘贴 Photo URL':'粘贴 Video URL';
+  const rows=[];
+  for(let i=0;i<5;i++){
+    const value=v34Text(list[i]);
+    rows.push(`<div class="v34-media-row"><span>${label}${i+1}</span><input type="url" data-v34-media="${kind}" data-v34-media-index="${i}" value="${v34Esc(value)}" placeholder="${placeholder}"/><button type="button" class="secondary-btn v34-mini" data-v34-clear-media="${kind}:${i}" ${value?'':'disabled'}>清除</button></div>`);
+  }
+  return rows.join('');
+}
+
+function v34TreeCard(item,motherPrice){
+  const tier=String(item.tier||'premium');
+  const mode=String(item.priceMode||((Number(item.regularPrice)||0)>0?'independent':'follow'));
+  const rp=mode==='follow'?motherPrice:Math.max(0,Number(item.regularPrice)||0);
+  const photo=v34FirstPhoto(item);
+  const status=String(item.status||'available');
+  const saleChannel=String(item.saleChannel||'');
+  const suggestion=v34PackageSuggestion(item);
+  const packL=v34Text(item.packageLength)||(v34Num(item.crownSpread)?String(suggestion.length):'');
+  const packW=v34Text(item.packageWidth)||(v34Num(item.overallWidth)?String(suggestion.width):'');
+  const packH=v34Text(item.packageHeight)||(v34Num(item.pottedHeight)?String(suggestion.height):'');
+  const photos=Array.isArray(item.photos)?item.photos:(item.photo?[item.photo]:[]);
+  const videos=Array.isArray(item.videos)?item.videos:(item.video?[item.video]:[]);
+  return `<article class="v34-tree-card online-store-unique-card-v10" data-v34-child-card="1" data-item-id-v10="${v34Esc(item.id)}" data-tier-v14="${v34Esc(tier)}">
+    <div class="v34-tree-row">
+      <button type="button" class="v34-photo-cell" data-v34-toggle-child="${v34Esc(item.id)}" title="打开 ${v34Esc(item.id)} 编辑">${photo?`<img src="${v34Esc(photo)}" alt="${v34Esc(item.id)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span class="v34-photo-empty" style="display:none">照片</span>`:'<span class="v34-photo-empty">＋ 照片</span>'}</button>
+      <button type="button" class="v34-child-id" data-v34-toggle-child="${v34Esc(item.id)}"><strong>${v34Esc(item.id)}</strong><small>${mode==='follow'?'跟随母产品售价':'独立售价'}</small></button>
+      <span class="v34-tier-chip ${tier}">${v34Esc(v34TierLabel(tier))}</span>
+      <strong class="v34-row-price">${rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价'}</strong>
+      <span class="v34-status-chip ${status==='sold'?'sold':'active'}">${v34StatusLabel(status)}</span>
+      <span class="v34-qty">1</span>
+      <button type="button" class="secondary-btn v34-edit-btn" data-v34-toggle-child="${v34Esc(item.id)}">编辑</button>
+    </div>
+    <div class="v34-tree-editor" hidden>
+      <input data-online-field-v10="tier" type="hidden" value="${v34Esc(tier)}"/>
+      <input data-online-field-v10="accessZone" type="hidden" value="${tier==='collector'?'vip':'standard'}"/>
+      <input data-online-field-v10="published" type="checkbox" hidden ${item.published!==false?'checked':''}/>
+      <input data-v34-field="priceMode" type="hidden" value="${v34Esc(mode)}"/>
+      <input data-v34-field="saleChannel" type="hidden" value="${v34Esc(saleChannel)}"/>
+
+      <div class="v34-mini-nav"><button type="button" data-v34-child-jump="sale">售价与状态</button><button type="button" data-v34-child-jump="size">盆景尺寸</button><button type="button" data-v34-child-jump="media">照片 / 视频</button><button type="button" data-v34-child-jump="package">物流信息</button></div>
+
+      <section class="v34-subsection" data-v34-child-section="sale"><h4>售价与状态</h4><div class="v34-form-grid four">
+        <label>分配区域<select data-online-field-v10="tierSelect"><option value="premium" ${tier==='premium'?'selected':''}>精品馆</option><option value="collector" ${tier==='collector'?'selected':''}>贵宾室</option><option value="entry" ${tier==='entry'?'selected':''}>入门首选</option></select></label>
+        <label>状态<select data-online-field-v10="status"><option value="available" ${status!=='sold'?'selected':''}>在售</option><option value="sold" ${status==='sold'?'selected':''}>Sold</option></select><small>${status==='sold'&&saleChannel?`后台来源：${saleChannel==='online'?'Online':'Offline'}`:'手动改为 Sold 时，后台自动记录 Offline；前台只显示 Sold。'}</small></label>
+        <label>子编号售价 (RM)<div class="v34-inline"><input data-online-field-v10="regularPrice" inputmode="decimal" value="${rp>0?formatOnlineMoneyInputV12(rp):''}" placeholder="跟随母产品售价"/><button type="button" class="secondary-btn v34-follow-price">跟随母价</button></div></label>
+        <label>Promotion Price (RM)<input data-online-field-v10="promotionPrice" inputmode="decimal" value="${item.promotionPrice?formatOnlineMoneyInputV12(item.promotionPrice):''}" placeholder="没有促销可留空"/></label>
+      </div></section>
+
+      <section class="v34-subsection" data-v34-child-section="size"><h4>盆景尺寸</h4><div class="v34-form-grid four">
+        <label>冠幅 (cm)<input data-v34-field="crownSpread" inputmode="decimal" value="${v34Esc(item.crownSpread||'')}" placeholder="例如 65"/></label>
+        <label>含盆高度 (cm)<input data-v34-field="pottedHeight" inputmode="decimal" value="${v34Esc(item.pottedHeight||'')}" placeholder="例如 70"/></label>
+        <label>整体宽度 (cm)<input data-v34-field="overallWidth" inputmode="decimal" value="${v34Esc(item.overallWidth||'')}" placeholder="例如 58"/></label>
+        <label>花盆尺寸<input data-online-field-v10="potSize" value="${v34Esc(item.potSize||'')}" placeholder="例如 45 × 32 × 15 cm"/></label>
+      </div><details class="v34-more"><summary>更多盆景资料</summary><div class="v34-form-grid three">
+        <label>树龄<input data-v34-field="treeAge" value="${v34Esc(item.treeAge||'')}" placeholder="例如 20 年"/></label>
+        <label>树头 / Trunk Base (cm)<input data-v34-field="trunkBase" inputmode="decimal" value="${v34Esc(item.trunkBase||'')}"/></label>
+        <label>根盘 (cm)<input data-v34-field="nebari" inputmode="decimal" value="${v34Esc(item.nebari||'')}"/></label>
+      </div></details></section>
+
+      <section class="v34-subsection" data-v34-child-section="media"><h4>照片 / 视频</h4><div class="v34-media-columns"><div><div class="v34-media-title"><strong>照片</strong><small>最多 5 张；第一张作为列表缩略图。</small></div>${v34MediaRows('photos',photos)}</div><div><div class="v34-media-title"><strong>视频</strong><small>最多 5 个链接。</small></div>${v34MediaRows('videos',videos)}</div></div></section>
+
+      <section class="v34-subsection" data-v34-child-section="package"><div class="v34-sub-head"><div><h4>物流信息 / Package Information</h4><small>建议值：冠幅 +5cm → L；整体宽度 +5cm → W；含盆高度 +8cm → H。全部可人工修改。</small></div><button type="button" class="secondary-btn v34-recalc-package">重新按盆景尺寸计算</button></div><div class="v34-form-grid four">
+        <label>包装长度 L (cm)<input data-v34-field="packageLength" inputmode="decimal" value="${v34Esc(packL)}"/></label>
+        <label>包装宽度 W (cm)<input data-v34-field="packageWidth" inputmode="decimal" value="${v34Esc(packW)}"/></label>
+        <label>包装高度 H (cm)<input data-v34-field="packageHeight" inputmode="decimal" value="${v34Esc(packH)}"/></label>
+        <label>包装重量 (kg)<input data-online-field-v10="weight" inputmode="decimal" value="${v34Esc(item.weight||'')}" placeholder="物流时填写"/></label>
+      </div></section>
+
+      <details class="v34-note"><summary>备注</summary><textarea data-online-field-v10="note" rows="2" placeholder="可留空">${v34Esc(item.note||'')}</textarea></details>
+      <div class="v34-tree-actions"><button type="button" class="danger-outline-btn" data-online-delete-v10="${v34Esc(item.id)}">删除子编号</button><button type="button" class="secondary-btn" data-v34-collapse-child="${v34Esc(item.id)}">完成编辑</button></div>
+    </div>
+  </article>`;
+}
+
+renderOnlineStoreUniqueItemsV10=function(items){
+  ensureV34Workbench();
+  const host=document.getElementById('v34TreeList');if(!host)return;
+  const list=Array.isArray(items)?items:[];
+  const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+  host.innerHTML=list.length?list.map(item=>v34TreeCard(item,mother)).join(''):'<div class="v34-empty"><strong>还没有上架独立盆景</strong><span>从真实库存挑选要在线上销售的树，再建立子编号。未上线库存不会生成候补编号。</span></div>';
+  const tierSelect=document.getElementById('v34NewTreeTier');if(tierSelect)tierSelect.value=v34CurrentDefaultTier();
+  updateOnlineStoreProfitDisplaysV13();
+};
+
+collectOnlineStoreUniqueItemsV10=function(){
+  const cards=[...document.querySelectorAll('#v34TreeList [data-v34-child-card="1"]')];
+  return cards.map(card=>{
+    const tier=String(card.querySelector('[data-online-field-v10="tierSelect"]')?.value||card.querySelector('[data-online-field-v10="tier"]')?.value||'premium');
+    const status=String(card.querySelector('[data-online-field-v10="status"]')?.value||'available');
+    const priceMode=String(card.querySelector('[data-v34-field="priceMode"]')?.value||'follow');
+    const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+    const visiblePrice=Math.max(0,parseOnlineNumberV12(card.querySelector('[data-online-field-v10="regularPrice"]')?.value));
+    const media=kind=>[...card.querySelectorAll(`[data-v34-media="${kind}"]`)].map(x=>v34Text(x.value)).filter(Boolean).slice(0,5);
+    return {
+      id:v34Text(card.dataset.itemIdV10).toUpperCase(),tier,
+      regularPrice:priceMode==='follow'?0:visiblePrice,priceMode,
+      promotionPrice:Math.max(0,parseOnlineNumberV12(card.querySelector('[data-online-field-v10="promotionPrice"]')?.value)),
+      photos:media('photos'),videos:media('videos'),photo:media('photos')[0]||'',video:media('videos')[0]||'',
+      accessZone:tier==='collector'?'vip':'standard',published:status!=='sold',status,
+      saleChannel:v34Text(card.querySelector('[data-v34-field="saleChannel"]')?.value),
+      crownSpread:v34Text(card.querySelector('[data-v34-field="crownSpread"]')?.value),pottedHeight:v34Text(card.querySelector('[data-v34-field="pottedHeight"]')?.value),overallWidth:v34Text(card.querySelector('[data-v34-field="overallWidth"]')?.value),
+      treeAge:v34Text(card.querySelector('[data-v34-field="treeAge"]')?.value),trunkBase:v34Text(card.querySelector('[data-v34-field="trunkBase"]')?.value),nebari:v34Text(card.querySelector('[data-v34-field="nebari"]')?.value),potSize:v34Text(card.querySelector('[data-online-field-v10="potSize"]')?.value),
+      packageLength:v34Text(card.querySelector('[data-v34-field="packageLength"]')?.value),packageWidth:v34Text(card.querySelector('[data-v34-field="packageWidth"]')?.value),packageHeight:v34Text(card.querySelector('[data-v34-field="packageHeight"]')?.value),weight:v34Text(card.querySelector('[data-online-field-v10="weight"]')?.value),note:v34Text(card.querySelector('[data-online-field-v10="note"]')?.value),
+      motherPriceAtEdit:mother
+    };
+  });
+};
+
+// Preserve V3.4 child metadata during normalization.
+normalizeOnlineStoreConfigV10=function(productId,raw){
+  const v=raw&&typeof raw==='object'?raw:{};const items=Array.isArray(v.uniqueItems)?v.uniqueItems:[];
+  return {
+    productId:String(productId||v.productId||'').trim().toUpperCase(),
+    randomQty:Math.max(0,Math.floor(Number(v.randomQty)||0)),regularPrice:Math.max(0,Number(v.regularPrice)||0),promotionPrice:Math.max(0,Number(v.promotionPrice)||0),randomPublished:v.randomPublished===true,
+    randomPhotos:Array.isArray(v.randomPhotos)?v.randomPhotos.map(x=>String(x||'').trim()).filter(Boolean).slice(0,5):[],randomVideo:String(v.randomVideo||'').trim(),shippingCost:Math.max(0,Number(v.shippingCost)||0),potCostOverride:v.potCostOverride==null||v.potCostOverride===''?null:Math.max(0,Number(v.potCostOverride)||0),
+    publicName:String(v.publicName||'').trim(),publicDescription:String(v.publicDescription||'').trim(),motherRegularPrice:Math.max(0,Number(v.motherRegularPrice)||0),motherPriceConfirmed:v.motherPriceConfirmed===true,lastChildSequence:Math.max(0,Math.floor(Number(v.lastChildSequence)||0)),
+    uniqueItems:items.map((item,index)=>({
+      id:String(item?.id||`${productId}-${index+1}`).trim().toUpperCase(),tier:({selected:'entry',premium:'premium',vip:'collector',entry:'entry',collector:'collector'}[String(item?.tier||'')]||'premium'),
+      regularPrice:Math.max(0,Number(item?.regularPrice)||0),priceMode:String(item?.priceMode||((Number(item?.regularPrice)||0)>0?'independent':'follow'))==='independent'?'independent':'follow',promotionPrice:Math.max(0,Number(item?.promotionPrice)||0),
+      photo:String(item?.photo||'').trim(),video:String(item?.video||'').trim(),photos:Array.isArray(item?.photos)?item.photos.map(x=>String(x||'').trim()).filter(Boolean).slice(0,5):(item?.photo?[String(item.photo).trim()]:[]),videos:Array.isArray(item?.videos)?item.videos.map(x=>String(x||'').trim()).filter(Boolean).slice(0,5):(item?.video?[String(item.video).trim()]:[]),
+      accessZone:String(item?.accessZone||'standard')==='vip'?'vip':'standard',published:item?.published===true,status:String(item?.status||'available')==='sold'?'sold':'available',saleChannel:String(item?.saleChannel||''),
+      crownSpread:String(item?.crownSpread||item?.depth||'').trim(),pottedHeight:String(item?.pottedHeight||item?.height||'').trim(),overallWidth:String(item?.overallWidth||item?.width||'').trim(),treeAge:String(item?.treeAge||'').trim(),trunkBase:String(item?.trunkBase||'').trim(),nebari:String(item?.nebari||'').trim(),potSize:String(item?.potSize||'').trim(),
+      packageLength:String(item?.packageLength||'').trim(),packageWidth:String(item?.packageWidth||'').trim(),packageHeight:String(item?.packageHeight||'').trim(),weight:String(item?.weight||'').trim(),note:String(item?.note||'').trim()
+    }))
+  };
+};
+
+const collectOnlineStoreConfigFromEditorV10BaseV34=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){
+  const cfg=collectOnlineStoreConfigFromEditorV10BaseV34();
+  cfg.publicName=v34Text(document.getElementById('onlineStorePublicNameV33')?.value);
+  cfg.publicDescription=v34Text(document.getElementById('onlineStorePublicDescriptionV33')?.value);
+  cfg.motherRegularPrice=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+  cfg.motherPriceConfirmed=cfg.motherRegularPrice>0;
+  cfg.uniqueItems=collectOnlineStoreUniqueItemsV10();
+  let maxSeq=Math.max(0,Number(getOnlineStoreConfigV10(onlineStoreSelectedProductIdV10)?.lastChildSequence)||0);
+  for(const item of cfg.uniqueItems){const m=String(item.id||'').match(/-(\d+)$/);if(m)maxSeq=Math.max(maxSeq,Number(m[1])||0);}
+  cfg.lastChildSequence=maxSeq;
+  return cfg;
+};
+
+function v34RefreshTreeRow(card){
+  if(!card)return;const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+  const mode=String(card.querySelector('[data-v34-field="priceMode"]')?.value||'follow');const input=card.querySelector('[data-online-field-v10="regularPrice"]');const rp=mode==='follow'?mother:Math.max(0,parseOnlineNumberV12(input?.value));
+  const price=card.querySelector('.v34-row-price');if(price)price.textContent=rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价';
+  const small=card.querySelector('.v34-child-id small');if(small)small.textContent=mode==='follow'?'跟随母产品售价':'独立售价';
+  const status=String(card.querySelector('[data-online-field-v10="status"]')?.value||'available');const chip=card.querySelector('.v34-status-chip');if(chip){chip.textContent=v34StatusLabel(status);chip.className='v34-status-chip '+(status==='sold'?'sold':'active');}
+  const tier=String(card.querySelector('[data-online-field-v10="tierSelect"]')?.value||'premium');const tierChip=card.querySelector('.v34-tier-chip');if(tierChip){tierChip.textContent=v34TierLabel(tier);tierChip.className='v34-tier-chip '+tier;}card.dataset.tierV14=tier;const hiddenTier=card.querySelector('[data-online-field-v10="tier"]');if(hiddenTier)hiddenTier.value=tier;
+  const photo=v34Text(card.querySelector('[data-v34-media="photos"]')?.value);const cell=card.querySelector('.v34-photo-cell');if(cell&&photo){cell.innerHTML=`<img src="${v34Esc(photo)}" alt="${v34Esc(card.dataset.itemIdV10||'')}"/><span class="v34-photo-empty" style="display:none">照片</span>`;}
+}
+
+function v34RecalcPackage(card){
+  if(!card)return;
+  const crown=v34Num(card.querySelector('[data-v34-field="crownSpread"]')?.value),width=v34Num(card.querySelector('[data-v34-field="overallWidth"]')?.value),height=v34Num(card.querySelector('[data-v34-field="pottedHeight"]')?.value);
+  const set=(name,val)=>{const el=card.querySelector(`[data-v34-field="${name}"]`);if(el)el.value=val>0?String(val):'';};
+  set('packageLength',crown?crown+5:0);set('packageWidth',width?width+5:0);set('packageHeight',height?height+8:0);
+}
+
+function setupV34Interactions(){
+  ensureV34Workbench();const editor=document.getElementById('onlineStoreEditorV10');if(!editor||editor.dataset.v34Bound==='1')return;editor.dataset.v34Bound='1';
+  editor.addEventListener('click',e=>{
+    const jump=e.target.closest('[data-v34-jump]');if(jump){document.getElementById(jump.dataset.v34Jump)?.scrollIntoView({behavior:'smooth',block:'start'});return;}
+    const add=e.target.closest('#v34AddTree');if(add){e.preventDefault();e.stopImmediatePropagation();if(!onlineStoreSelectedProductIdV10)return;const items=collectOnlineStoreUniqueItemsV10();const id=nextOnlineStoreItemIdV10();const tier=String(document.getElementById('v34NewTreeTier')?.value||v34CurrentDefaultTier());items.push({id,tier,regularPrice:0,priceMode:'follow',promotionPrice:0,photos:[],videos:[],published:true,status:'available',saleChannel:'',crownSpread:'',pottedHeight:'',overallWidth:'',treeAge:'',trunkBase:'',nebari:'',potSize:'',packageLength:'',packageWidth:'',packageHeight:'',weight:'',note:''});renderOnlineStoreUniqueItemsV10(items);updateOnlineStoreAllocationSummaryV10();onlineStoreRoomDirtyV16=true;setTimeout(()=>{const card=[...document.querySelectorAll('[data-v34-child-card]')].find(x=>x.dataset.itemIdV10===id);if(card){card.querySelector('.v34-tree-editor').hidden=false;card.scrollIntoView({behavior:'smooth',block:'center'});}},0);return;}
+    const toggle=e.target.closest('[data-v34-toggle-child]');if(toggle){const id=toggle.dataset.v34ToggleChild;const card=[...document.querySelectorAll('[data-v34-child-card]')].find(x=>x.dataset.itemIdV10===id);const body=card?.querySelector('.v34-tree-editor');if(body){const was=body.hidden;document.querySelectorAll('.v34-tree-editor').forEach(x=>x.hidden=true);body.hidden=!was;if(was)setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),0);}return;}
+    const collapse=e.target.closest('[data-v34-collapse-child]');if(collapse){const body=e.target.closest('.v34-tree-editor');if(body)body.hidden=true;return;}
+    const childJump=e.target.closest('[data-v34-child-jump]');if(childJump){const body=e.target.closest('.v34-tree-editor');body?.querySelector(`[data-v34-child-section="${childJump.dataset.v34ChildJump}"]`)?.scrollIntoView({behavior:'smooth',block:'nearest'});return;}
+    const follow=e.target.closest('.v34-follow-price');if(follow){const card=e.target.closest('[data-v34-child-card]');const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));const mode=card?.querySelector('[data-v34-field="priceMode"]');const input=card?.querySelector('[data-online-field-v10="regularPrice"]');if(mode)mode.value='follow';if(input)input.value=mother?formatOnlineMoneyInputV12(mother):'';v34RefreshTreeRow(card);return;}
+    const recalc=e.target.closest('.v34-recalc-package');if(recalc){v34RecalcPackage(e.target.closest('[data-v34-child-card]'));return;}
+    const clear=e.target.closest('[data-v34-clear-media]');if(clear){const [kind,index]=String(clear.dataset.v34ClearMedia||'').split(':');const card=e.target.closest('[data-v34-child-card]');const inputs=[...card.querySelectorAll(`[data-v34-media="${kind}"]`)];if(inputs[Number(index)]){inputs[Number(index)].value='';clear.disabled=true;v34RefreshTreeRow(card);}return;}
+  },true);
+  editor.addEventListener('input',e=>{
+    const card=e.target.closest('[data-v34-child-card]');if(!card)return;
+    if(e.target.matches('[data-online-field-v10="regularPrice"]')){const mode=card.querySelector('[data-v34-field="priceMode"]');if(mode)mode.value='independent';}
+    if(e.target.matches('[data-v34-media]')){const btn=e.target.parentElement?.querySelector('[data-v34-clear-media]');if(btn)btn.disabled=!v34Text(e.target.value);}
+    if(e.target.matches('[data-v34-field="crownSpread"],[data-v34-field="overallWidth"],[data-v34-field="pottedHeight"]'))v34RecalcPackage(card);
+    v34RefreshTreeRow(card);updateOnlineStoreAllocationSummaryV10();onlineStoreRoomDirtyV16=true;
+  });
+  editor.addEventListener('change',e=>{
+    const card=e.target.closest('[data-v34-child-card]');if(!card)return;
+    if(e.target.matches('[data-online-field-v10="status"]')&&e.target.value==='sold'){
+      const source=card.querySelector('[data-v34-field="saleChannel"]');if(source&&!source.value)source.value='offline';
+      const pub=card.querySelector('[data-online-field-v10="published"]');if(pub)pub.checked=false;
+    }
+    if(e.target.matches('[data-online-field-v10="status"]')&&e.target.value!=='sold'){
+      const source=card.querySelector('[data-v34-field="saleChannel"]');if(source)source.value='';const pub=card.querySelector('[data-online-field-v10="published"]');if(pub)pub.checked=true;
+    }
+    v34RefreshTreeRow(card);updateOnlineStoreAllocationSummaryV10();onlineStoreRoomDirtyV16=true;
+  });
+  document.getElementById('onlineStoreMotherRegularPriceV33')?.addEventListener('input',()=>{document.querySelectorAll('[data-v34-child-card]').forEach(card=>{if(card.querySelector('[data-v34-field="priceMode"]')?.value==='follow'){const input=card.querySelector('[data-online-field-v10="regularPrice"]');const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));if(input)input.value=mother?formatOnlineMoneyInputV12(mother):'';v34RefreshTreeRow(card);}});});
+}
+
+// Rehydrate clean workbench after the legacy editor has loaded product values.
+const setOnlineStoreEditorValuesV10BaseV34=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  ensureV34Workbench();setOnlineStoreEditorValuesV10BaseV34(productId,preserveRoomV16);
+  const cfg=getOnlineStoreConfigV10(productId),p=getOnlineStoreProductV10(productId);
+  const pub=document.getElementById('onlineStorePublicNameV33');if(pub)pub.value=String(cfg.publicName||p?.name||'');
+  const desc=document.getElementById('onlineStorePublicDescriptionV33');if(desc)desc.value=String(cfg.publicDescription||'');
+  const mother=document.getElementById('onlineStoreMotherRegularPriceV33');if(mother)mother.value=cfg.motherRegularPrice?formatOnlineMoneyInputV12(cfg.motherRegularPrice):'';
+  const warning=document.getElementById('onlineStorePriceFloorWarningV21');if(warning)warning.hidden=true;
+  renderOnlineStoreUniqueItemsV10(cfg.uniqueItems||[]);
+  const tier=document.getElementById('v34NewTreeTier');if(tier)tier.value=v34CurrentDefaultTier();
+};
+
+// V3.4: small search-card button. No oversized action block.
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{ensureV34Workbench();setupV34Interactions();},0);});
+
+// V3.4 sequence guard: once a child number is issued in the current editing session, do not reuse it.
+const v34IssuedSequenceByProduct={};
+nextOnlineStoreItemIdV10=function(){
+  const base=onlineStoreSelectedProductIdV10;if(!base)return'';
+  const cfg=getOnlineStoreConfigV10(base);let max=Math.max(0,Number(cfg?.lastChildSequence)||0,Number(v34IssuedSequenceByProduct[base])||0);
+  for(const x of collectOnlineStoreUniqueItemsV10()){const m=String(x?.id||'').match(/-(\d+)$/);if(m)max=Math.max(max,Number(m[1])||0);}
+  max+=1;v34IssuedSequenceByProduct[base]=max;return `${base}-${max}`;
+};
+
+// Follow-price children store the effective mother price for validation/history,
+// while priceMode keeps them linked to future mother-price changes.
+const collectOnlineStoreUniqueItemsV10V34Effective=collectOnlineStoreUniqueItemsV10;
+collectOnlineStoreUniqueItemsV10=function(){
+  const list=collectOnlineStoreUniqueItemsV10V34Effective();
+  const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+  return list.map(x=>({...x,regularPrice:x.priceMode==='follow'?mother:x.regularPrice}));
+};
+
+// Make the allocation summary language match the V3.4 mental model.
+window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
+  const grid=document.querySelector('#onlineStoreEditorV10 .online-store-allocation-grid-v10');
+  if(grid){const labels=[...grid.querySelectorAll('div>span')];if(labels[0])labels[0].textContent='Import 真实库存';if(labels[1])labels[1].textContent='随机发货';if(labels[2])labels[2].textContent='独立盆景在售';if(labels[3])labels[3].textContent='仍可分配';}
+},0));
+const collectOnlineStoreConfigFromEditorV10SeqV34=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){
+  const cfg=collectOnlineStoreConfigFromEditorV10SeqV34();
+  cfg.lastChildSequence=Math.max(Number(cfg.lastChildSequence)||0,Number(v34IssuedSequenceByProduct[onlineStoreSelectedProductIdV10])||0);
+  return cfg;
+};
+
+// V3.4 unified editor: room selection only sets the default allocation for a new child.
+// It no longer hides other child allocations or splits the editor into separate room pages.
+renderOnlineRoomChooserV16=function(){
+  ['onlineRoomSelectorV16','onlineRoomToolbarV16','onlineRoomEntryBlockV16','onlineRoomPremiumBlockV16','onlineRoomVipBlockV16'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  const random=document.getElementById('onlineRoomRandomBlockV16');if(random)random.hidden=false;
+  const save=document.querySelector('#v34SaveWrap .online-store-save-bar-v10')||document.querySelector('.online-store-save-bar-v10');if(save)save.hidden=false;
+  const tier=document.getElementById('v34NewTreeTier');if(tier)tier.value=v34CurrentDefaultTier();
+};
+openOnlineRoomV16=function(room,source='parent'){
+  onlineStoreRoomV16=String(room||'');onlineStoreRoomSourceV16=source;onlineStoreRoomDirtyV16=false;
+  renderOnlineRoomChooserV16();updateOnlineRoomFocusV17();scrollOnlineRoomTopV17();
+};
+closeOnlineRoomV16=function(){onlineStoreRoomV16='';onlineStoreRoomSourceV16='parent';onlineStoreRoomDirtyV16=false;renderOnlineRoomChooserV16();updateOnlineRoomFocusV17();};
+
+// Final V3.4 row repaint polish.
+const v34RefreshTreeRowBase=v34RefreshTreeRow;
+v34RefreshTreeRow=function(card){
+  v34RefreshTreeRowBase(card);if(!card)return;
+  const photo=v34Text(card.querySelector('[data-v34-media="photos"]')?.value);const cell=card.querySelector('.v34-photo-cell');
+  if(cell&&!photo)cell.innerHTML='<span class="v34-photo-empty">＋ 照片</span>';
+  const status=card.querySelector('[data-online-field-v10="status"]');
+  if(status){const soldOpt=[...status.options].find(o=>o.value==='sold');if(soldOpt)soldOpt.textContent='Sold（手动下架）';}
+};

@@ -1,4 +1,4 @@
-const CACHE = "lover-legend-online-store-V3.3-import41-8-professional-readonly";
+const CACHE = "lover-legend-online-store-V3.4-import41-8-professional-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
