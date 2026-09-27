@@ -20723,3 +20723,215 @@ v34RefreshTreeRow=function(card){
   const status=card.querySelector('[data-online-field-v10="status"]');
   if(status){const soldOpt=[...status.options].find(o=>o.value==='sold');if(soldOpt)soldOpt.textContent='Sold（手动下架）';}
 };
+
+/* ================================================================
+   Online Store V3.5 - streamlined individual-tree editor
+   ================================================================ */
+
+function v35TierLimit(tier){return (tier==='premium'||tier==='entry')?5:Infinity;}
+function v35ActiveCount(items,tier){return (items||[]).filter(x=>String(x.tier||'premium')===tier&&String(x.status||'available')!=='sold').length;}
+function v35MediaList(card,kind){return [...card.querySelectorAll(`[data-v35-media="${kind}"]`)].map(x=>v34Text(x.value)).filter(Boolean).slice(0,5);}
+function v35MediaPreviewHtml(kind,values,itemId){
+  const vals=(Array.isArray(values)?values:[]).filter(Boolean).slice(0,5);
+  const label=kind==='photos'?'照片':'视频';
+  const rows=vals.map((v,i)=>`<div class="v35-media-item"><span>${label}${i+1}</span><input type="url" data-v35-media="${kind}" value="${v34Esc(v)}" placeholder="粘贴 ${kind==='photos'?'Photo':'Video'} URL"/><button type="button" class="secondary-btn v35-media-clear" data-v35-media-clear="${kind}">清除</button></div>`).join('');
+  const canAdd=vals.length<5;
+  return `<div class="v35-media-group" data-v35-media-group="${kind}">
+    <div class="v35-media-group-head"><div><strong>${label}</strong><small>${vals.length}/5${kind==='photos'?' · 每个子编号必须使用自己的实物照片；第一张为缩略图。':''}</small></div>${canAdd?`<button type="button" class="secondary-btn v35-add-media" data-v35-add-media="${kind}">＋ 添加${label}链接</button>`:''}</div>
+    <div class="v35-media-items">${rows||`<div class="v35-media-empty">尚未加入${label}连接</div>`}</div>
+  </div>`;
+}
+
+function v35TreeCard(item,motherPrice){
+  const tier=String(item.tier||'premium');
+  const mode=String(item.priceMode||((Number(item.regularPrice)||0)>0?'independent':'follow'));
+  const rp=mode==='follow'?motherPrice:Math.max(0,Number(item.regularPrice)||0);
+  const photo=v34FirstPhoto(item);
+  const status=String(item.status||'available');
+  const saleChannel=String(item.saleChannel||'');
+  const suggestion=v34PackageSuggestion(item);
+  const packL=v34Text(item.packageLength)||(v34Num(item.crownSpread)?String(suggestion.length):'');
+  const packW=v34Text(item.packageWidth)||(v34Num(item.overallWidth)?String(suggestion.width):'');
+  const packH=v34Text(item.packageHeight)||(v34Num(item.pottedHeight)?String(suggestion.height):'');
+  const photos=Array.isArray(item.photos)?item.photos:(item.photo?[item.photo]:[]);
+  const videos=Array.isArray(item.videos)?item.videos:(item.video?[item.video]:[]);
+  const draft=item.draft===true;
+  const mediaBadge=`${photos.filter(Boolean).length}图 · ${videos.filter(Boolean).length}视频`;
+  return `<article class="v34-tree-card v35-tree-card online-store-unique-card-v10 ${status==='sold'?'v35-sold-card':''}" data-v34-child-card="1" data-item-id-v10="${v34Esc(item.id)}" data-tier-v14="${v34Esc(tier)}" data-v35-draft="${draft?'1':'0'}">
+    <div class="v34-tree-row v35-tree-row">
+      <button type="button" class="v34-photo-cell v35-photo-cell" data-v34-toggle-child="${v34Esc(item.id)}" title="编辑 ${v34Esc(item.id)}">${photo?`<img loading="lazy" decoding="async" src="${v34Esc(photo)}" alt="${v34Esc(item.id)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span class="v34-photo-empty" style="display:none">照片</span>`:'<span class="v34-photo-empty">＋ 照片</span>'}</button>
+      <button type="button" class="v34-child-id" data-v34-toggle-child="${v34Esc(item.id)}"><strong>${v34Esc(item.id)}</strong><small>${draft?'新编辑器 · 尚未保存':mediaBadge}</small></button>
+      <span class="v34-tier-chip ${tier}">${v34Esc(v34TierLabel(tier))}</span>
+      <strong class="v34-row-price">${rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价'}</strong>
+      <span class="v34-status-chip ${status==='sold'?'sold':'active'}">${v34StatusLabel(status)}</span>
+      <button type="button" class="secondary-btn v34-edit-btn" data-v34-toggle-child="${v34Esc(item.id)}">编辑</button>
+    </div>
+    <div class="v34-tree-editor v35-tree-editor" hidden>
+      <input data-online-field-v10="tier" type="hidden" value="${v34Esc(tier)}"/>
+      <input data-online-field-v10="accessZone" type="hidden" value="${tier==='collector'?'vip':'standard'}"/>
+      <input data-online-field-v10="published" type="checkbox" hidden ${item.published!==false&&status!=='sold'?'checked':''}/>
+      <input data-v34-field="priceMode" type="hidden" value="${v34Esc(mode)}"/>
+      <input data-v34-field="saleChannel" type="hidden" value="${v34Esc(saleChannel)}"/>
+
+      <div class="v35-editor-title"><div><strong>${v34Esc(item.id)}</strong><span>数量固定 1</span></div><button type="button" class="secondary-btn" data-v34-collapse-child="${v34Esc(item.id)}">收起</button></div>
+
+      <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">1</span><div><h4>售价与状态</h4><small>默认跟随母产品售价；这棵较漂亮时可直接改成独立售价。</small></div></div><div class="v34-form-grid four">
+        <label>分配区域<select data-online-field-v10="tierSelect"><option value="premium" ${tier==='premium'?'selected':''}>精品馆</option><option value="collector" ${tier==='collector'?'selected':''}>贵宾室</option><option value="entry" ${tier==='entry'?'selected':''}>入门首选</option></select></label>
+        <label>状态<select data-online-field-v10="status"><option value="available" ${status!=='sold'?'selected':''}>在售</option><option value="sold" ${status==='sold'?'selected':''}>Sold</option></select><small>${status==='sold'&&saleChannel?`后台：${saleChannel==='online'?'Online Sold':'Offline Sold'}`:'手动标记 Sold → 后台自动记录 Offline Sold；前台只显示 Sold。'}</small></label>
+        <label>子编号售价 (RM)<div class="v34-inline"><input data-online-field-v10="regularPrice" inputmode="decimal" value="${rp>0?formatOnlineMoneyInputV12(rp):''}" placeholder="输入售价"/><button type="button" class="secondary-btn v34-follow-price">跟随母价</button></div></label>
+        <label>Promotion Price (RM)<input data-online-field-v10="promotionPrice" inputmode="decimal" value="${item.promotionPrice?formatOnlineMoneyInputV12(item.promotionPrice):''}" placeholder="可留空"/></label>
+      </div></section>
+
+      <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">2</span><div><h4>盆景尺寸</h4><small>每棵独立输入；包装尺寸会自动带入。</small></div></div><div class="v34-form-grid four">
+        <label>冠幅 (cm)<input data-v34-field="crownSpread" inputmode="decimal" value="${v34Esc(item.crownSpread||'')}" placeholder="例如 65"/></label>
+        <label>含盆高度 (cm)<input data-v34-field="pottedHeight" inputmode="decimal" value="${v34Esc(item.pottedHeight||'')}" placeholder="例如 70"/></label>
+        <label>整体宽度 (cm)<input data-v34-field="overallWidth" inputmode="decimal" value="${v34Esc(item.overallWidth||'')}" placeholder="例如 58"/></label>
+        <label>花盆尺寸<input data-online-field-v10="potSize" value="${v34Esc(item.potSize||'')}" placeholder="例如 45 × 32 × 15 cm"/></label>
+      </div><details class="v34-more"><summary>更多盆景资料：树龄 / 树头 / 根盘</summary><div class="v34-form-grid three">
+        <label>树龄<input data-v34-field="treeAge" value="${v34Esc(item.treeAge||'')}" placeholder="例如 20 年"/></label>
+        <label>树头 / Trunk Base (cm)<input data-v34-field="trunkBase" inputmode="decimal" value="${v34Esc(item.trunkBase||'')}"/></label>
+        <label>根盘 (cm)<input data-v34-field="nebari" inputmode="decimal" value="${v34Esc(item.nebari||'')}"/></label>
+      </div></details></section>
+
+      <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">3</span><div><h4>照片 / 视频</h4><small>每个一物一拍子编号必须使用自己的媒体；照片不会与其他子编号共用。</small></div></div><div class="v35-media-stack">${v35MediaPreviewHtml('photos',photos,item.id)}${v35MediaPreviewHtml('videos',videos,item.id)}</div></section>
+
+      <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">4</span><div><h4>物流信息 / Package Information</h4><small>自动建议：L = 冠幅 +5cm；W = 整体宽度 +5cm；H = 含盆高度 +8cm，可人工修改。</small></div></div><div class="v35-package-head"><button type="button" class="secondary-btn v34-recalc-package">重新按盆景尺寸计算</button></div><div class="v34-form-grid four">
+        <label>包装长度 L (cm)<input data-v34-field="packageLength" inputmode="decimal" value="${v34Esc(packL)}"/></label>
+        <label>包装宽度 W (cm)<input data-v34-field="packageWidth" inputmode="decimal" value="${v34Esc(packW)}"/></label>
+        <label>包装高度 H (cm)<input data-v34-field="packageHeight" inputmode="decimal" value="${v34Esc(packH)}"/></label>
+        <label>包装重量 (kg)<input data-online-field-v10="weight" inputmode="decimal" value="${v34Esc(item.weight||'')}" placeholder="物流时填写"/></label>
+      </div></section>
+
+      <details class="v34-note"><summary>备注（可留空）</summary><textarea data-online-field-v10="note" rows="2" placeholder="备注">${v34Esc(item.note||'')}</textarea></details>
+      <div class="v34-tree-actions"><button type="button" class="danger-outline-btn" data-v35-delete-child="${v34Esc(item.id)}">删除这个编辑器</button><button type="button" class="primary-btn" data-v34-collapse-child="${v34Esc(item.id)}">完成编辑</button></div>
+    </div>
+  </article>`;
+}
+
+function v35RenderCapacity(list){
+  const host=document.getElementById('v35Capacity'); if(!host)return;
+  const p=v35ActiveCount(list,'premium'),e=v35ActiveCount(list,'entry'),v=v35ActiveCount(list,'collector');
+  host.innerHTML=`<span class="v35-cap"><b>精品馆</b> ${p}/5</span><span class="v35-cap"><b>贵宾室</b> ${v}</span><span class="v35-cap"><b>入门首选</b> ${e}/5</span><span class="v35-cap muted"><b>当前在售</b> ${p+e+v}</span>`;
+}
+function v35UpdateAddState(){
+  const tier=String(document.getElementById('v34NewTreeTier')?.value||'premium'); const btn=document.getElementById('v34AddTree'); if(!btn)return;
+  const items=collectOnlineStoreUniqueItemsV10(); const limit=v35TierLimit(tier); const count=v35ActiveCount(items,tier); const full=Number.isFinite(limit)&&count>=limit;
+  btn.disabled=full; btn.textContent=full?'已达到 5 棵':'＋ 新增一棵'; btn.title=full?`${v34TierLabel(tier)}当前在售已达到最多 5 棵；Sold 后会自动释放一个名额。`:'';
+}
+
+renderOnlineStoreUniqueItemsV10=function(items){
+  ensureV34Workbench();
+  const host=document.getElementById('v34TreeList'); if(!host)return;
+  const list=Array.isArray(items)?items:[];
+  const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+  const active=list.filter(x=>String(x.status||'available')!=='sold');
+  const sold=list.filter(x=>String(x.status||'available')==='sold');
+  const activeHtml=active.length?active.map(x=>v35TreeCard(x,mother)).join(''):'<div class="v34-empty"><strong>还没有上架独立盆景</strong><span>只为真正拿到线上销售的树建立子编号；未上架库存不会生成候补编号。</span></div>';
+  const soldHtml=sold.length?`<details class="v35-sold-history"><summary>Sold 历史 <b>${sold.length}</b><small>后台保留 Online / Offline 来源；前台统一显示 Sold。</small></summary><div class="v35-sold-list">${sold.map(x=>v35TreeCard(x,mother)).join('')}</div></details>`:'';
+  host.innerHTML=activeHtml+soldHtml;
+  v35RenderCapacity(list); v35UpdateAddState(); updateOnlineStoreProfitDisplaysV13();
+};
+
+collectOnlineStoreUniqueItemsV10=function(){
+  const cards=[...document.querySelectorAll('#v34TreeList [data-v34-child-card="1"]')];
+  return cards.map(card=>{
+    const tier=String(card.querySelector('[data-online-field-v10="tierSelect"]')?.value||card.querySelector('[data-online-field-v10="tier"]')?.value||'premium');
+    const status=String(card.querySelector('[data-online-field-v10="status"]')?.value||'available');
+    const priceMode=String(card.querySelector('[data-v34-field="priceMode"]')?.value||'follow');
+    const visiblePrice=Math.max(0,parseOnlineNumberV12(card.querySelector('[data-online-field-v10="regularPrice"]')?.value));
+    const photos=v35MediaList(card,'photos'),videos=v35MediaList(card,'videos');
+    return {id:v34Text(card.dataset.itemIdV10).toUpperCase(),tier,regularPrice:priceMode==='follow'?0:visiblePrice,priceMode,promotionPrice:Math.max(0,parseOnlineNumberV12(card.querySelector('[data-online-field-v10="promotionPrice"]')?.value)),photos,videos,photo:photos[0]||'',video:videos[0]||'',accessZone:tier==='collector'?'vip':'standard',published:status!=='sold',status,saleChannel:v34Text(card.querySelector('[data-v34-field="saleChannel"]')?.value),crownSpread:v34Text(card.querySelector('[data-v34-field="crownSpread"]')?.value),pottedHeight:v34Text(card.querySelector('[data-v34-field="pottedHeight"]')?.value),overallWidth:v34Text(card.querySelector('[data-v34-field="overallWidth"]')?.value),treeAge:v34Text(card.querySelector('[data-v34-field="treeAge"]')?.value),trunkBase:v34Text(card.querySelector('[data-v34-field="trunkBase"]')?.value),nebari:v34Text(card.querySelector('[data-v34-field="nebari"]')?.value),potSize:v34Text(card.querySelector('[data-online-field-v10="potSize"]')?.value),packageLength:v34Text(card.querySelector('[data-v34-field="packageLength"]')?.value),packageWidth:v34Text(card.querySelector('[data-v34-field="packageWidth"]')?.value),packageHeight:v34Text(card.querySelector('[data-v34-field="packageHeight"]')?.value),weight:v34Text(card.querySelector('[data-online-field-v10="weight"]')?.value),note:v34Text(card.querySelector('[data-online-field-v10="note"]')?.value),draft:card.dataset.v35Draft==='1'};
+  });
+};
+
+function v35RefreshTreeRow(card){
+  if(!card)return; const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+  const mode=String(card.querySelector('[data-v34-field="priceMode"]')?.value||'follow'); const input=card.querySelector('[data-online-field-v10="regularPrice"]'); const rp=mode==='follow'?mother:Math.max(0,parseOnlineNumberV12(input?.value));
+  const price=card.querySelector('.v34-row-price'); if(price)price.textContent=rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价';
+  const status=String(card.querySelector('[data-online-field-v10="status"]')?.value||'available'); const chip=card.querySelector('.v34-status-chip');if(chip){chip.textContent=v34StatusLabel(status);chip.className='v34-status-chip '+(status==='sold'?'sold':'active');}
+  const tier=String(card.querySelector('[data-online-field-v10="tierSelect"]')?.value||'premium'); const tierChip=card.querySelector('.v34-tier-chip'); if(tierChip){tierChip.textContent=v34TierLabel(tier);tierChip.className='v34-tier-chip '+tier;} card.dataset.tierV14=tier; const hiddenTier=card.querySelector('[data-online-field-v10="tier"]'); if(hiddenTier)hiddenTier.value=tier;
+  const photos=v35MediaList(card,'photos'),videos=v35MediaList(card,'videos'); const cell=card.querySelector('.v34-photo-cell'); if(cell){cell.innerHTML=photos[0]?`<img loading="lazy" decoding="async" src="${v34Esc(photos[0])}" alt="${v34Esc(card.dataset.itemIdV10||'')}"/><span class="v34-photo-empty" style="display:none">照片</span>`:'<span class="v34-photo-empty">＋ 照片</span>';}
+  const small=card.querySelector('.v34-child-id small');if(small)small.textContent=card.dataset.v35Draft==='1'?'新编辑器 · 尚未保存':`${photos.length}图 · ${videos.length}视频`;
+  v35UpdateAddState();
+}
+v34RefreshTreeRow=v35RefreshTreeRow;
+
+function v35ValidateUniquePhotoLinks(items){
+  const seen=new Map();
+  for(const item of items){for(const raw of (item.photos||[])){const u=String(raw||'').trim(); if(!u)continue; const key=u.toLowerCase(); if(seen.has(key)&&seen.get(key)!==item.id)return {ok:false,url:u,first:seen.get(key),second:item.id}; seen.set(key,item.id);}}
+  return {ok:true};
+}
+function v35ValidateDraftCards(){
+  const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+  const cards=[...document.querySelectorAll('#v34TreeList [data-v34-child-card="1"]')];
+  for(const card of cards){
+    if(card.dataset.v35Draft!=='1')continue;
+    const id=card.dataset.itemIdV10||'新子编号'; const status=String(card.querySelector('[data-online-field-v10="status"]')?.value||'available'); if(status==='sold')continue;
+    const mode=String(card.querySelector('[data-v34-field="priceMode"]')?.value||'follow'); const own=Math.max(0,parseOnlineNumberV12(card.querySelector('[data-online-field-v10="regularPrice"]')?.value)); const price=mode==='follow'?mother:own;
+    const photos=v35MediaList(card,'photos'); const crown=v34Num(card.querySelector('[data-v34-field="crownSpread"]')?.value),height=v34Num(card.querySelector('[data-v34-field="pottedHeight"]')?.value),width=v34Num(card.querySelector('[data-v34-field="overallWidth"]')?.value);
+    const missing=[]; if(price<=0)missing.push('售价'); if(!photos.length)missing.push('至少1张照片'); if(!crown)missing.push('冠幅'); if(!height)missing.push('含盆高度'); if(!width)missing.push('整体宽度');
+    if(missing.length){return {ok:false,card,id,missing};}
+  }
+  return {ok:true};
+}
+
+const saveOnlineStoreEditorV10BaseV35=saveOnlineStoreEditorV10;
+saveOnlineStoreEditorV10=function(){
+  const draftCheck=v35ValidateDraftCards();
+  if(!draftCheck.ok){const body=draftCheck.card?.querySelector('.v34-tree-editor');if(body)body.hidden=false;draftCheck.card?.scrollIntoView({behavior:'smooth',block:'center'});window.alert(`${draftCheck.id} 编辑器尚未完成：${draftCheck.missing.join('、')}。\n\n请完成填写，或删除这个编辑器后再保存。`);return;}
+  const items=collectOnlineStoreUniqueItemsV10();
+  for(const tier of ['premium','entry']){const count=v35ActiveCount(items,tier);if(count>5){window.alert(`不能保存：${v34TierLabel(tier)}最多同时上架 5 棵，目前为 ${count} 棵。`);return;}}
+  const dup=v35ValidateUniquePhotoLinks(items);if(!dup.ok){window.alert(`不能保存：同一张照片不能用于两个一物一拍子编号。\n\n${dup.first} 与 ${dup.second} 使用了同一个照片链接，请为每棵盆景使用自己的实物照片。`);return;}
+  document.querySelectorAll('#v34TreeList [data-v34-child-card="1"]').forEach(card=>card.dataset.v35Draft='0');
+  saveOnlineStoreEditorV10BaseV35();
+};
+
+function setupV34Interactions(){
+  ensureV34Workbench(); const editor=document.getElementById('onlineStoreEditorV10'); if(!editor||editor.dataset.v35Bound==='1')return; editor.dataset.v35Bound='1'; editor.dataset.v34Bound='1';
+  const single=document.getElementById('v34SingleTrees');
+  if(single&&!document.getElementById('v35Capacity')){const cap=document.createElement('div');cap.id='v35Capacity';cap.className='v35-capacity';single.querySelector('.v34-section-head')?.insertAdjacentElement('afterend',cap); const head=single.querySelector('.v34-tree-table-head');if(head)head.remove(); const btn=document.getElementById('v34AddTree');if(btn)btn.textContent='＋ 新增一棵';}
+  editor.addEventListener('click',e=>{
+    const jump=e.target.closest('[data-v34-jump]');if(jump){document.getElementById(jump.dataset.v34Jump)?.scrollIntoView({behavior:'smooth',block:'start'});return;}
+    const add=e.target.closest('#v34AddTree');if(add){e.preventDefault();if(add.disabled||!onlineStoreSelectedProductIdV10)return;const items=collectOnlineStoreUniqueItemsV10();const tier=String(document.getElementById('v34NewTreeTier')?.value||v34CurrentDefaultTier());const limit=v35TierLimit(tier);if(Number.isFinite(limit)&&v35ActiveCount(items,tier)>=limit){v35UpdateAddState();return;}const id=nextOnlineStoreItemIdV10();items.push({id,tier,regularPrice:0,priceMode:'follow',promotionPrice:0,photos:[],videos:[],published:true,status:'available',saleChannel:'',crownSpread:'',pottedHeight:'',overallWidth:'',treeAge:'',trunkBase:'',nebari:'',potSize:'',packageLength:'',packageWidth:'',packageHeight:'',weight:'',note:'',draft:true});renderOnlineStoreUniqueItemsV10(items);onlineStoreRoomDirtyV16=true;setTimeout(()=>{const card=[...document.querySelectorAll('[data-v34-child-card]')].find(x=>x.dataset.itemIdV10===id);if(card){card.querySelector('.v34-tree-editor').hidden=false;card.scrollIntoView({behavior:'smooth',block:'center'});}},0);return;}
+    const toggle=e.target.closest('[data-v34-toggle-child]');if(toggle){const id=toggle.dataset.v34ToggleChild;const card=[...document.querySelectorAll('[data-v34-child-card]')].find(x=>x.dataset.itemIdV10===id);const body=card?.querySelector('.v34-tree-editor');if(body){const was=body.hidden;document.querySelectorAll('.v34-tree-editor').forEach(x=>x.hidden=true);body.hidden=!was;if(was)setTimeout(()=>card.scrollIntoView({behavior:'smooth',block:'nearest'}),0);}return;}
+    const collapse=e.target.closest('[data-v34-collapse-child]');if(collapse){const body=e.target.closest('.v34-tree-editor');if(body)body.hidden=true;return;}
+    const follow=e.target.closest('.v34-follow-price');if(follow){const card=e.target.closest('[data-v34-child-card]');const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));const mode=card?.querySelector('[data-v34-field="priceMode"]');const input=card?.querySelector('[data-online-field-v10="regularPrice"]');if(mode)mode.value='follow';if(input)input.value=mother?formatOnlineMoneyInputV12(mother):'';v35RefreshTreeRow(card);return;}
+    const recalc=e.target.closest('.v34-recalc-package');if(recalc){v34RecalcPackage(e.target.closest('[data-v34-child-card]'));return;}
+    const addMedia=e.target.closest('[data-v35-add-media]');if(addMedia){const kind=addMedia.dataset.v35AddMedia;const group=addMedia.closest('[data-v35-media-group]');const box=group?.querySelector('.v35-media-items');const count=group?.querySelectorAll(`[data-v35-media="${kind}"]`).length||0;if(!box||count>=5)return;if(box.querySelector('.v35-media-empty'))box.innerHTML='';const label=kind==='photos'?'照片':'视频';box.insertAdjacentHTML('beforeend',`<div class="v35-media-item"><span>${label}${count+1}</span><input type="url" data-v35-media="${kind}" placeholder="粘贴 ${kind==='photos'?'Photo':'Video'} URL"/><button type="button" class="secondary-btn v35-media-clear" data-v35-media-clear="${kind}">清除</button></div>`);const input=box.lastElementChild?.querySelector('input');input?.focus();if(count+1>=5)addMedia.remove();return;}
+    const clear=e.target.closest('[data-v35-media-clear]');if(clear){const item=clear.closest('.v35-media-item');const group=clear.closest('[data-v35-media-group]');item?.remove();const kind=clear.dataset.v35MediaClear;const remaining=group?.querySelectorAll(`[data-v35-media="${kind}"]`).length||0;if(group&&remaining===0){group.querySelector('.v35-media-items').innerHTML=`<div class="v35-media-empty">尚未加入${kind==='photos'?'照片':'视频'}连接</div>`;}if(group&&!group.querySelector('[data-v35-add-media]')&&remaining<5){group.querySelector('.v35-media-group-head')?.insertAdjacentHTML('beforeend',`<button type="button" class="secondary-btn v35-add-media" data-v35-add-media="${kind}">＋ 添加${kind==='photos'?'照片':'视频'}链接</button>`);}v35RefreshTreeRow(e.target.closest('[data-v34-child-card]'));return;}
+    const del=e.target.closest('[data-v35-delete-child]');if(del){const id=String(del.dataset.v35DeleteChild||'');const card=e.target.closest('[data-v34-child-card]');const isDraft=card?.dataset.v35Draft==='1';if(!isDraft&&!window.confirm(`确认删除子编号 ${id} 的 Online 编辑记录？\n\n如果这棵已经正式使用过，建议改成 Sold 保留历史，而不是删除。`))return;const items=collectOnlineStoreUniqueItemsV10().filter(x=>x.id!==id);renderOnlineStoreUniqueItemsV10(items);updateOnlineStoreAllocationSummaryV10();onlineStoreRoomDirtyV16=true;return;}
+  },true);
+  editor.addEventListener('input',e=>{const card=e.target.closest('[data-v34-child-card]');if(!card)return;if(e.target.matches('[data-online-field-v10="regularPrice"]')){const mode=card.querySelector('[data-v34-field="priceMode"]');if(mode)mode.value='independent';}if(e.target.matches('[data-v34-field="crownSpread"],[data-v34-field="overallWidth"],[data-v34-field="pottedHeight"]'))v34RecalcPackage(card);v35RefreshTreeRow(card);updateOnlineStoreAllocationSummaryV10();onlineStoreRoomDirtyV16=true;});
+  editor.addEventListener('change',e=>{if(e.target.id==='v34NewTreeTier'){v35UpdateAddState();return;}const card=e.target.closest('[data-v34-child-card]');if(!card)return;if(e.target.matches('[data-online-field-v10="status"]')){const source=card.querySelector('[data-v34-field="saleChannel"]'),pub=card.querySelector('[data-online-field-v10="published"]');if(e.target.value==='sold'){if(source&&!source.value)source.value='offline';if(pub)pub.checked=false;}else{if(source)source.value='';if(pub)pub.checked=true;}}v35RefreshTreeRow(card);updateOnlineStoreAllocationSummaryV10();onlineStoreRoomDirtyV16=true;});
+  document.getElementById('onlineStoreMotherRegularPriceV33')?.addEventListener('input',()=>{document.querySelectorAll('[data-v34-child-card]').forEach(card=>{if(card.querySelector('[data-v34-field="priceMode"]')?.value==='follow'){const input=card.querySelector('[data-online-field-v10="regularPrice"]');const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));if(input)input.value=mother?formatOnlineMoneyInputV12(mother):'';v35RefreshTreeRow(card);}});});
+}
+
+const normalizeOnlineStoreConfigV10BaseV35=normalizeOnlineStoreConfigV10;
+normalizeOnlineStoreConfigV10=function(productId,raw){const cfg=normalizeOnlineStoreConfigV10BaseV35(productId,raw);cfg.uniqueItems=(cfg.uniqueItems||[]).map((x,i)=>({...x,draft:false}));return cfg;};
+
+window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{const btn=document.querySelector('.product-title-actions-v33 .online-store-manage-btn-v12');if(btn)btn.classList.add('v35-compact-manage');},0));
+
+// V3.5 final price-confirmation and follow-price safeguards.
+const collectOnlineStoreUniqueItemsV10V35Raw=collectOnlineStoreUniqueItemsV10;
+collectOnlineStoreUniqueItemsV10=function(){
+  const list=collectOnlineStoreUniqueItemsV10V35Raw();
+  const mother=Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));
+  return list.map(x=>({...x,regularPrice:x.priceMode==='follow'?mother:x.regularPrice}));
+};
+const setOnlineStoreEditorValuesV10BaseV35=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  setOnlineStoreEditorValuesV10BaseV35(productId,preserveRoomV16);
+  const cfg=getOnlineStoreConfigV10(productId);const mother=document.getElementById('onlineStoreMotherRegularPriceV33');
+  if(mother)mother.dataset.v35PriceConfirmed=cfg?.motherPriceConfirmed===true?'1':'0';
+  v35UpdateAddState();
+};
+const collectOnlineStoreConfigFromEditorV10BaseV35Confirm=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){
+  const cfg=collectOnlineStoreConfigFromEditorV10BaseV35Confirm();const mother=document.getElementById('onlineStoreMotherRegularPriceV33');
+  cfg.motherPriceConfirmed=Boolean(cfg.motherRegularPrice>0&&mother?.dataset.v35PriceConfirmed==='1');
+  return cfg;
+};
+window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
+  const mother=document.getElementById('onlineStoreMotherRegularPriceV33');
+  mother?.addEventListener('input',()=>{mother.dataset.v35PriceConfirmed='1';});
+},0));
