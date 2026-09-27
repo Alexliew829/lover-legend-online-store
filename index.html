@@ -97,7 +97,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V3.1</div>
+  <div class="sidebar-version-v27">Online Store V3.2</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -107,7 +107,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V3.1 · Import Base V41.8 · Import Data Read-Only</small>
+      <small>Online Store V3.2 · Import Base V41.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -245,10 +245,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V3.1 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
+<div class="muted">Online Store V3.2 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V3.1</span>
+<span class="online-store-version-v10">V3.2</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
   <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
@@ -258,7 +258,7 @@
   <button type="button" disabled>媒体管理 <small>Coming Soon</small></button>
 </nav>
 <section class="room-first-hub-v27" id="roomFirstHubV27">
-  <div class="room-first-head-v27"><div><strong>先选择商品房间</strong><small>选择房间后，再从 Import 可分配库存中选择产品。</small></div><button class="ghost-btn" id="roomFirstBackV27" type="button" hidden>重新选择房间</button></div>
+  <div class="room-first-head-v27"><div><strong>盆景商品房间</strong><small>点击房间会直接进入该房间，再搜索和选择产品。</small></div></div>
   <div class="room-first-grid-v27">
     <button class="room-first-card-v27 vip" data-room-first-v27="vip" type="button"><span class="room-first-icon-v27">◆</span><strong>贵宾室</strong><small>VIP Room</small><em>藏家级别 · 专属浏览</em></button>
     <button class="room-first-card-v27 premium" data-room-first-v27="premium" type="button"><span class="room-first-icon-v27">✦</span><strong>精品馆</strong><small>Premium</small><em>高品质精选商品</em></button>
@@ -266,10 +266,34 @@
   </div>
   <div class="selected-room-banner-v27" id="selectedRoomBannerV27" hidden></div>
 </section>
-<div class="online-store-search-row-v10 room-product-tools-v27" hidden id="roomProductToolsV27">
-<input aria-label="搜索产品" autocomplete="off" class="search-input text-left-input" id="onlineStoreSearchV10" placeholder="搜索产品编号、中文名、英文名或类别"/>
+<section class="product-category-hub-v32" id="productCategoryHubV32">
+  <div class="product-category-head-v32"><div><strong>商品分类</strong><small>除了盆景，预留周边商品分类；搜索与筛选以后可覆盖全部商品。</small></div></div>
+  <div class="product-category-grid-v32">
+    <button type="button" class="active" data-product-category-v32="bonsai"><strong>盆景</strong><small>Bonsai</small></button>
+    <button type="button" data-product-category-v32="fertilizer-pesticide"><strong>肥料 / 农药</strong><small>Fertilizer / Pesticide</small></button>
+    <button type="button" data-product-category-v32="soil-media"><strong>泥土 / 介质</strong><small>Soil / Media</small></button>
+    <button type="button" data-product-category-v32="pot"><strong>花盆</strong><small>Pots</small></button>
+    <button type="button" data-product-category-v32="tools"><strong>工具</strong><small>Tools</small></button>
+    <button type="button" data-product-category-v32="other"><strong>其他</strong><small>Other</small></button>
+  </div>
+</section>
+<section class="product-entered-header-v32" id="productEnteredHeaderV32" hidden>
+  <button type="button" class="ghost-btn" id="productRoomExitV32">← 返回商品总览</button>
+  <div><strong id="productEnteredTitleV32">—</strong><small id="productEnteredHintV32">输入关键词后才显示搜索结果。</small></div>
+</section>
+<div class="online-store-search-row-v10 room-product-tools-v27 product-search-tools-v32" hidden id="roomProductToolsV27">
+<input aria-label="搜索产品" autocomplete="off" class="search-input text-left-input" id="onlineStoreSearchV10" placeholder="搜索产品编号、中文名、英文名或关键词"/>
+<select aria-label="筛选商品分类" id="onlineStoreCategoryFilterV32">
+<option value="all">全部分类</option>
+<option value="bonsai">盆景</option>
+<option value="fertilizer-pesticide">肥料 / 农药</option>
+<option value="soil-media">泥土 / 介质</option>
+<option value="pot">花盆</option>
+<option value="tools">工具</option>
+<option value="other">其他</option>
+</select>
 <select aria-label="筛选 Online Store 商品状态" id="onlineStoreFilterV10">
-<option value="all">全部产品</option>
+<option value="all">全部状态</option>
 <option value="configured">已设置 Online Store</option>
 <option value="published">已上架</option>
 <option value="unpublished">未上架</option>
@@ -657,7 +681,7 @@
   <section class="panel aftersales-placeholder-v29"><div><strong>退款 / 售后</strong><p>售后记录绑定原订单；沟通优先通过 WhatsApp，系统保存正式状态、原因、金额与备注。</p></div><button type="button" class="secondary-btn">WhatsApp 顾客</button></section>
 </section>
 <section class="page" id="shippingPageV27">
-  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V3.1 UI</span></div>
+  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V3.2 UI</span></div>
   <nav class="module-tabs-v30" id="shippingTabsV31"><button class="active" type="button" data-module-tab-v31="shipping-methods">配送方式</button><button type="button" data-module-tab-v31="freight-estimate">运费估算</button><button type="button" data-module-tab-v31="shipping-records">发货记录</button><button type="button" data-module-tab-v31="shipping-issues">配送异常</button></nav>
   <div class="module-card-grid-v27 seller-module-grid-v30" id="shippingMethodsPanelV31"><article><strong>West Malaysia Courier</strong><p>Line Clear / City-Link 等本地配送。</p><span class="status-success-v29">可设置</span></article><article><strong>Klang Valley</strong><p>Lalamove · 顾客承担实际配送费。</p><span class="status-info-v29">可设置</span></article><article><strong>Pickup / Meetup</strong><p>门店自取或约定地点交收。</p><span>RM 0.00</span></article><article><strong>Singapore</strong><p>Private Driver · 商品付款与实际运费分开。</p><span class="status-info-v29">预留</span></article></div>
   <section class="panel freight-estimator-shell-v30" id="freightEstimatePanelV31" hidden><div class="dashboard-block-head-v30"><div><strong>Freight Estimate</strong><small>后续接入尺寸、重量与目的地区域计算；当前仅建立操作位置。</small></div><span class="module-status-v27">下一阶段接公式</span></div><div class="freight-input-grid-v30"><input placeholder="Length (cm)" disabled><input placeholder="Width (cm)" disabled><input placeholder="Height (cm)" disabled><input placeholder="Weight (kg)" disabled><select disabled><option>Destination Zone</option></select><button type="button" class="secondary-btn" disabled>计算运费</button></div></section>
@@ -765,7 +789,7 @@
 <button class="primary-btn" id="saveHolidayModeV29" type="button">保存 Holiday Mode</button>
 </section>
 <section class="panel settings-section-v12 password-security-v16">
-<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V3.1 界面开发阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
+<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V3.2 界面开发阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
 <div class="password-protection-row-v16">
   <div><strong>后台密码保护</strong><small id="onlineStorePasswordStateV16">检查中...</small></div>
   <button class="primary-btn" id="onlineStorePasswordToggleV16" type="button">检查中...</button>
@@ -1059,7 +1083,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V3.1</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V3.2</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1080,7 +1104,7 @@
 <aside class="admin-assist-v27" aria-label="辅助信息">
   <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V3.1</p><small>Import Base 41.8 Stable</small></section>
+  <section><strong>当前版本</strong><p>Online Store V3.2</p><small>Import Base 41.8 Stable</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>
