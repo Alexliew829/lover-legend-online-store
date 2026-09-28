@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-V3.7-import41-8-professional-readonly";
+const CACHE = "lover-legend-online-store-V3.8-import41-8-professional-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=31-interaction-fix",
-  "./css/style.css?v=31-interaction-fix",
-  "./js/common.js?v=31-interaction-fix",
-  "./js/sync.js?v=31-interaction-fix",
-  "./js/app.js?v=31-interaction-fix",
-  "./manifest.json?v=31-interaction-fix",
+  "./index.html?v=38-room-index-current-price",
+  "./css/style.css?v=38-room-index-current-price",
+  "./js/common.js?v=38-room-index-current-price",
+  "./js/sync.js?v=38-room-index-current-price",
+  "./js/app.js?v=38-room-index-current-price",
+  "./manifest.json?v=38-room-index-current-price",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -42,11 +42,11 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=31-interaction-fix", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=38-room-index-current-price", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=31-interaction-fix")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=38-room-index-current-price")) || (await caches.match("./index.html")))
     );
     return;
   }
