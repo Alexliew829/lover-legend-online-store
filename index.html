@@ -15,7 +15,7 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=39-performance-r1" rel="manifest"/>
+<link href="./manifest.json?v=40-systematic-r1" rel="manifest"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
 <link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
@@ -47,12 +47,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=39-performance-r1" rel="preload"/>
-<link href="./css/style.css?v=39-performance-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=39-performance-r1" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=39-performance-r1"></script>
-<script defer="" src="./js/sync.js?v=39-performance-r1"></script>
-<script defer="" src="./js/app.js?v=39-performance-r1"></script>
+<link as="style" href="./css/style.css?v=40-systematic-r1" rel="preload"/>
+<link href="./css/style.css?v=40-systematic-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=40-systematic-r1" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=40-systematic-r1"></script>
+<script defer="" src="./js/sync.js?v=40-systematic-r1"></script>
+<script defer="" src="./js/app.js?v=40-systematic-r1"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog" hidden>
@@ -98,7 +98,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V3.9</div>
+  <div class="sidebar-version-v27">Online Store V4.0</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -108,7 +108,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V3.9 · Import Base V41.8 · Import Data Read-Only</small>
+      <small>Online Store V4.0 · Import Base V41.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -246,10 +246,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V3.9 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
+<div class="muted">Online Store V4.0 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V3.9</span>
+<span class="online-store-version-v10">V4.0</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
   <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
@@ -327,7 +327,31 @@
   <div class="online-store-form-grid-v10">
     <label>商品名称（前台显示）<input id="onlineStorePublicNameV33" class="text-left-input" type="text" placeholder="默认使用 Import 产品名称，可改成前台销售名称"/><small class="field-hint-v12">顾客前台看到的商品名称；不回写 Import。</small></label>
     <label>母产品默认售价 (RM)<input id="onlineStoreMotherRegularPriceV33" inputmode="decimal" type="text" placeholder="例如 1,280.00"/><small class="field-hint-v12">新增子编号时默认继承；每个子编号仍可独立加价或减价。</small></label>
-    <label class="online-product-description-v33">商品简介 / Description<textarea id="onlineStorePublicDescriptionV33" rows="3" placeholder="前台给顾客看的商品说明"></textarea></label>
+    <label>商品卖点 / Short Summary<input id="onlineStoreShortSummaryV40" class="text-left-input" type="text" maxlength="120" placeholder="可选：一句话重点，例如 老桩游龙 · 枝位成熟"/><small class="field-hint-v12">母产品共用；前台商品卡/详情顶部可使用。</small></label>
+    <label class="online-product-description-v33">商品详情 / Product Details<textarea id="onlineStoreProductDetailsV40" rows="4" placeholder="输入需要人工说明的商品特点；所有子编号共用"></textarea></label>
+  </div>
+  <div class="v40-shared-block">
+    <div class="v40-shared-head"><div><strong>母产品标准资料 / Shared Product Defaults</strong><small>只输入一次。新增子编号自动继承；只有个别差异才需要单独修改。</small></div><span class="v40-auto-badge">系统自动套用</span></div>
+    <div class="v40-section-label">标准盆景尺寸</div>
+    <div class="v34-form-grid four v40-master-dim-grid">
+      <label>冠幅 (cm)<input id="onlineStoreMasterCrownV40" inputmode="decimal" placeholder="例如 60"/></label>
+      <label>含盆高度 (cm)<input id="onlineStoreMasterHeightV40" inputmode="decimal" placeholder="例如 70"/></label>
+      <label>整体宽度 (cm)<input id="onlineStoreMasterWidthV40" inputmode="decimal" placeholder="例如 55"/></label>
+      <label>花盆尺寸<input id="onlineStoreMasterPotSizeV40" placeholder="例如 45 × 32 × 15 cm"/></label>
+      <label>树龄<input id="onlineStoreMasterTreeAgeV40" placeholder="例如 20 年"/></label>
+      <label>树头 / Trunk Base (cm)<input id="onlineStoreMasterTrunkV40" inputmode="decimal"/></label>
+      <label>根盘 (cm)<input id="onlineStoreMasterNebariV40" inputmode="decimal"/></label>
+    </div>
+    <div class="v40-auto-result" id="onlineStoreMasterPackagePreviewV40">输入冠幅 / 高度 / 宽度后，系统自动生成包装尺寸建议。</div>
+    <div class="v40-section-label">养护教程 / Care Guide</div>
+    <div class="v40-care-grid">
+      <label>浇水<textarea id="onlineStoreCareWaterV40" rows="2" placeholder="例如：表土略干后浇透"></textarea></label>
+      <label>光照<textarea id="onlineStoreCareLightV40" rows="2" placeholder="例如：明亮散射光 / 半日照"></textarea></label>
+      <label>施肥<textarea id="onlineStoreCareFertilizerV40" rows="2" placeholder="例如：生长期薄肥勤施"></textarea></label>
+      <label>修剪<textarea id="onlineStoreCarePruningV40" rows="2" placeholder="例如：新梢成熟后修剪"></textarea></label>
+      <label class="v40-care-wide">环境 / 注意事项<textarea id="onlineStoreCareNotesV40" rows="2" placeholder="温度、通风、雨季或其他提醒"></textarea></label>
+    </div>
+    <div class="field-hint-v12">系统负责把这些资料分层整理到前台；子编号无需重复输入。</div>
   </div>
 </section>
 <div class="muted online-store-price-note-v11">Import 最低售价与平均成本在 Online Store 全部只读；商品编辑这里只管理正常售价、成本与利润，促销统一由「营销管理」处理，绝不回写 Import。</div>
@@ -692,7 +716,18 @@
   <section class="panel aftersales-placeholder-v29"><div><strong>退款 / 售后</strong><p>售后记录绑定原订单；沟通优先通过 WhatsApp，系统保存正式状态、原因、金额与备注。</p></div><button type="button" class="secondary-btn">WhatsApp 顾客</button></section>
 </section>
 <section class="page" id="shippingPageV27">
-  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V3.9 UI</span></div>
+  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V4.0 UI</span></div>
+  <section class="panel v40-package-reserve-panel" id="packageReserveSettingsV40">
+    <div class="v40-shared-head"><div><strong>包装预留设置 / Package Reserve</strong><small>系统根据母产品标准尺寸自动生成包装建议；以后新增子编号直接继承。</small></div><span class="v40-auto-badge">自动化</span></div>
+    <div class="v40-reserve-grid">
+      <label>长度预留 (cm)<input id="packageReserveLengthV40" inputmode="decimal" value="5"/></label>
+      <label>宽度预留 (cm)<input id="packageReserveWidthV40" inputmode="decimal" value="5"/></label>
+      <label>高度预留 (cm)<input id="packageReserveHeightV40" inputmode="decimal" value="8"/></label>
+      <div class="v40-reserve-actions"><button type="button" class="primary-btn" id="savePackageReserveV40">保存设置</button><button type="button" class="secondary-btn" id="resetPackageReserveV40">回到原厂设定</button></div>
+    </div>
+    <div class="status-text" id="packageReserveStatusV40"></div>
+    <div class="field-hint-v12">原厂：5 / 5 / 8 cm。只影响 Online 包装建议，不修改 Import。自动结果仍可在个别子编号中微调。</div>
+  </section>
   <nav class="module-tabs-v30" id="shippingTabsV31"><button class="active" type="button" data-module-tab-v31="shipping-methods">配送方式</button><button type="button" data-module-tab-v31="freight-estimate">运费估算</button><button type="button" data-module-tab-v31="shipping-records">发货记录</button><button type="button" data-module-tab-v31="shipping-issues">配送异常</button></nav>
   <div class="module-card-grid-v27 seller-module-grid-v30" id="shippingMethodsPanelV31"><article><strong>West Malaysia Courier</strong><p>Line Clear / City-Link 等本地配送。</p><span class="status-success-v29">可设置</span></article><article><strong>Klang Valley</strong><p>Lalamove · 顾客承担实际配送费。</p><span class="status-info-v29">可设置</span></article><article><strong>Pickup / Meetup</strong><p>门店自取或约定地点交收。</p><span>RM 0.00</span></article><article><strong>Singapore</strong><p>Private Driver · 商品付款与实际运费分开。</p><span class="status-info-v29">预留</span></article></div>
   <section class="panel freight-estimator-shell-v30" id="freightEstimatePanelV31" hidden><div class="dashboard-block-head-v30"><div><strong>Freight Estimate</strong><small>后续接入尺寸、重量与目的地区域计算；当前仅建立操作位置。</small></div><span class="module-status-v27">下一阶段接公式</span></div><div class="freight-input-grid-v30"><input placeholder="Length (cm)" disabled><input placeholder="Width (cm)" disabled><input placeholder="Height (cm)" disabled><input placeholder="Weight (kg)" disabled><select disabled><option>Destination Zone</option></select><button type="button" class="secondary-btn" disabled>计算运费</button></div></section>
@@ -800,7 +835,7 @@
 <button class="primary-btn" id="saveHolidayModeV29" type="button">保存 Holiday Mode</button>
 </section>
 <section class="panel settings-section-v12 password-security-v16">
-<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V3.9 性能优化阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
+<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V4.0 系统化与自动化阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
 <div class="password-protection-row-v16">
   <div><strong>后台密码保护</strong><small id="onlineStorePasswordStateV16">检查中...</small></div>
   <button class="primary-btn" id="onlineStorePasswordToggleV16" type="button">检查中...</button>
@@ -1094,7 +1129,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V3.9</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V4.0</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1115,7 +1150,7 @@
 <aside class="admin-assist-v27" aria-label="辅助信息">
   <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V3.9</p><small>Import Base 41.8 Stable</small></section>
+  <section><strong>当前版本</strong><p>Online Store V4.0</p><small>Import Base 41.8 Stable</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>

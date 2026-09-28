@@ -2866,7 +2866,7 @@ function setupNavigation() {
         // the keyword box still contains text. Query only on 查看历史 / Enter / date action.
       }
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "auto" });
     });
   });
 }
@@ -18995,7 +18995,7 @@ function showDataToolsStatus(message, isError = false) {
 
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js?v=39-performance-r1").then(reg=>reg.update()).catch(error => {
+    navigator.serviceWorker.register("./sw.js?v=40-systematic-r1").then(reg=>reg.update()).catch(error => {
       console.error("Service Worker registration failed:", error);
     });
   }
@@ -19845,7 +19845,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"3.9",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"4.0",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19860,7 +19860,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.9",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"4.0",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;
@@ -21394,3 +21394,117 @@ function renderOnlineDashboardFastV39(){
 if(window.ONLINE_STORE_IMPORT_READ_ONLY_V20===true){
   renderDashboard=renderOnlineDashboardFastV39;
 }
+
+
+/* ================================================================
+   Online Store V4.0 - Systematic + Automation
+   Human inputs only what must be human: price, media, exceptions.
+   System inherits shared product data, classifies context and generates package suggestions.
+   ================================================================ */
+window.ONLINE_STORE_V40_SYSTEMATIC_AUTOMATION=true;
+const V40_FACTORY_PACKAGE_RESERVE=Object.freeze({length:5,width:5,height:8});
+
+function v40PackageReserve(){
+  const ui=getOnlineStoreUiSettingsV12(); const r=ui?.shipping?.packageReserve||{};
+  const safe=(v,d)=>{const n=Number(v);return Number.isFinite(n)&&n>=0?n:d;};
+  return {length:safe(r.length,5),width:safe(r.width,5),height:safe(r.height,8)};
+}
+const getOnlineStoreUiSettingsV12BaseV40=getOnlineStoreUiSettingsV12;
+getOnlineStoreUiSettingsV12=function(){
+  const v=getOnlineStoreUiSettingsV12BaseV40();
+  const r=v?.shipping?.packageReserve||{};
+  v.shipping={...(v.shipping||{}),packageReserve:{length:Number.isFinite(Number(r.length))?Number(r.length):5,width:Number.isFinite(Number(r.width))?Number(r.width):5,height:Number.isFinite(Number(r.height))?Number(r.height):8}};
+  return v;
+};
+
+v34PackageSuggestion=function(item){
+  const r=v40PackageReserve();
+  return {length:v34Num(item?.crownSpread)+r.length,width:v34Num(item?.overallWidth)+r.width,height:v34Num(item?.pottedHeight)+r.height};
+};
+
+function v40MasterDimsFromDom(){return {
+  crownSpread:v34Text(document.getElementById('onlineStoreMasterCrownV40')?.value),
+  pottedHeight:v34Text(document.getElementById('onlineStoreMasterHeightV40')?.value),
+  overallWidth:v34Text(document.getElementById('onlineStoreMasterWidthV40')?.value),
+  potSize:v34Text(document.getElementById('onlineStoreMasterPotSizeV40')?.value),
+  treeAge:v34Text(document.getElementById('onlineStoreMasterTreeAgeV40')?.value),
+  trunkBase:v34Text(document.getElementById('onlineStoreMasterTrunkV40')?.value),
+  nebari:v34Text(document.getElementById('onlineStoreMasterNebariV40')?.value)
+};}
+function v40HasDims(d){return ['crownSpread','pottedHeight','overallWidth','potSize','treeAge','trunkBase','nebari'].some(k=>v34Text(d?.[k]));}
+function v40EffectiveDims(item,master){const mode=String(item?.dimensionMode||'');const oldHas=v40HasDims(item);const useOwn=mode==='override'||(!mode&&oldHas);return useOwn?{crownSpread:v34Text(item.crownSpread),pottedHeight:v34Text(item.pottedHeight),overallWidth:v34Text(item.overallWidth),potSize:v34Text(item.potSize),treeAge:v34Text(item.treeAge),trunkBase:v34Text(item.trunkBase),nebari:v34Text(item.nebari)}:{...master};}
+function v40UpdateMasterPackagePreview(){const el=document.getElementById('onlineStoreMasterPackagePreviewV40');if(!el)return;const d=v40MasterDimsFromDom(),r=v40PackageReserve();const c=v34Num(d.crownSpread),w=v34Num(d.overallWidth),h=v34Num(d.pottedHeight);el.textContent=(c&&w&&h)?`系统包装建议：L ${c+r.length} × W ${w+r.width} × H ${h+r.height} cm（预留 ${r.length}/${r.width}/${r.height}）`:'输入冠幅 / 高度 / 宽度后，系统自动生成包装尺寸建议。';}
+
+const normalizeOnlineStoreConfigV10BaseV40=normalizeOnlineStoreConfigV10;
+normalizeOnlineStoreConfigV10=function(productId,raw){
+  const cfg=normalizeOnlineStoreConfigV10BaseV40(productId,raw); const source=raw&&typeof raw==='object'?raw:{};
+  const sd=source.standardDimensions&&typeof source.standardDimensions==='object'?source.standardDimensions:{};
+  cfg.shortSummary=v34Text(source.shortSummary);
+  cfg.productDetails=v34Text(source.productDetails||source.publicDescription);
+  cfg.careGuide={water:v34Text(source.careGuide?.water),light:v34Text(source.careGuide?.light),fertilizer:v34Text(source.careGuide?.fertilizer),pruning:v34Text(source.careGuide?.pruning),notes:v34Text(source.careGuide?.notes)};
+  cfg.standardDimensions={crownSpread:v34Text(sd.crownSpread),pottedHeight:v34Text(sd.pottedHeight),overallWidth:v34Text(sd.overallWidth),potSize:v34Text(sd.potSize),treeAge:v34Text(sd.treeAge),trunkBase:v34Text(sd.trunkBase),nebari:v34Text(sd.nebari)};
+  cfg.uniqueItems=(cfg.uniqueItems||[]).map((x,i)=>{const original=(Array.isArray(source.uniqueItems)?source.uniqueItems[i]:null)||{};return {...x,dimensionMode:v34Text(original.dimensionMode)|| (v40HasDims(original)?'override':'inherit'),packageMode:v34Text(original.packageMode)||'auto'};});
+  return cfg;
+};
+
+const setOnlineStoreEditorValuesV10BaseV40=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  setOnlineStoreEditorValuesV10BaseV40(productId,preserveRoomV16); const cfg=getOnlineStoreConfigV10(productId);
+  let d={...(cfg.standardDimensions||{})};
+  if(!v40HasDims(d)){const candidate=(cfg.uniqueItems||[]).find(x=>v40HasDims(x));if(candidate)d={crownSpread:v34Text(candidate.crownSpread),pottedHeight:v34Text(candidate.pottedHeight),overallWidth:v34Text(candidate.overallWidth),potSize:v34Text(candidate.potSize),treeAge:v34Text(candidate.treeAge),trunkBase:v34Text(candidate.trunkBase),nebari:v34Text(candidate.nebari)};}
+  const vals={onlineStoreShortSummaryV40:cfg.shortSummary||'',onlineStoreProductDetailsV40:cfg.productDetails||'',onlineStoreMasterCrownV40:d.crownSpread||'',onlineStoreMasterHeightV40:d.pottedHeight||'',onlineStoreMasterWidthV40:d.overallWidth||'',onlineStoreMasterPotSizeV40:d.potSize||'',onlineStoreMasterTreeAgeV40:d.treeAge||'',onlineStoreMasterTrunkV40:d.trunkBase||'',onlineStoreMasterNebariV40:d.nebari||'',onlineStoreCareWaterV40:cfg.careGuide?.water||'',onlineStoreCareLightV40:cfg.careGuide?.light||'',onlineStoreCareFertilizerV40:cfg.careGuide?.fertilizer||'',onlineStoreCarePruningV40:cfg.careGuide?.pruning||'',onlineStoreCareNotesV40:cfg.careGuide?.notes||''};
+  Object.entries(vals).forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.value=val;});
+  const legacy=document.getElementById('onlineStorePublicDescriptionV33');if(legacy)legacy.value=cfg.productDetails||'';
+  v40UpdateMasterPackagePreview(); renderOnlineStoreUniqueItemsV10(cfg.uniqueItems||[]);
+};
+
+const collectOnlineStoreConfigFromEditorV10BaseV40=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){
+  const cfg=collectOnlineStoreConfigFromEditorV10BaseV40(); cfg.shortSummary=v34Text(document.getElementById('onlineStoreShortSummaryV40')?.value);cfg.productDetails=v34Text(document.getElementById('onlineStoreProductDetailsV40')?.value);cfg.publicDescription=cfg.productDetails;
+  cfg.standardDimensions=v40MasterDimsFromDom(); cfg.careGuide={water:v34Text(document.getElementById('onlineStoreCareWaterV40')?.value),light:v34Text(document.getElementById('onlineStoreCareLightV40')?.value),fertilizer:v34Text(document.getElementById('onlineStoreCareFertilizerV40')?.value),pruning:v34Text(document.getElementById('onlineStoreCarePruningV40')?.value),notes:v34Text(document.getElementById('onlineStoreCareNotesV40')?.value)};
+  return cfg;
+};
+
+function v40ChildCard(item,motherPrice){
+  const tier=String(item.tier||'premium'),mode=String(item.priceMode||((Number(item.regularPrice)||0)>0?'independent':'follow')),rp=mode==='follow'?motherPrice:Math.max(0,Number(item.regularPrice)||0),status=String(item.status||'available'),saleChannel=String(item.saleChannel||''),draft=item.draft===true;
+  const master=v40MasterDimsFromDom();const dimMode=String(item.dimensionMode||'')|| (v40HasDims(item)?'override':'inherit');const d=v40EffectiveDims({...item,dimensionMode:dimMode},master);const suggestion=v34PackageSuggestion(d);const packL=v34Text(item.packageLength)||String(suggestion.length||''),packW=v34Text(item.packageWidth)||String(suggestion.width||''),packH=v34Text(item.packageHeight)||String(suggestion.height||'');
+  const photos=Array.isArray(item.photos)?item.photos:(item.photo?[item.photo]:[]),videos=Array.isArray(item.videos)?item.videos:(item.video?[item.video]:[]),photo=v37DisplayMediaUrl(v34FirstPhoto(item));const mediaBadge=`${photos.filter(Boolean).length}图 · ${videos.filter(Boolean).length}视频`;
+  const inherited=dimMode!=='override';
+  return `<article class="v34-tree-card v35-tree-card v40-tree-card online-store-unique-card-v10 ${status==='sold'?'v35-sold-card':''}" data-v34-child-card="1" data-item-id-v10="${v34Esc(item.id)}" data-tier-v14="${v34Esc(tier)}" data-v35-draft="${draft?'1':'0'}">
+    <div class="v34-tree-row v35-tree-row"><button type="button" class="v34-photo-cell v35-photo-cell" data-v34-toggle-child="${v34Esc(item.id)}">${photo?`<img loading="lazy" decoding="async" ${status==='sold'?`data-v37-src="${v34Esc(photo)}"`:`src="${v34Esc(photo)}"`} alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span class="v34-photo-empty" style="display:none">暂无图片</span>`:'<span class="v34-photo-empty">＋ 照片</span>'}</button><button type="button" class="v34-child-id" data-v34-toggle-child="${v34Esc(item.id)}"><strong>${v34Esc(item.id)}</strong><small>${draft?'新编辑器 · 尚未保存':mediaBadge}</small></button><span class="v34-tier-chip ${tier}">${v34Esc(v34TierLabel(tier))}</span><strong class="v34-row-price">${rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价'}</strong><span class="v36-dim-cell v36-crown"><small>冠幅</small><b>${v34Esc(d.crownSpread||'—')}</b></span><span class="v36-dim-cell v36-height"><small>高度</small><b>${v34Esc(d.pottedHeight||'—')}</b></span><span class="v36-dim-cell v36-width"><small>宽度</small><b>${v34Esc(d.overallWidth||'—')}</b></span><span class="v36-dim-cell v36-pot-cell v36-pot"><small>花盆</small><b>${v34Esc(d.potSize||'—')}</b></span><span class="v34-status-chip ${status==='sold'?'sold':'active'}">${v34StatusLabel(status)}</span><button type="button" class="secondary-btn v34-edit-btn" data-v34-toggle-child="${v34Esc(item.id)}">编辑</button></div>
+    <div class="v34-tree-editor v35-tree-editor" hidden><input data-online-field-v10="tier" type="hidden" value="${v34Esc(tier)}"/><input data-online-field-v10="accessZone" type="hidden" value="${tier==='collector'?'vip':'standard'}"/><input data-online-field-v10="published" type="checkbox" hidden ${item.published!==false&&status!=='sold'?'checked':''}/><input data-v34-field="priceMode" type="hidden" value="${v34Esc(mode)}"/><input data-v34-field="saleChannel" type="hidden" value="${v34Esc(saleChannel)}"/><input data-v40-field="dimensionMode" type="hidden" value="${inherited?'inherit':'override'}"/>
+    <div class="v35-editor-title"><div><strong>${v34Esc(item.id)}</strong><span>数量固定 1 · ${inherited?'自动使用母产品资料':'个别尺寸'}</span></div><div class="v36-editor-top-actions"><button type="button" class="danger-outline-btn v36-delete-editor" data-v35-delete-child="${v34Esc(item.id)}">${draft?'删除编辑器':'删除子编号'}</button><button type="button" class="secondary-btn" data-v34-collapse-child="${v34Esc(item.id)}">收起</button></div></div>
+    <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">1</span><div><h4>人工确认：售价与状态</h4><small>系统已带入房间、在售状态与母产品售价；只有需要不同才修改。</small></div></div><div class="v34-form-grid three"><label>分配区域<select data-online-field-v10="tierSelect"><option value="premium" ${tier==='premium'?'selected':''}>精品馆</option><option value="collector" ${tier==='collector'?'selected':''}>贵宾室</option><option value="entry" ${tier==='entry'?'selected':''}>入门首选</option></select></label><label>状态<select data-online-field-v10="status"><option value="available" ${status!=='sold'?'selected':''}>在售</option><option value="sold" ${status==='sold'?'selected':''}>Sold</option></select></label><label>售价 (RM)<div class="v34-inline"><input data-online-field-v10="regularPrice" inputmode="decimal" value="${rp>0?formatOnlineMoneyInputV12(rp):''}" placeholder="输入售价"/><button type="button" class="secondary-btn v34-follow-price">跟随母价</button></div></label><input data-online-field-v10="promotionPrice" type="hidden" value="0"/></div></section>
+    <section class="v34-subsection v35-subsection v40-auto-size-section"><div class="v35-subtitle"><span class="v35-step">2</span><div><h4>系统自动：尺寸与包装</h4><small>${inherited?'使用母产品标准尺寸，并按 Shipping 预留设置自动生成包装尺寸。':'此棵使用个别尺寸；包装仍自动计算。'}</small></div></div><div class="v40-inherited-summary"><span>冠幅 <b>${v34Esc(d.crownSpread||'—')}</b></span><span>高 <b>${v34Esc(d.pottedHeight||'—')}</b></span><span>宽 <b>${v34Esc(d.overallWidth||'—')}</b></span><span>花盆 <b>${v34Esc(d.potSize||'—')}</b></span><button type="button" class="secondary-btn v40-toggle-dim">${inherited?'这棵尺寸不同':'恢复母产品尺寸'}</button></div><div class="v40-child-dim-fields" ${inherited?'hidden':''}><div class="v34-form-grid four"><label>冠幅 (cm)<input data-v34-field="crownSpread" inputmode="decimal" value="${v34Esc(d.crownSpread||'')}"/></label><label>含盆高度 (cm)<input data-v34-field="pottedHeight" inputmode="decimal" value="${v34Esc(d.pottedHeight||'')}"/></label><label>整体宽度 (cm)<input data-v34-field="overallWidth" inputmode="decimal" value="${v34Esc(d.overallWidth||'')}"/></label><label>花盆尺寸<input data-online-field-v10="potSize" value="${v34Esc(d.potSize||'')}"/></label><label>树龄<input data-v34-field="treeAge" value="${v34Esc(d.treeAge||'')}"/></label><label>树头 (cm)<input data-v34-field="trunkBase" inputmode="decimal" value="${v34Esc(d.trunkBase||'')}"/></label><label>根盘 (cm)<input data-v34-field="nebari" inputmode="decimal" value="${v34Esc(d.nebari||'')}"/></label></div></div>${inherited?`<input data-v34-field="crownSpread" type="hidden" value="${v34Esc(d.crownSpread||'')}"/><input data-v34-field="pottedHeight" type="hidden" value="${v34Esc(d.pottedHeight||'')}"/><input data-v34-field="overallWidth" type="hidden" value="${v34Esc(d.overallWidth||'')}"/><input data-online-field-v10="potSize" type="hidden" value="${v34Esc(d.potSize||'')}"/><input data-v34-field="treeAge" type="hidden" value="${v34Esc(d.treeAge||'')}"/><input data-v34-field="trunkBase" type="hidden" value="${v34Esc(d.trunkBase||'')}"/><input data-v34-field="nebari" type="hidden" value="${v34Esc(d.nebari||'')}"/>`:''}<div class="v40-package-result"><strong>包装建议</strong><span>L <input data-v34-field="packageLength" inputmode="decimal" value="${v34Esc(packL)}"/> cm</span><span>W <input data-v34-field="packageWidth" inputmode="decimal" value="${v34Esc(packW)}"/> cm</span><span>H <input data-v34-field="packageHeight" inputmode="decimal" value="${v34Esc(packH)}"/> cm</span><label>重量 <input data-online-field-v10="weight" inputmode="decimal" value="${v34Esc(item.weight||'')}" placeholder="人工填写"/> kg</label></div></section>
+    <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">3</span><div><h4>人工输入：照片 / 视频</h4><small>这部分必须对应真实这一棵；第一张照片自动成为 Preview。</small></div></div><div class="v35-media-stack">${v35MediaPreviewHtml('photos',photos,item.id)}${v35MediaPreviewHtml('videos',videos,item.id)}</div></section>
+    <details class="v34-note"><summary>备注（只有需要时才填）</summary><textarea data-online-field-v10="note" rows="2">${v34Esc(item.note||'')}</textarea></details><div class="v34-tree-actions"><button type="button" class="primary-btn" data-v34-collapse-child="${v34Esc(item.id)}">检查完成</button></div></div></article>`;
+}
+v35TreeCard=v40ChildCard;
+
+const collectOnlineStoreUniqueItemsV10BaseV40=collectOnlineStoreUniqueItemsV10;
+collectOnlineStoreUniqueItemsV10=function(){
+  const list=collectOnlineStoreUniqueItemsV10BaseV40();
+  const cards=[...document.querySelectorAll('#v34TreeList [data-v34-child-card="1"]')];
+  return list.map((x,i)=>{const card=cards[i];if(!card)return x;const dm=v34Text(card.querySelector('[data-v40-field="dimensionMode"]')?.value)||'inherit';return {...x,dimensionMode:dm,packageMode:'auto'};});
+};
+
+function v40ApplyMasterDimsToInheritedCards(){
+  const d=v40MasterDimsFromDom();document.querySelectorAll('[data-v34-child-card]').forEach(card=>{if(v34Text(card.querySelector('[data-v40-field="dimensionMode"]')?.value)!=='inherit')return;const set=(sel,val)=>{const el=card.querySelector(sel);if(el)el.value=val||'';};set('[data-v34-field="crownSpread"]',d.crownSpread);set('[data-v34-field="pottedHeight"]',d.pottedHeight);set('[data-v34-field="overallWidth"]',d.overallWidth);set('[data-online-field-v10="potSize"]',d.potSize);set('[data-v34-field="treeAge"]',d.treeAge);set('[data-v34-field="trunkBase"]',d.trunkBase);set('[data-v34-field="nebari"]',d.nebari);v34RecalcPackage(card);v35RefreshTreeRow(card);});
+  v40UpdateMasterPackagePreview();
+}
+function v40SetupAutomation(){
+  const ids=['onlineStoreMasterCrownV40','onlineStoreMasterHeightV40','onlineStoreMasterWidthV40','onlineStoreMasterPotSizeV40','onlineStoreMasterTreeAgeV40','onlineStoreMasterTrunkV40','onlineStoreMasterNebariV40'];ids.forEach(id=>document.getElementById(id)?.addEventListener('input',v40ApplyMasterDimsToInheritedCards));
+  const editor=document.getElementById('onlineStoreEditorV10');if(editor&&!editor.dataset.v40Bound){editor.dataset.v40Bound='1';editor.addEventListener('click',e=>{const b=e.target.closest('.v40-toggle-dim');if(!b)return;const card=b.closest('[data-v34-child-card]'),mode=card?.querySelector('[data-v40-field="dimensionMode"]');if(!card||!mode)return;if(mode.value==='inherit'){mode.value='override';const fields=card.querySelector('.v40-child-dim-fields');if(fields)fields.hidden=false;b.textContent='恢复母产品尺寸';}else{mode.value='inherit';const d=v40MasterDimsFromDom();const pairs=[['[data-v34-field="crownSpread"]',d.crownSpread],['[data-v34-field="pottedHeight"]',d.pottedHeight],['[data-v34-field="overallWidth"]',d.overallWidth],['[data-online-field-v10="potSize"]',d.potSize],['[data-v34-field="treeAge"]',d.treeAge],['[data-v34-field="trunkBase"]',d.trunkBase],['[data-v34-field="nebari"]',d.nebari]];pairs.forEach(([sel,val])=>{const el=card.querySelector(sel);if(el)el.value=val||'';});const fields=card.querySelector('.v40-child-dim-fields');if(fields)fields.hidden=true;b.textContent='这棵尺寸不同';v34RecalcPackage(card);}onlineStoreRoomDirtyV16=true;v35RefreshTreeRow(card);});}
+  const loadReserve=()=>{const r=v40PackageReserve();[['packageReserveLengthV40',r.length],['packageReserveWidthV40',r.width],['packageReserveHeightV40',r.height]].forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v;});};loadReserve();
+  document.getElementById('savePackageReserveV40')?.addEventListener('click',()=>{const ui=getOnlineStoreUiSettingsV12(),n=id=>Math.max(0,parseOnlineNumberV12(document.getElementById(id)?.value));ui.shipping={...(ui.shipping||{}),packageReserve:{length:n('packageReserveLengthV40'),width:n('packageReserveWidthV40'),height:n('packageReserveHeightV40')}};saveOnlineStoreUiSettingsV12(ui);const st=document.getElementById('packageReserveStatusV40');if(st)st.textContent='已保存 · 新包装建议立即使用';v40ApplyMasterDimsToInheritedCards();});
+  document.getElementById('resetPackageReserveV40')?.addEventListener('click',()=>{if(!window.confirm('确认把包装预留恢复原厂设定？\n\n长度 5 cm · 宽度 5 cm · 高度 8 cm\n\n只恢复这三项，不影响商品、子编号、重量、运费规则或 Import 数据。'))return;const ui=getOnlineStoreUiSettingsV12();ui.shipping={...(ui.shipping||{}),packageReserve:{...V40_FACTORY_PACKAGE_RESERVE}};saveOnlineStoreUiSettingsV12(ui);loadReserve();const st=document.getElementById('packageReserveStatusV40');if(st)st.textContent='已恢复原厂设定 5 / 5 / 8 cm';v40ApplyMasterDimsToInheritedCards();});
+}
+window.addEventListener('DOMContentLoaded',()=>setTimeout(v40SetupAutomation,0));
+
+// V4.0 perceived navigation speed: switch UI immediately; defer heavy Online list work one frame.
+const renderOnlineStoreProductListV10BaseV40=renderOnlineStoreProductListV10;
+let v40RenderQueued=false;
+renderOnlineStoreProductListV10=function(){
+  if(!document.getElementById('onlineStorePage')?.classList.contains('active'))return;
+  if(v40RenderQueued)return;v40RenderQueued=true;requestAnimationFrame(()=>{v40RenderQueued=false;renderOnlineStoreProductListV10BaseV40();});
+};
