@@ -19832,7 +19832,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"3.6",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"3.7",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19847,7 +19847,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.6",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.7",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;
@@ -20158,7 +20158,7 @@ renderOnlineStoreProductListV10=function(){
   host.innerHTML=rows.map(p=>{
     const id=String(p.id||'').trim().toUpperCase();const config=getOnlineStoreConfigV10(id),counts=getOnlineStoreCountsV10(p,config),englishName=productEnglishNameV262(p);const avgCost=Math.max(0,Number(p?.averageCost)||0);const baseMinimum=getImportBaseMinimumPriceV21(p);const vndProduct=typeof isVndProductV205==='function'&&isVndProductV205(p,getMinimumPriceOriginIndexV160());const allocated=room?onlineStoreRoomAllocatedV27(config,room):0;
     const manage=room?`<button type="button" class="primary-btn online-store-manage-btn-v12" data-online-manage-v10="${escapeHTML(id)}">选择产品</button>`:`<button type="button" class="secondary-btn" disabled title="周边商品管理将在后续版本启用">Coming Soon</button>`;
-    return `<article class="online-store-product-card-v10 room-product-card-v27" data-online-product-v10="${escapeHTML(id)}"><div class="online-store-product-main-v10"><div class="online-store-product-title-v12"><button type="button" class="copy-text-btn-v12 online-store-product-id-v10" data-online-copy-v12="${escapeHTML(id)}">${escapeHTML(id)}</button><button type="button" class="copy-text-btn-v12 online-store-product-name-v10" data-online-copy-v12="${escapeHTML(p.name||'')}">${escapeHTML(p.name||'')}</button></div>${englishName?`<button type="button" class="copy-text-btn-v12 online-store-product-english-v12" data-online-copy-v12="${escapeHTML(englishName)}">${escapeHTML(englishName)}</button>`:''}<div class="room-product-meta-v27 room-product-meta-v28"><span><i>真实库存</i><strong>${formatNumber(counts.stock)}</strong></span><span><i>可分配</i><strong>${formatNumber(Math.max(0,counts.unallocated))}</strong></span><span><i>${vndProduct?'平均成本（VND不含盆）':'平均成本'}</i><strong>${formatMoney(avgCost,'RM ')}</strong></span><span class="minimum-readonly-v28"><i>最低售价基准</i><strong>${formatMoney(baseMinimum,'RM ')}</strong></span>${room?`<span><i>本房已分配</i><strong>${formatNumber(allocated)}</strong></span>`:`<span><i>分类</i><strong>${escapeHTML(productCategoryLabelV32(detectProductCategoryV32(p)))}</strong></span>`}</div></div>${manage}</article>`;
+    return `<article class="online-store-product-card-v10 room-product-card-v27" data-online-product-v10="${escapeHTML(id)}"><div class="online-store-product-main-v10"><div class="online-store-product-title-v12"><button type="button" class="copy-text-btn-v12 online-store-product-id-v10" data-online-copy-v12="${escapeHTML(id)}">${escapeHTML(id)}</button><button type="button" class="copy-text-btn-v12 online-store-product-name-v10" data-online-copy-v12="${escapeHTML(p.name||'')}">${escapeHTML(p.name||'')}</button></div>${englishName?`<button type="button" class="copy-text-btn-v12 online-store-product-english-v12" data-online-copy-v12="${escapeHTML(englishName)}">${escapeHTML(englishName)}</button>`:''}<div class="room-product-meta-v27 room-product-meta-v28"><span><i>真实库存</i><strong>${formatNumber(counts.stock)}</strong></span><span><i>可分配</i><strong>${formatNumber(Math.max(0,counts.unallocated))}</strong></span><span><i>${vndProduct?'平均成本（VND不含盆）':'平均成本'}</i><strong>${formatMoney(avgCost,'RM ')}</strong></span>${v37ProductMinimumMetaHtml(p)}${room?`<span><i>本房已分配</i><strong>${formatNumber(allocated)}</strong></span>`:`<span><i>分类</i><strong>${escapeHTML(productCategoryLabelV32(detectProductCategoryV32(p)))}</strong></span>`}</div></div>${manage}</article>`;
   }).join('')||'<div class="empty-state">没有找到符合关键词与筛选条件的商品。</div>';
 };
 function setupProductsNavigationV32(){
@@ -20476,7 +20476,7 @@ function v34TreeCard(item,motherPrice){
   const tier=String(item.tier||'premium');
   const mode=String(item.priceMode||((Number(item.regularPrice)||0)>0?'independent':'follow'));
   const rp=mode==='follow'?motherPrice:Math.max(0,Number(item.regularPrice)||0);
-  const photo=v34FirstPhoto(item);
+  const photo=v37DisplayMediaUrl(v34FirstPhoto(item));
   const status=String(item.status||'available');
   const saleChannel=String(item.saleChannel||'');
   const suggestion=v34PackageSuggestion(item);
@@ -20487,7 +20487,7 @@ function v34TreeCard(item,motherPrice){
   const videos=Array.isArray(item.videos)?item.videos:(item.video?[item.video]:[]);
   return `<article class="v34-tree-card online-store-unique-card-v10" data-v34-child-card="1" data-item-id-v10="${v34Esc(item.id)}" data-tier-v14="${v34Esc(tier)}">
     <div class="v34-tree-row">
-      <button type="button" class="v34-photo-cell" data-v34-toggle-child="${v34Esc(item.id)}" title="打开 ${v34Esc(item.id)} 编辑">${photo?`<img src="${v34Esc(photo)}" alt="${v34Esc(item.id)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span class="v34-photo-empty" style="display:none">照片</span>`:'<span class="v34-photo-empty">＋ 照片</span>'}</button>
+      <button type="button" class="v34-photo-cell" data-v34-toggle-child="${v34Esc(item.id)}" title="打开 ${v34Esc(item.id)} 编辑">${photo?`<img src="${v34Esc(photo)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span class="v34-photo-empty" style="display:none">照片</span>`:'<span class="v34-photo-empty">＋ 照片</span>'}</button>
       <button type="button" class="v34-child-id" data-v34-toggle-child="${v34Esc(item.id)}"><strong>${v34Esc(item.id)}</strong><small>${mode==='follow'?'跟随母产品售价':'独立售价'}</small></button>
       <span class="v34-tier-chip ${tier}">${v34Esc(v34TierLabel(tier))}</span>
       <strong class="v34-row-price">${rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价'}</strong>
@@ -20746,7 +20746,7 @@ function v35TreeCard(item,motherPrice){
   const tier=String(item.tier||'premium');
   const mode=String(item.priceMode||((Number(item.regularPrice)||0)>0?'independent':'follow'));
   const rp=mode==='follow'?motherPrice:Math.max(0,Number(item.regularPrice)||0);
-  const photo=v34FirstPhoto(item);
+  const photo=v37DisplayMediaUrl(v34FirstPhoto(item));
   const status=String(item.status||'available');
   const saleChannel=String(item.saleChannel||'');
   const suggestion=v34PackageSuggestion(item);
@@ -20759,7 +20759,7 @@ function v35TreeCard(item,motherPrice){
   const mediaBadge=`${photos.filter(Boolean).length}图 · ${videos.filter(Boolean).length}视频`;
   return `<article class="v34-tree-card v35-tree-card online-store-unique-card-v10 ${status==='sold'?'v35-sold-card':''}" data-v34-child-card="1" data-item-id-v10="${v34Esc(item.id)}" data-tier-v14="${v34Esc(tier)}" data-v35-draft="${draft?'1':'0'}">
     <div class="v34-tree-row v35-tree-row">
-      <button type="button" class="v34-photo-cell v35-photo-cell" data-v34-toggle-child="${v34Esc(item.id)}" title="编辑 ${v34Esc(item.id)}">${photo?`<img loading="lazy" decoding="async" src="${v34Esc(photo)}" alt="${v34Esc(item.id)}" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span class="v34-photo-empty" style="display:none">照片</span>`:'<span class="v34-photo-empty">＋ 照片</span>'}</button>
+      <button type="button" class="v34-photo-cell v35-photo-cell" data-v34-toggle-child="${v34Esc(item.id)}" title="编辑 ${v34Esc(item.id)}">${photo?`<img loading="lazy" decoding="async" ${status==='sold'?`data-v37-src="${v34Esc(photo)}"`:`src="${v34Esc(photo)}"`} alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span class="v34-photo-empty" style="display:none">暂无图片</span>`:'<span class="v34-photo-empty">＋ 照片</span>'}</button>
       <button type="button" class="v34-child-id" data-v34-toggle-child="${v34Esc(item.id)}"><strong>${v34Esc(item.id)}</strong><small>${draft?'新编辑器 · 尚未保存':mediaBadge}</small></button>
       <span class="v34-tier-chip ${tier}">${v34Esc(v34TierLabel(tier))}</span>
       <strong class="v34-row-price">${rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价'}</strong>
@@ -20791,11 +20791,11 @@ function v35TreeCard(item,motherPrice){
         <label>含盆高度 (cm)<input data-v34-field="pottedHeight" inputmode="decimal" value="${v34Esc(item.pottedHeight||'')}" placeholder="例如 70"/></label>
         <label>整体宽度 (cm)<input data-v34-field="overallWidth" inputmode="decimal" value="${v34Esc(item.overallWidth||'')}" placeholder="例如 58"/></label>
         <label>花盆尺寸<input data-online-field-v10="potSize" value="${v34Esc(item.potSize||'')}" placeholder="例如 45 × 32 × 15 cm"/></label>
-      </div><details class="v34-more"><summary>更多盆景资料：树龄 / 树头 / 根盘</summary><div class="v34-form-grid three">
+      </div><div class="v37-bonsai-extra"><div class="v37-bonsai-extra-title">更多盆景资料</div><div class="v34-form-grid three">
         <label>树龄<input data-v34-field="treeAge" value="${v34Esc(item.treeAge||'')}" placeholder="例如 20 年"/></label>
         <label>树头 / Trunk Base (cm)<input data-v34-field="trunkBase" inputmode="decimal" value="${v34Esc(item.trunkBase||'')}"/></label>
         <label>根盘 (cm)<input data-v34-field="nebari" inputmode="decimal" value="${v34Esc(item.nebari||'')}"/></label>
-      </div></details></section>
+      </div></div></section>
 
       <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">3</span><div><h4>照片 / 视频</h4><small>每个一物一拍子编号必须使用自己的媒体；照片不会与其他子编号共用。</small></div></div><div class="v35-media-stack">${v35MediaPreviewHtml('photos',photos,item.id)}${v35MediaPreviewHtml('videos',videos,item.id)}</div></section>
 
@@ -20854,7 +20854,7 @@ function v35RefreshTreeRow(card){
   const price=card.querySelector('.v34-row-price'); if(price)price.textContent=rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价';
   const status=String(card.querySelector('[data-online-field-v10="status"]')?.value||'available'); const chip=card.querySelector('.v34-status-chip');if(chip){chip.textContent=v34StatusLabel(status);chip.className='v34-status-chip '+(status==='sold'?'sold':'active');}
   const tier=String(card.querySelector('[data-online-field-v10="tierSelect"]')?.value||'premium'); const tierChip=card.querySelector('.v34-tier-chip'); if(tierChip){tierChip.textContent=v34TierLabel(tier);tierChip.className='v34-tier-chip '+tier;} card.dataset.tierV14=tier; const hiddenTier=card.querySelector('[data-online-field-v10="tier"]'); if(hiddenTier)hiddenTier.value=tier;
-  const photos=v35MediaList(card,'photos'),videos=v35MediaList(card,'videos'); const cell=card.querySelector('.v34-photo-cell'); if(cell){cell.innerHTML=photos[0]?`<img loading="lazy" decoding="async" src="${v34Esc(photos[0])}" alt="${v34Esc(card.dataset.itemIdV10||'')}"/><span class="v34-photo-empty" style="display:none">照片</span>`:'<span class="v34-photo-empty">＋ 照片</span>';}
+  const photos=v35MediaList(card,'photos'),videos=v35MediaList(card,'videos'); const cell=card.querySelector('.v34-photo-cell'); if(cell){const preview=v37DisplayMediaUrl(photos[0]||'');cell.innerHTML=preview?`<img loading="lazy" decoding="async" src="${v34Esc(preview)}" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span class="v34-photo-empty" style="display:none">暂无图片</span>`:'<span class="v34-photo-empty">＋ 照片</span>';}
   const small=card.querySelector('.v34-child-id small');if(small)small.textContent=card.dataset.v35Draft==='1'?'新编辑器 · 尚未保存':`${photos.length}图 · ${videos.length}视频`;
   const dimMap=[['.v36-crown','crownSpread'],['.v36-height','pottedHeight'],['.v36-width','overallWidth'],['.v36-pot','potSize']];
   for(const [selector,field] of dimMap){const node=card.querySelector(selector+' b');const inputNode=field==='potSize'?card.querySelector('[data-online-field-v10="potSize"]'):card.querySelector(`[data-v34-field="${field}"]`);if(node)node.textContent=v34Text(inputNode?.value)||'—';}
@@ -21012,3 +21012,119 @@ collectOnlineStoreConfigFromEditorV10=function(){
   cfg.uniqueItems=(cfg.uniqueItems||[]).map(x=>({...x,promotionPrice:0}));
   return cfg;
 };
+
+
+/* ================================================================
+   Online Store V3.7 - read-only Import price mirror + media preview
+   ================================================================ */
+window.ONLINE_STORE_V37_ACTIVE=true;
+
+// Display-only media conversion. Main Online data always keeps the original URL.
+function v37DisplayMediaUrl(raw){
+  const url=String(raw||'').trim(); if(!url)return '';
+  try{
+    const u=new URL(url,window.location.href);
+    const host=String(u.hostname||'').toLowerCase();
+    if(host==='drive.google.com'||host.endsWith('.drive.google.com')){
+      let id='';
+      const m=u.pathname.match(/\/file\/d\/([^/]+)/i); if(m)id=m[1];
+      if(!id)id=u.searchParams.get('id')||'';
+      if(id)return `https://drive.google.com/thumbnail?id=${encodeURIComponent(id)}&sz=w1000`;
+    }
+  }catch(_){ }
+  return url;
+}
+window.v37DisplayMediaUrl=v37DisplayMediaUrl;
+
+// Preserve Import's manual/protected flag before the Online read-only normalizer
+// deliberately disables edit behavior. This is metadata only and is never written back.
+const normalizeProductMinimumPriceV160BaseV37=normalizeProductMinimumPriceV160;
+normalizeProductMinimumPriceV160=function(product,configuredRules=null,configuredOverrides=null,originIndex=null){
+  const importManual=(product?.importMinimumPriceManualV37===true)||(product?.importMinimumPriceManual===true)||(product?.minimumPriceManual===true);
+  const out=normalizeProductMinimumPriceV160BaseV37(product,configuredRules,configuredOverrides,originIndex);
+  if(typeof ONLINE_STORE_IMPORT_READ_ONLY_V20!=='undefined'&&ONLINE_STORE_IMPORT_READ_ONLY_V20){
+    return {...out,importMinimumPriceManualV37:importManual};
+  }
+  return out;
+};
+
+function v37CurrentMinimumState(product){
+  const current=getImportCurrentMinimumPriceV26(product);
+  const manual=(product?.importMinimumPriceManualV37===true)||(product?.importMinimumPriceManual===true);
+  let promotion=null; try{promotion=getPromotionSettingsV183();}catch(_){promotion=null;}
+  const id=String(product?.id||'').trim().toUpperCase();
+  const excluded=Boolean(promotion?.excludedProductIds?.includes(id));
+  const manualInPromotion=Boolean(manual&&promotion&&promotion.includeManualPriceProducts===true&&!excluded);
+  if(manual&&!manualInPromotion)return {state:'manual',label:'受保护精品',color:'#0b68c9',current};
+  if(!(current>0))return {state:'neutral',label:'暂无',color:'',current};
+  let profit=0;
+  try{
+    const rules=getMinimumPriceRulesV160();
+    const index=getMinimumPriceOriginIndexV160();
+    const averageCost=Math.max(0,Number(product?.averageCost)||0);
+    const potCost=Math.max(0,Number(getVndPotCostV160(product,rules,index))||0);
+    const promotionApplies=Boolean(promotion&&!excluded&&(!manual||manualInPromotion));
+    const commissionRate=promotionApplies?Math.max(0,Number(promotion.commissionRate)||0):Math.max(0,Number(rules.commissionRate)||0);
+    const freight=Math.max(0,Number(getMinimumFreightTierV188(current,rules)?.amount)||0);
+    profit=current-averageCost-potCost-freight-current*commissionRate/100;
+  }catch(_){profit=current-Math.max(0,Number(product?.averageCost)||0);}
+  return profit<-0.005?{state:'loss',label:'亏损',color:'#c62828',current,profit}:{state:'gain',label:'赚钱',color:'#087a43',current,profit};
+}
+function v37ApplyCurrentMinimumVisual(product){
+  const input=document.getElementById('onlineStoreCurrentMinimumPriceV37'); if(!input)return;
+  const current=getImportCurrentMinimumPriceV26(product); input.value=current>0?formatOnlineMoneyInputV12(current):'';
+  const state=v37CurrentMinimumState(product);
+  input.dataset.minimumPriceStateV37=state.state;
+  input.style.setProperty('color',state.color||'inherit','important');
+  const hint=document.getElementById('onlineStoreCurrentMinimumHintV37');
+  if(hint){
+    const promo=(()=>{try{return getPromotionSettingsV183();}catch(_){return null;}})();
+    const suffix=state.state==='manual'?' · Import 售价控制保护中':(promo?` · Import 当前促销状态 · ${state.label}`:` · ${state.label}`);
+    hint.textContent=`只读：实时镜像 Import Current Minimum Price${suffix}；Online 不可修改。`;
+    hint.style.color=state.color||'';
+  }
+}
+function v37ProductMinimumMetaHtml(product){
+  const initial=getImportInitialMinimumPriceV26(product),current=getImportCurrentMinimumPriceV26(product),state=v37CurrentMinimumState(product);
+  return `<span class="minimum-readonly-v28 v37-initial-min"><i>初始最低售价</i><strong>${initial>0?formatMoney(initial,'RM '):'—'}</strong></span><span class="minimum-readonly-v28 v37-current-min" data-state="${v34Esc(state.state)}"><i>当前最低售价</i><strong style="color:${state.color||'inherit'}!important">${current>0?formatMoney(current,'RM '):'—'}</strong></span>`;
+}
+window.v37ProductMinimumMetaHtml=v37ProductMinimumMetaHtml;
+
+const setOnlineStoreEditorValuesV10BaseV37=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  setOnlineStoreEditorValuesV10BaseV37(productId,preserveRoomV16);
+  const product=getOnlineStoreProductV10(productId); if(!product)return;
+  const initial=getImportInitialMinimumPriceV26(product),base=getImportBaseMinimumPriceV21(product);
+  const input=document.getElementById('onlineStoreMinimumPriceV11'); if(input)input.value=formatOnlineMoneyInputV12(base);
+  const label=document.getElementById('onlineStoreMinimumPriceLabelV26');if(label)label.textContent=initial>0?'Import 初始最低售价（Online 保护基准）(RM)':'Import 最低售价基准（Initial 尚未建立）(RM)';
+  const hint=document.getElementById('onlineStoreMinimumPriceHintV26');if(hint)hint.textContent=initial>0?'只读：正式 Online 保护基准；只跟随 Import Initial Minimum Price 的变化。':'只读：Initial 缺失/0，暂时 fallback 到 Import Current Minimum Price；建立 Initial 后自动切换。';
+  v37ApplyCurrentMinimumVisual(product);
+};
+
+const updateOnlineProtectionFloorV21BaseV37=updateOnlineProtectionFloorV21;
+updateOnlineProtectionFloorV21=function(){
+  updateOnlineProtectionFloorV21BaseV37();
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(product)v37ApplyCurrentMinimumVisual(product);
+};
+
+// Front-store preview uses only the first photo, lazy loads it, and resolves Google Drive
+// share URLs at display time. No Base64, no media sync, no full 1-5 media fetch here.
+renderStorePreviewV13=function(){
+  const grid=document.getElementById('storePreviewGridV13');if(!grid)return;
+  const audience=String(document.getElementById('storePreviewAudienceV13')?.value||'normal');
+  const state=getOnlineStoreStateV10();const cards=[];
+  getProducts().filter(p=>!p?.inventoryArchived).forEach(product=>{
+    const id=String(product?.id||'').trim().toUpperCase();const cfg=normalizeOnlineStoreConfigV10(id,state.products[id]);
+    const publicName=String(cfg.publicName||cleanOnlinePublicNameV36(product?.name||'')||product?.name||'');
+    if(cfg.randomPublished&&cfg.randomQty>0){const price=cfg.regularPrice;if(price>0)cards.push({id,name:publicName,english:productEnglishNameV262(product),price,regular:cfg.regularPrice,promo:cfg.promotionPrice,photo:cfg.randomPhotos?.[0]||'',tier:'入门首选 / Starter',vip:false});}
+    cfg.uniqueItems.filter(x=>x.published&&x.status!=='sold').forEach(item=>{const vip=item.accessZone==='vip';if(vip&&audience!=='vip')return;const price=item.regularPrice;if(price<=0)return;const tier={entry:'入门首选 / Starter',premium:'精品馆 / Premium',collector:'贵宾室 / VIP Room'}[item.tier]||'入门首选 / Starter';cards.push({id:item.id,name:publicName,english:productEnglishNameV262(product),price,regular:item.regularPrice,promo:0,photo:(item.photos?.[0]||item.photo||''),tier,vip});});
+  });
+  const label=document.getElementById('storePreviewAudienceLabelV13');if(label)label.textContent=audience==='vip'?'贵宾厅 / VIP Room · 可浏览商品':'顾客商城 · 可浏览商品';
+  grid.innerHTML=cards.map(x=>{const photo=v37DisplayMediaUrl(x.photo);return `<article class="store-preview-product-v13">${photo?`<div class="v37-store-photo"><img src="${escapeHTML(photo)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><div class="store-preview-placeholder-v13 v37-photo-fallback" style="display:none">暂无图片</div></div>`:`<div class="store-preview-placeholder-v13 v37-photo-fallback">暂无图片</div>`}<div class="store-preview-card-body-v13"><small>${escapeHTML(x.tier)}${x.vip?' · VIP Room':''}</small><strong>${escapeHTML(x.name)}</strong>${x.english?`<span>${escapeHTML(x.english)}</span>`:''}<div class="store-preview-price-v13"><b>RM ${formatOnlineMoneyInputV12(x.price)}</b></div></div></article>`;}).join('')||'<div class="empty-state">目前没有符合这个顾客身份的已上架商品。</div>';
+};
+
+// Sold history remains collapsed and its lazy thumbnails are allowed to load only when opened.
+window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
+  const host=document.getElementById('v34TreeList');
+  host?.addEventListener('toggle',e=>{const details=e.target;if(!(details instanceof HTMLDetailsElement)||!details.classList.contains('v35-sold-history')||!details.open)return;details.querySelectorAll('img[data-v37-src]').forEach(img=>{if(!img.getAttribute('src'))img.setAttribute('src',img.dataset.v37Src||'');});},true);
+},0));

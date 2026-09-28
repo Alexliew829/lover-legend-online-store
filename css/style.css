@@ -6957,3 +6957,19 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   .v36-editor-top-actions>button{width:100%!important;min-height:38px!important}
   .v36-price-wide{grid-column:1!important}
 }
+
+
+/* ================= Online Store V3.7 ================= */
+/* Initial = black read-only protection baseline; Current = dynamic Import status color. */
+#onlineStoreMinimumPriceV11{color:#1f2924!important;background:#f7f8f7!important;font-weight:900!important}
+#onlineStoreCurrentMinimumPriceV37{font-weight:900!important;background:#f7f8f7!important}
+#onlineStoreCurrentMinimumPriceV37[data-minimum-price-state-v37="manual"]{color:#0b68c9!important}
+#onlineStoreCurrentMinimumPriceV37[data-minimum-price-state-v37="gain"]{color:#087a43!important}
+#onlineStoreCurrentMinimumPriceV37[data-minimum-price-state-v37="loss"]{color:#c62828!important}
+.v37-initial-min strong{color:#1f2924!important}.v37-current-min[data-state="manual"] strong{color:#0b68c9!important}.v37-current-min[data-state="gain"] strong{color:#087a43!important}.v37-current-min[data-state="loss"] strong{color:#c62828!important}
+.v37-bonsai-extra{margin-top:12px;padding-top:12px;border-top:1px solid #edf1ee}.v37-bonsai-extra-title{font-size:12px;font-weight:850;color:#536259;margin-bottom:9px}
+.v37-store-photo{width:100%;aspect-ratio:1/1;background:#f1f6f0;overflow:hidden}.v37-store-photo img{width:100%;height:100%;object-fit:cover;display:block}.v37-photo-fallback{font-size:13px!important;color:#7b867f!important;font-weight:750!important;text-align:center;padding:12px}
+.v35-photo-cell img{width:100%;height:100%;object-fit:cover;display:block;border-radius:8px}.v35-photo-cell .v34-photo-empty{font-size:10px;line-height:1.2;text-align:center;color:#7b867f}
+@media(max-width:760px){.v37-bonsai-extra{margin-top:10px;padding-top:10px}.v37-bonsai-extra .v34-form-grid.three{grid-template-columns:1fr!important}}
+
+.room-product-meta-v28 .v37-initial-min strong{color:#1f2924!important}.room-product-meta-v28 .v37-current-min[data-state="manual"] strong{color:#0b68c9!important}.room-product-meta-v28 .v37-current-min[data-state="gain"] strong{color:#087a43!important}.room-product-meta-v28 .v37-current-min[data-state="loss"] strong{color:#c62828!important}
