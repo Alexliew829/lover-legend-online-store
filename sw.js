@@ -1,4 +1,4 @@
-const CACHE = "lover-legend-online-store-V4.6-safe-nav-r1-import41-8-readonly";
+const CACHE = "lover-legend-online-store-V4.7-layout-route-r1";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
@@ -58,11 +58,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // V4.6: static assets are versioned in index.html. Serve a cached copy first
-  // for instant repeat loads, while refreshing it in the background.
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      const network = fetch(event.request, { cache: "no-store" })
+  // V4.7-layout-route-r1"no-store" })
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
