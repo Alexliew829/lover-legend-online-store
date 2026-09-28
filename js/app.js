@@ -19832,7 +19832,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"3.3",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"3.6",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19847,7 +19847,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.3",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.6",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;
@@ -20089,7 +20089,7 @@ function showProductOverviewV32(){
   const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=true;
   const list=document.getElementById('onlineStoreProductListV10');if(list){list.hidden=true;list.innerHTML='';}
   const search=document.getElementById('onlineStoreSearchV10');if(search)search.value='';
-  const catFilter=document.getElementById('onlineStoreCategoryFilterV32');if(catFilter){catFilter.value='all';catFilter.disabled=false;}
+  const catFilter=document.getElementById('onlineStoreCategoryFilterV32');if(catFilter){catFilter.value='all';catFilter.disabled=false;catFilter.hidden=false;}
   setProductRoomActiveStateV32('');setProductCategoryActiveStateV32('bonsai');
 }
 function enterProductRoomV32(room){
@@ -20101,7 +20101,7 @@ function enterProductRoomV32(room){
   const cats=document.getElementById('productCategoryHubV32');if(cats)cats.hidden=true;
   const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;
   const search=document.getElementById('onlineStoreSearchV10');if(search){search.value='';setTimeout(()=>search.focus(),0);}
-  const catFilter=document.getElementById('onlineStoreCategoryFilterV32');if(catFilter){catFilter.value='bonsai';catFilter.disabled=true;}
+  const catFilter=document.getElementById('onlineStoreCategoryFilterV32');if(catFilter){catFilter.value='bonsai';catFilter.disabled=true;catFilter.hidden=false;}
   setProductRoomActiveStateV32(target);setProductCategoryActiveStateV32('bonsai');
   setEnteredProductHeaderV32(onlineStoreRoomLabelV27(target),target==='entry'?'Starter：先搜索产品，再选择 One-of-a-Kind 或 Random。':'输入关键词搜索可分配盆景，再进入房间管理。');
   renderOnlineStoreProductListV10();
@@ -20116,7 +20116,7 @@ function enterProductCategoryV32(category){
   const cats=document.getElementById('productCategoryHubV32');if(cats)cats.hidden=true;
   const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;
   const search=document.getElementById('onlineStoreSearchV10');if(search){search.value='';setTimeout(()=>search.focus(),0);}
-  const catFilter=document.getElementById('onlineStoreCategoryFilterV32');if(catFilter){catFilter.value=target;catFilter.disabled=false;}
+  const catFilter=document.getElementById('onlineStoreCategoryFilterV32');if(catFilter){catFilter.value=target;catFilter.disabled=true;catFilter.hidden=true;}
   setProductRoomActiveStateV32('__category__');setProductCategoryActiveStateV32(target);
   setEnteredProductHeaderV32(productCategoryLabelV32(target),'周边商品分类已预留；输入关键词后才显示结果。');
   renderOnlineStoreProductListV10();
@@ -20231,7 +20231,7 @@ renderOnlineStoreProductListV10=function(){
   const rawQuery=String(document.getElementById('onlineStoreSearchV10')?.value||'').trim();
   if(!rawQuery){host.innerHTML='<div class="empty-state search-start-hint-v31">输入产品编号、中文名、英文名或关键词开始搜索。<small>未输入关键词不会展开产品列表；停止输入约 0.2 秒后才搜索，减少页面卡顿。</small></div>';return;}
   const statusFilter=String(document.getElementById('onlineStoreFilterV10')?.value||'all');
-  const categoryFilter=room?'bonsai':String(document.getElementById('onlineStoreCategoryFilterV32')?.value||onlineStoreSelectedCategoryV32||'all');
+  const categoryFilter=room?'bonsai':String(onlineStoreSelectedCategoryV32||'all');
   let cache=buildOnlineStoreSearchCacheV33(false);
   if(!cache.length){host.innerHTML='<div class="room-product-load-state-v30">正在读取 Import V41.8 产品资料…</div>';refreshOnlineStoreImportProductsV30(false).then(()=>{invalidateOnlineStoreSearchCacheV33();buildOnlineStoreSearchCacheV33(true);renderOnlineStoreProductListV10();});return;}
   // Search text/category first. Expensive room/config calculations only run on the small matched subset.
@@ -20763,6 +20763,10 @@ function v35TreeCard(item,motherPrice){
       <button type="button" class="v34-child-id" data-v34-toggle-child="${v34Esc(item.id)}"><strong>${v34Esc(item.id)}</strong><small>${draft?'新编辑器 · 尚未保存':mediaBadge}</small></button>
       <span class="v34-tier-chip ${tier}">${v34Esc(v34TierLabel(tier))}</span>
       <strong class="v34-row-price">${rp>0?'RM '+formatOnlineMoneyInputV12(rp):'未设售价'}</strong>
+      <span class="v36-dim-cell v36-crown"><small>冠幅</small><b>${v34Esc(item.crownSpread||'—')}</b></span>
+      <span class="v36-dim-cell v36-height"><small>高度</small><b>${v34Esc(item.pottedHeight||'—')}</b></span>
+      <span class="v36-dim-cell v36-width"><small>宽度</small><b>${v34Esc(item.overallWidth||'—')}</b></span>
+      <span class="v36-dim-cell v36-pot-cell v36-pot"><small>花盆</small><b>${v34Esc(item.potSize||'—')}</b></span>
       <span class="v34-status-chip ${status==='sold'?'sold':'active'}">${v34StatusLabel(status)}</span>
       <button type="button" class="secondary-btn v34-edit-btn" data-v34-toggle-child="${v34Esc(item.id)}">编辑</button>
     </div>
@@ -20773,13 +20777,13 @@ function v35TreeCard(item,motherPrice){
       <input data-v34-field="priceMode" type="hidden" value="${v34Esc(mode)}"/>
       <input data-v34-field="saleChannel" type="hidden" value="${v34Esc(saleChannel)}"/>
 
-      <div class="v35-editor-title"><div><strong>${v34Esc(item.id)}</strong><span>数量固定 1</span></div><button type="button" class="secondary-btn" data-v34-collapse-child="${v34Esc(item.id)}">收起</button></div>
+      <div class="v35-editor-title"><div><strong>${v34Esc(item.id)}</strong><span>数量固定 1</span></div><div class="v36-editor-top-actions"><button type="button" class="danger-outline-btn v36-delete-editor" data-v35-delete-child="${v34Esc(item.id)}">${draft?'删除编辑器':'删除子编号'}</button><button type="button" class="secondary-btn" data-v34-collapse-child="${v34Esc(item.id)}">收起</button></div></div>
 
       <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">1</span><div><h4>售价与状态</h4><small>默认跟随母产品售价；这棵较漂亮时可直接改成独立售价。</small></div></div><div class="v34-form-grid four">
         <label>分配区域<select data-online-field-v10="tierSelect"><option value="premium" ${tier==='premium'?'selected':''}>精品馆</option><option value="collector" ${tier==='collector'?'selected':''}>贵宾室</option><option value="entry" ${tier==='entry'?'selected':''}>入门首选</option></select></label>
         <label>状态<select data-online-field-v10="status"><option value="available" ${status!=='sold'?'selected':''}>在售</option><option value="sold" ${status==='sold'?'selected':''}>Sold</option></select><small>${status==='sold'&&saleChannel?`后台：${saleChannel==='online'?'Online Sold':'Offline Sold'}`:'手动标记 Sold → 后台自动记录 Offline Sold；前台只显示 Sold。'}</small></label>
-        <label>子编号售价 (RM)<div class="v34-inline"><input data-online-field-v10="regularPrice" inputmode="decimal" value="${rp>0?formatOnlineMoneyInputV12(rp):''}" placeholder="输入售价"/><button type="button" class="secondary-btn v34-follow-price">跟随母价</button></div></label>
-        <label>Promotion Price (RM)<input data-online-field-v10="promotionPrice" inputmode="decimal" value="${item.promotionPrice?formatOnlineMoneyInputV12(item.promotionPrice):''}" placeholder="可留空"/></label>
+        <label class="v36-price-wide">子编号售价 (RM)<div class="v34-inline"><input data-online-field-v10="regularPrice" inputmode="decimal" value="${rp>0?formatOnlineMoneyInputV12(rp):''}" placeholder="输入售价"/><button type="button" class="secondary-btn v34-follow-price">跟随母价</button></div><small>促销价不在这里维护；促销期间统一到「营销管理」设置。</small></label>
+        <input data-online-field-v10="promotionPrice" type="hidden" value="0"/>
       </div></section>
 
       <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">2</span><div><h4>盆景尺寸</h4><small>每棵独立输入；包装尺寸会自动带入。</small></div></div><div class="v34-form-grid four">
@@ -20803,7 +20807,7 @@ function v35TreeCard(item,motherPrice){
       </div></section>
 
       <details class="v34-note"><summary>备注（可留空）</summary><textarea data-online-field-v10="note" rows="2" placeholder="备注">${v34Esc(item.note||'')}</textarea></details>
-      <div class="v34-tree-actions"><button type="button" class="danger-outline-btn" data-v35-delete-child="${v34Esc(item.id)}">删除这个编辑器</button><button type="button" class="primary-btn" data-v34-collapse-child="${v34Esc(item.id)}">完成编辑</button></div>
+      <div class="v34-tree-actions"><button type="button" class="primary-btn" data-v34-collapse-child="${v34Esc(item.id)}">完成编辑</button></div>
     </div>
   </article>`;
 }
@@ -20852,6 +20856,8 @@ function v35RefreshTreeRow(card){
   const tier=String(card.querySelector('[data-online-field-v10="tierSelect"]')?.value||'premium'); const tierChip=card.querySelector('.v34-tier-chip'); if(tierChip){tierChip.textContent=v34TierLabel(tier);tierChip.className='v34-tier-chip '+tier;} card.dataset.tierV14=tier; const hiddenTier=card.querySelector('[data-online-field-v10="tier"]'); if(hiddenTier)hiddenTier.value=tier;
   const photos=v35MediaList(card,'photos'),videos=v35MediaList(card,'videos'); const cell=card.querySelector('.v34-photo-cell'); if(cell){cell.innerHTML=photos[0]?`<img loading="lazy" decoding="async" src="${v34Esc(photos[0])}" alt="${v34Esc(card.dataset.itemIdV10||'')}"/><span class="v34-photo-empty" style="display:none">照片</span>`:'<span class="v34-photo-empty">＋ 照片</span>';}
   const small=card.querySelector('.v34-child-id small');if(small)small.textContent=card.dataset.v35Draft==='1'?'新编辑器 · 尚未保存':`${photos.length}图 · ${videos.length}视频`;
+  const dimMap=[['.v36-crown','crownSpread'],['.v36-height','pottedHeight'],['.v36-width','overallWidth'],['.v36-pot','potSize']];
+  for(const [selector,field] of dimMap){const node=card.querySelector(selector+' b');const inputNode=field==='potSize'?card.querySelector('[data-online-field-v10="potSize"]'):card.querySelector(`[data-v34-field="${field}"]`);if(node)node.textContent=v34Text(inputNode?.value)||'—';}
   v35UpdateAddState();
 }
 v34RefreshTreeRow=v35RefreshTreeRow;
@@ -20935,3 +20941,74 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
   const mother=document.getElementById('onlineStoreMotherRegularPriceV33');
   mother?.addEventListener('input',()=>{mother.dataset.v35PriceConfirmed='1';});
 },0));
+
+
+/* ================================================================
+   Online Store V3.6 - product naming + scoped category search
+   ================================================================ */
+window.ONLINE_STORE_V36_ACTIVE=true;
+function cleanOnlinePublicNameV36(name){
+  let text=String(name||'').normalize('NFKC').trim();
+  if(!text)return '';
+  // Confirmed supplier/source prefixes. Keep this explicit to avoid deleting real species names.
+  const supplierPrefixes=['游小北','忠盛','昊杨','大厚'];
+  for(const prefix of supplierPrefixes){if(text.startsWith(prefix)){text=text.slice(prefix.length).trim();break;}}
+  // Internal reference/price tails, e.g. BX580, BBDK680, 1888, 12000, 2500.
+  text=text.replace(/[A-Za-z]{1,10}[A-Za-z0-9-]*\d+[A-Za-z0-9-]*$/,'').trim();
+  text=text.replace(/\d+(?:\.\d+)?$/,'').trim();
+  // Once a principal bonsai form is identified, omit decorative/container detail after it.
+  const formPatterns=[
+    /老桩游龙/,/游龙小桩/,/[大小中]?丛林\d*号?/,/矮霸(?:多菇型|冬菇型)?/,/游龙/,/提根(?:式)?/,/悬崖/,/双干/,/造型/
+  ];
+  let bestEnd=-1;
+  for(const re of formPatterns){const m=re.exec(text);if(m){const end=m.index+m[0].length;if(end>bestEnd)bestEnd=end;}}
+  if(bestEnd>0)text=text.slice(0,bestEnd).trim();
+  return text||String(name||'').trim();
+}
+const setOnlineStoreEditorValuesV10BaseV36=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  setOnlineStoreEditorValuesV10BaseV36(productId,preserveRoomV16);
+  const p=getOnlineStoreProductV10(productId),cfg=getOnlineStoreConfigV10(productId),pub=document.getElementById('onlineStorePublicNameV33');
+  if(pub){
+    const original=String(p?.name||'').trim();
+    const saved=String(cfg?.publicName||'').trim();
+    // Auto-clean only when the user has not supplied a custom Online name.
+    if(!saved||saved===original)pub.value=cleanOnlinePublicNameV36(original);
+  }
+  const promo=document.getElementById('onlineStorePromotionPriceV10');if(promo)promo.value='';
+};
+
+// Category page = fixed search scope. The hidden dropdown can never broaden the search.
+const enterProductCategoryV32BaseV36=enterProductCategoryV32;
+enterProductCategoryV32=function(category){
+  enterProductCategoryV32BaseV36(category);
+  const target=String(category||'all');
+  if(target!=='bonsai'){
+    const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.value=target;cat.disabled=true;cat.hidden=true;}
+    const tools=document.getElementById('roomProductToolsV27');if(tools)tools.classList.add('v36-category-scoped');
+    const search=document.getElementById('onlineStoreSearchV10');if(search)search.placeholder=`只搜索${productCategoryLabelV32(target)}：产品编号、中文名、英文名或关键词`;
+  }
+};
+const showProductOverviewV32BaseV36=showProductOverviewV32;
+showProductOverviewV32=function(){
+  showProductOverviewV32BaseV36();
+  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.hidden=false;cat.disabled=false;cat.value='all';}
+  document.getElementById('roomProductToolsV27')?.classList.remove('v36-category-scoped');
+  const search=document.getElementById('onlineStoreSearchV10');if(search)search.placeholder='搜索产品编号、中文名、英文名或关键词';
+};
+const enterProductRoomV32BaseV36=enterProductRoomV32;
+enterProductRoomV32=function(room){
+  enterProductRoomV32BaseV36(room);
+  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.hidden=false;cat.value='bonsai';cat.disabled=true;}
+  document.getElementById('roomProductToolsV27')?.classList.remove('v36-category-scoped');
+  const search=document.getElementById('onlineStoreSearchV10');if(search)search.placeholder='只搜索盆景：产品编号、中文名、英文名或关键词';
+};
+
+// Ensure product editor no longer treats Promotion Price as an editable/checkable selling price.
+const collectOnlineStoreConfigFromEditorV10BaseV36=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){
+  const cfg=collectOnlineStoreConfigFromEditorV10BaseV36();
+  cfg.promotionPrice=0;
+  cfg.uniqueItems=(cfg.uniqueItems||[]).map(x=>({...x,promotionPrice:0}));
+  return cfg;
+};
