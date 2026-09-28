@@ -212,7 +212,7 @@ function setupCloudSync() {
     requestOnlineRevisionCheckV45(event.persisted ? 10 : 40);
   });
 
-  // V4.5: while visible, Online Store performs one coalesced lightweight revision check every 2.5 seconds.
+  // V4.6: while visible, Online Store performs one coalesced lightweight revision check every 2.5 seconds.
   // An unchanged revision returns only metadata, so another device's single-product
   // minimum-price/manual-protection edit is picked up automatically without a manual refresh.
   window.clearInterval(cloudBackgroundRevisionTimerV367);
@@ -748,7 +748,7 @@ function applyOnlineImportReadOnlyDataV20(data) {
     inventoryPreparedRowsCacheV321 = { rawProducts:null, settings:null, imports:null, batches:null, sales:null, rows:[] };
   }
   if (typeof inventoryLastRenderedPreparedRowsV321 !== "undefined") inventoryLastRenderedPreparedRowsV321 = null;
-  // V4.5: update the currently open product immediately, but postpone heavy list/dashboard/preview renders.
+  // V4.6: update the currently open product immediately, but postpone heavy list/dashboard/preview renders.
   // This lets the revision + mirror write finish quickly and keeps input/navigation responsive.
   try { if (typeof window.refreshOnlineImportReadOnlyFieldsV21 === "function") window.refreshOnlineImportReadOnlyFieldsV21(); } catch (_) {}
   const refreshVisibleViewsV44 = () => {
@@ -789,7 +789,7 @@ async function pullOnlineImportReadOnlyV20(forceFull = false) {
   window.ONLINE_STORE_IMPORT_API_VERSION_V23 = String(data?.clientVersion || data?.apiVersion || window.ONLINE_STORE_IMPORT_API_VERSION_V23 || "");
   if (data?.unchanged) {
     onlineReadOnlyUnchangedChecksV24 += 1;
-    // V4.5: an unchanged revision means no data was synchronized. Avoid a
+    // V4.6: an unchanged revision means no data was synchronized. Avoid a
     // localStorage write + System Information repaint every 2.5 seconds.
     return false;
   }
