@@ -19832,7 +19832,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"3.7",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"3.8",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19847,7 +19847,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.7",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.8",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;
@@ -21127,4 +21127,232 @@ renderStorePreviewV13=function(){
 window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
   const host=document.getElementById('v34TreeList');
   host?.addEventListener('toggle',e=>{const details=e.target;if(!(details instanceof HTMLDetailsElement)||!details.classList.contains('v35-sold-history')||!details.open)return;details.querySelectorAll('img[data-v37-src]').forEach(img=>{if(!img.getAttribute('src'))img.setAttribute('src',img.dataset.v37Src||'');});},true);
+},0));
+
+
+/* ================================================================
+   Online Store V3.8 - assigned tree recovery + live Import current minimum
+   ================================================================ */
+window.ONLINE_STORE_V38_ACTIVE=true;
+let onlineStoreAllTreesModeV38=false;
+
+// Import's displayed CURRENT minimum price is not frozen when a promotion starts.
+// Reproduce the Import read-only display calculation from mirrored Product + Settings.
+// Nothing in this function writes to Import storage.
+function v38ImportStoredMinimum(product){
+  if(!product||typeof product!=='object')return 0;
+  const normalized=Object.prototype.hasOwnProperty.call(product,'importMinimumPriceSourceV26');
+  if(normalized){
+    const kept=Math.max(0,Number(product.importStoredMinimumPriceV38)||0);
+    if(kept>0)return kept;
+    const current=Math.max(0,Number(product.importCurrentMinimumPrice)||0);
+    if(current>0)return current;
+  }
+  return Math.max(0,Number(product.minimumPrice ?? product.importCurrentMinimumPrice)||0);
+}
+function v38ImportCurrentMinimum(product){
+  if(!product||typeof product!=='object')return 0;
+  const rules=getMinimumPriceRulesV160();
+  const index=getMinimumPriceOriginIndexV160();
+  const manual=(product.importMinimumPriceManualV37===true)||(product.importMinimumPriceManual===true)||(product.minimumPriceManual===true);
+  const stored=v38ImportStoredMinimum(product);
+  let base=stored;
+  if(!manual){
+    try{base=Math.max(0,Number(getAutomaticMinimumPriceV160(product.averageCost,rules,product,index))||0)||stored;}catch(_){base=stored;}
+  }
+  let promotion=null;try{promotion=getPromotionSettingsV183();}catch(_){promotion=null;}
+  if(!promotion)return base;
+  const id=String(product.id||'').trim().toUpperCase();
+  const excluded=Array.isArray(promotion.excludedProductIds)&&promotion.excludedProductIds.includes(id);
+  if(excluded)return base;
+  if(manual&&promotion.includeManualPriceProducts!==true)return base;
+  const override=Math.max(0,Number(promotion.priceOverrides?.[id])||0);
+  if(override>0)return override;
+  try{
+    return Math.max(0,Number(getPromotionPriceBreakdownV183({...product,minimumPrice:base,minimumPriceManual:false},promotion,rules,index).price)||0)||base;
+  }catch(_){return base;}
+}
+window.v38ImportCurrentMinimum=v38ImportCurrentMinimum;
+
+// Preserve the stored Import minimum before Online's read-only normalizer replaces
+// product.minimumPrice with the Initial protection base.
+const normalizeProductMinimumPriceV160BaseV38=normalizeProductMinimumPriceV160;
+normalizeProductMinimumPriceV160=function(product,configuredRules=null,configuredOverrides=null,originIndex=null){
+  if(typeof ONLINE_STORE_IMPORT_READ_ONLY_V20!=='undefined'&&ONLINE_STORE_IMPORT_READ_ONLY_V20){
+    const normalizedAlready=Boolean(product&&Object.prototype.hasOwnProperty.call(product,'importMinimumPriceSourceV26'));
+    const stored=normalizedAlready
+      ? Math.max(0,Number(product?.importStoredMinimumPriceV38 ?? product?.importCurrentMinimumPrice ?? product?.minimumPrice)||0)
+      : Math.max(0,Number(product?.minimumPrice ?? product?.importCurrentMinimumPrice)||0);
+    const manual=(product?.importMinimumPriceManualV37===true)||(product?.importMinimumPriceManual===true)||(product?.minimumPriceManual===true);
+    const seed={...(product||{}),importStoredMinimumPriceV38:stored,importCurrentMinimumPrice:stored,importMinimumPriceManualV37:manual};
+    const out=normalizeProductMinimumPriceV160BaseV38(seed,configuredRules,configuredOverrides,originIndex);
+    const current=v38ImportCurrentMinimum({...out,importStoredMinimumPriceV38:stored,importMinimumPriceManualV37:manual});
+    return {...out,importStoredMinimumPriceV38:stored,importCurrentMinimumPrice:current,importMinimumPriceManualV37:manual};
+  }
+  return normalizeProductMinimumPriceV160BaseV38(product,configuredRules,configuredOverrides,originIndex);
+};
+
+// Any renderer asking for Import Current Minimum Price gets the live Import result,
+// including promotion periods. Initial remains a separate Online protection base.
+getImportCurrentMinimumPriceV26=function(product){return v38ImportCurrentMinimum(product);};
+
+
+function v38CurrentMinimumState(product){
+  const current=v38ImportCurrentMinimum(product);
+  const manual=(product?.importMinimumPriceManualV37===true)||(product?.importMinimumPriceManual===true)||(product?.minimumPriceManual===true);
+  let promotion=null;try{promotion=getPromotionSettingsV183();}catch(_){promotion=null;}
+  const id=String(product?.id||'').trim().toUpperCase();
+  const excluded=Boolean(promotion&&Array.isArray(promotion.excludedProductIds)&&promotion.excludedProductIds.includes(id));
+  const promotionApplies=Boolean(promotion&&!excluded&&(!manual||promotion.includeManualPriceProducts===true));
+  if(manual&&!promotionApplies)return {state:'manual',label:'受保护精品',color:'#0b68c9',current};
+  if(!(current>0))return {state:'neutral',label:'暂无',color:'',current};
+  let profit=0;
+  try{
+    const rules=getMinimumPriceRulesV160();const index=getMinimumPriceOriginIndexV160();
+    const avg=Math.max(0,Number(product?.averageCost)||0);const pot=Math.max(0,Number(getVndPotCostV160(product,rules,index))||0);
+    const base=manual?v38ImportStoredMinimum(product):Math.max(0,Number(getAutomaticMinimumPriceV160(product?.averageCost,rules,product,index))||0);
+    const freightBase=promotionApplies?(base||current):current;
+    const freight=Math.max(0,Number(getMinimumFreightTierV188(freightBase,rules)?.amount)||0);
+    const commissionRate=promotionApplies?Math.max(0,Number(promotion?.commissionRate)||0):Math.max(0,Number(rules.commissionRate)||0);
+    profit=current-avg-pot-freight-current*commissionRate/100;
+  }catch(_){profit=current-Math.max(0,Number(product?.averageCost)||0);}
+  return profit<-0.005?{state:'loss',label:'亏损',color:'#c62828',current,profit}:{state:'gain',label:'赚钱',color:'#087a43',current,profit};
+}
+v37CurrentMinimumState=v38CurrentMinimumState;
+
+function v38TierRoom(item){
+  const tier=String(item?.tier||'entry');
+  return tier==='collector'?'vip':tier==='premium'?'premium':'entry';
+}
+function v38RoomLabel(room){return room==='vip'?'贵宾室':room==='premium'?'精品馆':'入门首选';}
+function v38ConfigHasRoom(config,room){
+  const items=Array.isArray(config?.uniqueItems)?config.uniqueItems:[];
+  if(items.some(x=>v38TierRoom(x)===room))return true;
+  return room==='entry'&&Math.max(0,Number(config?.randomQty)||0)>0;
+}
+function v38RoomCounts(config,room){
+  const items=(Array.isArray(config?.uniqueItems)?config.uniqueItems:[]).filter(x=>v38TierRoom(x)===room);
+  const active=items.filter(x=>String(x?.status||'available')!=='sold').length+(room==='entry'?Math.max(0,Math.floor(Number(config?.randomQty)||0)):0);
+  const sold=items.filter(x=>String(x?.status||'available')==='sold').length;
+  return {active,sold,total:items.length+(room==='entry'?Math.max(0,Math.floor(Number(config?.randomQty)||0)):0)};
+}
+function v38ImportProductMap(){
+  const map=new Map();
+  try{for(const p of getOnlineStoreImportProductsV30()){const id=String(p?.id||'').trim().toUpperCase();if(id)map.set(id,p);}}catch(_){}
+  return map;
+}
+function v38AssignedRoomRows(room){
+  const state=getOnlineStoreStateV10();const products=v38ImportProductMap();const rows=[];
+  for(const [rawId,rawCfg] of Object.entries(state.products||{})){
+    const id=String(rawId||'').trim().toUpperCase();if(!id)continue;
+    const cfg=normalizeOnlineStoreConfigV10(id,rawCfg);if(!v38ConfigHasRoom(cfg,room))continue;
+    const p=products.get(id)||null;const rc=v38RoomCounts(cfg,room);
+    rows.push({id,cfg,p,rc});
+  }
+  return rows.sort((a,b)=>b.rc.active-a.rc.active||a.id.localeCompare(b.id,undefined,{numeric:true}));
+}
+function v38RoomAssignedHtml(room){
+  const rows=v38AssignedRoomRows(room);const filter=String(document.getElementById('onlineStoreFilterV10')?.value||'all');
+  const filtered=rows.filter(r=>filter==='published'?r.rc.active>0:filter==='unpublished'?r.rc.active===0:filter==='configured'?r.rc.total>0:true).slice(0,50);
+  if(!rows.length)return `<div class="v38-assigned-empty"><strong>${v38RoomLabel(room)}目前没有已分配商品</strong><span>在上方搜索框输入产品编号或名称，即可加入这个房间。</span></div>`;
+  const cards=filtered.map(({id,cfg,p,rc})=>{
+    const name=String(cfg.publicName||p?.name||'').trim();
+    const stock=p?Math.max(0,Number(p.stock)||0):0;
+    const current=p?getImportCurrentMinimumPriceV26(p):0;
+    const state=p?v37CurrentMinimumState(p):null;
+    return `<article class="v38-assigned-card"><div class="v38-assigned-title"><button type="button" class="copy-text-btn-v12 online-store-product-id-v10" data-online-copy-v12="${escapeHTML(id)}">${escapeHTML(id)}</button><strong>${escapeHTML(name||'已保存 Online 商品')}</strong></div><div class="v38-assigned-meta"><span><i>本房在售</i><b>${formatNumber(rc.active)}</b></span><span><i>Sold</i><b>${formatNumber(rc.sold)}</b></span>${p?`<span><i>Import 库存</i><b>${formatNumber(stock)}</b></span><span><i>当前最低售价</i><b style="color:${state?.color||'inherit'}">${current>0?formatMoney(current,'RM '):'—'}</b></span>`:'<span><i>Import</i><b>暂未找到母产品</b></span>'}</div>${p?`<button type="button" class="primary-btn v38-manage-assigned" data-online-manage-v10="${escapeHTML(id)}">管理 / 编辑</button>`:'<button type="button" class="secondary-btn" disabled>保留旧 Online 记录</button>'}</article>`;
+  }).join('');
+  return `<div class="v38-assigned-head"><div><strong>本房已分配</strong><small>进入房间即可看到，不需要记得产品名称再搜索。搜索框用于寻找其他产品。</small></div><span>${rows.length} 个母产品</span></div>${cards}${rows.length>50?`<div class="v38-list-limit">已先显示 50 个已分配母产品；可用搜索快速定位。</div>`:''}`;
+}
+
+function v38AllTreeRows(){
+  const state=getOnlineStoreStateV10(),products=v38ImportProductMap(),rows=[];
+  for(const [rawId,rawCfg] of Object.entries(state.products||{})){
+    const parentId=String(rawId||'').trim().toUpperCase();if(!parentId)continue;
+    const cfg=normalizeOnlineStoreConfigV10(parentId,rawCfg);const p=products.get(parentId)||null;
+    for(const item of (cfg.uniqueItems||[])){
+      rows.push({parentId,cfg,p,item,room:v38TierRoom(item)});
+    }
+  }
+  return rows.sort((a,b)=>{
+    const as=String(a.item?.status||'available')==='sold'?1:0,bs=String(b.item?.status||'available')==='sold'?1:0;
+    return as-bs||String(a.item?.id||'').localeCompare(String(b.item?.id||''),undefined,{numeric:true});
+  });
+}
+function v38RenderAllTrees(){
+  const host=document.getElementById('onlineStoreProductListV10');if(!host)return;
+  const q=normalizeOnlineSearchV33(document.getElementById('onlineStoreSearchV10')?.value||'');
+  const filter=String(document.getElementById('onlineStoreFilterV10')?.value||'all');
+  let rows=v38AllTreeRows();
+  if(filter==='active')rows=rows.filter(r=>String(r.item?.status||'available')!=='sold');
+  if(filter==='sold')rows=rows.filter(r=>String(r.item?.status||'available')==='sold');
+  if(q){const tokens=q.split(' ').filter(Boolean);rows=rows.filter(r=>{const text=normalizeOnlineSearchV33([r.item?.id,r.parentId,r.cfg?.publicName,r.p?.name,v38RoomLabel(r.room),r.item?.status].join(' '));return tokens.every(t=>text.includes(t));});}
+  const total=rows.length;const shown=rows.slice(0,80);
+  host.hidden=false;
+  host.innerHTML=`<div class="v38-all-tree-summary"><strong>全部子编号 / All Individual Trees</strong><span>${total} 棵${total>80?' · 先显示 80 棵':''}</span></div>`+(shown.map(r=>{
+    const item=r.item||{};const photoRaw=(Array.isArray(item.photos)?item.photos[0]:'')||item.photo||'';const photo=v37DisplayMediaUrl(photoRaw);
+    const sold=String(item.status||'available')==='sold';
+    const mode=String(item.priceMode||'follow');const price=Math.max(0,Number(item.regularPrice)||0)||(mode==='follow'?Math.max(0,Number(r.cfg.motherRegularPrice)||0):0);
+    const publicName=String(r.cfg.publicName||r.p?.name||'').trim();
+    return `<article class="v38-tree-index-row">${photo?`<div class="v38-tree-thumb"><img src="${escapeHTML(photo)}" alt="" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"/><span style="display:none">暂无图片</span></div>`:'<div class="v38-tree-thumb"><span>暂无图片</span></div>'}<div class="v38-tree-index-main"><div><strong>${escapeHTML(item.id||'—')}</strong><span>${escapeHTML(r.parentId)}${publicName?' · '+escapeHTML(publicName):''}</span></div><div class="v38-tree-index-meta"><span>${v38RoomLabel(r.room)}</span><b>${price>0?'RM '+formatOnlineMoneyInputV12(price):'未设售价'}</b><em class="${sold?'sold':'active'}">${sold?'Sold':'在售'}</em></div></div><button type="button" class="secondary-btn" data-v38-edit-child="${escapeHTML(item.id||'')}" data-v38-parent="${escapeHTML(r.parentId)}" ${r.p?'':'disabled'}>编辑</button></article>`;
+  }).join('')||'<div class="empty-state">目前还没有建立任何子编号。</div>');
+}
+function v38SetTreeStatusOptions(){
+  const el=document.getElementById('onlineStoreFilterV10');if(!el)return;
+  el.innerHTML='<option value="all">全部状态</option><option value="active">在售</option><option value="sold">Sold</option>';el.value='all';
+}
+function v38RestoreProductStatusOptions(){
+  const el=document.getElementById('onlineStoreFilterV10');if(!el)return;
+  const current=String(el.value||'all');
+  el.innerHTML='<option value="all">全部状态</option><option value="configured">已设置 Online Store</option><option value="published">已上架</option><option value="unpublished">未上架</option>';
+  el.value=['all','configured','published','unpublished'].includes(current)?current:'all';
+}
+function v38EnterAllTrees(){
+  if(onlineStoreRoomDirtyV16&&!confirmRoomLeaveV16())return;
+  onlineStoreAllTreesModeV38=true;onlineStoreSelectedRoomV27='';onlineStoreSelectedCategoryV32='bonsai';
+  const editor=document.getElementById('onlineStoreEditorV10');if(editor)editor.hidden=true;
+  const hub=document.getElementById('roomFirstHubV27');if(hub)hub.hidden=true;
+  const cats=document.getElementById('productCategoryHubV32');if(cats)cats.hidden=true;
+  const entered=document.getElementById('productEnteredHeaderV32');if(entered)entered.hidden=false;
+  const title=document.getElementById('productEnteredTitleV32');if(title)title.textContent='全部子编号 / All Individual Trees';
+  const hint=document.getElementById('productEnteredHintV32');if(hint)hint.textContent='不用记得产品或房间；这里集中查看所有已建立子编号，并可直接进入母产品编辑。';
+  const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;
+  const search=document.getElementById('onlineStoreSearchV10');if(search){search.value='';search.placeholder='搜索子编号、母产品编号、商品名称或房间';}
+  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.hidden=true;cat.disabled=true;}
+  v38SetTreeStatusOptions();
+  document.querySelectorAll('[data-product-room-tab-v30]').forEach(x=>x.classList.remove('active'));
+  document.querySelector('[data-v38-all-trees]')?.classList.add('active');
+  v38RenderAllTrees();
+  entered?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+const renderOnlineStoreProductListV10BaseV38=renderOnlineStoreProductListV10;
+renderOnlineStoreProductListV10=function(){
+  if(onlineStoreAllTreesModeV38){v38RenderAllTrees();return;}
+  const room=onlineStoreSelectedRoomV27;
+  const q=String(document.getElementById('onlineStoreSearchV10')?.value||'').trim();
+  if(room&&!q){
+    const host=document.getElementById('onlineStoreProductListV10');if(!host)return;
+    host.hidden=false;host.innerHTML=v38RoomAssignedHtml(room);return;
+  }
+  renderOnlineStoreProductListV10BaseV38();
+};
+
+const showProductOverviewV32BaseV38=showProductOverviewV32;
+showProductOverviewV32=function(){onlineStoreAllTreesModeV38=false;document.querySelector('[data-v38-all-trees]')?.classList.remove('active');v38RestoreProductStatusOptions();showProductOverviewV32BaseV38();};
+const enterProductRoomV32BaseV38=enterProductRoomV32;
+enterProductRoomV32=function(room){onlineStoreAllTreesModeV38=false;document.querySelector('[data-v38-all-trees]')?.classList.remove('active');v38RestoreProductStatusOptions();enterProductRoomV32BaseV38(room);const hint=document.getElementById('productEnteredHintV32');if(hint)hint.textContent='本房已分配商品会自动显示；输入关键词则搜索其他盆景加入或管理。';renderOnlineStoreProductListV10();};
+const enterProductCategoryV32BaseV38=enterProductCategoryV32;
+enterProductCategoryV32=function(category){onlineStoreAllTreesModeV38=false;document.querySelector('[data-v38-all-trees]')?.classList.remove('active');v38RestoreProductStatusOptions();enterProductCategoryV32BaseV38(category);};
+
+window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
+  const page=document.getElementById('onlineStorePage');if(!page||page.dataset.v38Bound==='1')return;page.dataset.v38Bound='1';
+  page.addEventListener('click',e=>{
+    const all=e.target.closest('[data-v38-all-trees]');if(all){e.preventDefault();e.stopPropagation();v38EnterAllTrees();return;}
+    const edit=e.target.closest('[data-v38-edit-child]');if(edit){
+      e.preventDefault();e.stopPropagation();const parent=String(edit.dataset.v38Parent||'').trim().toUpperCase(),child=String(edit.dataset.v38EditChild||'').trim().toUpperCase();
+      onlineStoreAllTreesModeV38=false;v38RestoreProductStatusOptions();setOnlineStoreEditorValuesV10(parent);
+      setTimeout(()=>{const card=[...document.querySelectorAll('[data-v34-child-card]')].find(x=>String(x.dataset.itemIdV10||'').toUpperCase()===child);if(card){const editor=card.querySelector('.v34-tree-editor');if(editor)editor.hidden=false;card.scrollIntoView({behavior:'smooth',block:'center'});}},0);return;
+    }
+  },true);
 },0));
