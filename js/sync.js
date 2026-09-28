@@ -1769,6 +1769,15 @@ function setCloudState(state, error = null) {
   } else {
     element.classList.add("syncing");
     if (icon) icon.textContent = "↻";
-    if (text) text.textContent = "同步中...";
+    if (text) {
+      let hasCachedOnlineImport = false;
+      if (ONLINE_STORE_IMPORT_READ_ONLY_V20) {
+        try {
+          const cached = JSON.parse(localStorage.getItem("importSystemProducts") || "[]");
+          hasCachedOnlineImport = Array.isArray(cached) && cached.length > 0;
+        } catch (_) {}
+      }
+      text.textContent = hasCachedOnlineImport ? "上次资料已保留 · 后台检查中" : "正在读取 Import 资料…";
+    }
   }
 }

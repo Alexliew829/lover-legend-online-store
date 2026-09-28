@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-V4.1-runtime-r1-import41-8-readonly";
+const CACHE = "lover-legend-online-store-V4.2-runtime-r1-import41-8-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=40-systematic-r1",
-  "./css/style.css?v=40-systematic-r1",
-  "./js/common.js?v=40-systematic-r1",
-  "./js/sync.js?v=40-systematic-r1",
-  "./js/app.js?v=40-systematic-r1",
-  "./manifest.json?v=40-systematic-r1",
+  "./index.html?v=42-clean-automation-r1",
+  "./css/style.css?v=42-clean-automation-r1",
+  "./js/common.js?v=42-clean-automation-r1",
+  "./js/sync.js?v=42-clean-automation-r1",
+  "./js/app.js?v=42-clean-automation-r1",
+  "./manifest.json?v=42-clean-automation-r1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -49,16 +49,16 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=40-systematic-r1", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=42-clean-automation-r1", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=40-systematic-r1")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=42-clean-automation-r1")) || (await caches.match("./index.html")))
     );
     return;
   }
 
-  // V4.1: static assets are versioned in index.html. Serve a cached copy first
+  // V4.2: static assets are versioned in index.html. Serve a cached copy first
   // for instant repeat loads, while refreshing it in the background.
   event.respondWith(
     caches.match(event.request).then(cached => {

@@ -15,7 +15,7 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=41-runtime-r1" rel="manifest"/>
+<link href="./manifest.json?v=42-clean-automation-r1" rel="manifest"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
 <link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
@@ -47,12 +47,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=41-runtime-r1" rel="preload"/>
-<link href="./css/style.css?v=41-runtime-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=41-runtime-r1" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=41-runtime-r1"></script>
-<script defer="" src="./js/sync.js?v=41-runtime-r1"></script>
-<script defer="" src="./js/app.js?v=41-runtime-r1"></script>
+<link as="style" href="./css/style.css?v=42-clean-automation-r1" rel="preload"/>
+<link href="./css/style.css?v=42-clean-automation-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=42-clean-automation-r1" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=42-clean-automation-r1"></script>
+<script defer="" src="./js/sync.js?v=42-clean-automation-r1"></script>
+<script defer="" src="./js/app.js?v=42-clean-automation-r1"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog" hidden>
@@ -98,7 +98,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V4.1</div>
+  <div class="sidebar-version-v27">Online Store V4.2</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -108,7 +108,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V4.1 · Import Base V41.8 · Import Data Read-Only</small>
+      <small>Online Store V4.2 · Import Base V41.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -246,10 +246,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V4.1 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
+<div class="muted">Online Store V4.2 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V4.1</span>
+<span class="online-store-version-v10">V4.2</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
   <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
@@ -261,7 +261,7 @@
   <button type="button" disabled>媒体管理 <small>Coming Soon</small></button>
 </nav>
 <section class="v41-template-panel" id="contentTemplatesPanelV41" hidden>
-  <div class="v41-template-head"><div><strong>盆景内容模板 / Bonsai Content Templates</strong><small>同一树种只建立一次；系统按产品名称自动匹配并套用。商品与子编号不重复存相同文案。</small></div><button type="button" class="secondary-btn" id="closeContentTemplatesV41">返回商品总览</button></div>
+  <div class="v41-template-head"><div><strong>盆景内容模板 / Bonsai Content Templates</strong><small>同一树种只建立一次；系统按产品名称自动匹配并套用。商品与子编号不重复存相同文案。</small></div><button type="button" class="secondary-btn" id="closeContentTemplatesV41">关闭模板</button></div>
   <div class="v41-template-editor">
     <div class="v41-template-grid">
       <label>树种 / 模板名称<input id="contentTemplateNameV41" class="text-left-input" placeholder="例如：水梅 / 黄杨 / 罗汉松"/></label>
@@ -342,7 +342,7 @@
     <label>商品名称（前台显示）<input id="onlineStorePublicNameV33" class="text-left-input" type="text" placeholder="默认使用 Import 产品名称，可改成前台销售名称"/><small class="field-hint-v12">顾客前台看到的商品名称；不回写 Import。</small></label>
     <label>母产品默认售价 (RM)<input id="onlineStoreMotherRegularPriceV33" inputmode="decimal" type="text" placeholder="例如 1,280.00"/><small class="field-hint-v12">新增子编号时默认继承；每个子编号仍可独立加价或减价。</small></label>
     <label>商品卖点 / Short Summary<input id="onlineStoreShortSummaryV40" class="text-left-input" type="text" maxlength="120" placeholder="可选：一句话重点，例如 老桩游龙 · 枝位成熟"/><small class="field-hint-v12">母产品共用；前台商品卡/详情顶部可使用。</small></label>
-    <label class="online-product-description-v33">商品详情 / Product Details<textarea id="onlineStoreProductDetailsV40" rows="4" placeholder="输入需要人工说明的商品特点；所有子编号共用"></textarea></label>
+    <label class="online-product-description-v33">商品详情 / Product Details<textarea id="onlineStoreProductDetailsV40" rows="4" placeholder="系统按盆景内容模板自动套用盆景介绍；只有本商品需要特别说明时才修改。"></textarea></label>
   </div>
   <div class="v40-shared-block">
     <div class="v40-shared-head"><div><strong>母产品标准资料 / Shared Product Defaults</strong><small>只输入一次。新增子编号自动继承；只有个别差异才需要单独修改。</small></div><span class="v40-auto-badge">系统自动套用</span></div>
@@ -729,7 +729,7 @@
   <section class="panel aftersales-placeholder-v29"><div><strong>退款 / 售后</strong><p>售后记录绑定原订单；沟通优先通过 WhatsApp，系统保存正式状态、原因、金额与备注。</p></div><button type="button" class="secondary-btn">WhatsApp 顾客</button></section>
 </section>
 <section class="page" id="shippingPageV27">
-  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V4.1 UI</span></div>
+  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V4.2 UI</span></div>
   <section class="panel v40-package-reserve-panel" id="packageReserveSettingsV40">
     <div class="v40-shared-head"><div><strong>包装预留设置 / Package Reserve</strong><small>系统根据母产品标准尺寸自动生成包装建议；以后新增子编号直接继承。</small></div><span class="v40-auto-badge">自动化</span></div>
     <div class="v40-reserve-grid">
@@ -848,7 +848,7 @@
 <button class="primary-btn" id="saveHolidayModeV29" type="button">保存 Holiday Mode</button>
 </section>
 <section class="panel settings-section-v12 password-security-v16">
-<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V4.1 系统化与自动化阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
+<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V4.2 系统化与自动化阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
 <div class="password-protection-row-v16">
   <div><strong>后台密码保护</strong><small id="onlineStorePasswordStateV16">检查中...</small></div>
   <button class="primary-btn" id="onlineStorePasswordToggleV16" type="button">检查中...</button>
@@ -1142,7 +1142,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V4.1</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V4.2</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1163,7 +1163,7 @@
 <aside class="admin-assist-v27" aria-label="辅助信息">
   <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V4.1</p><small>Import Base 41.8 Stable</small></section>
+  <section><strong>当前版本</strong><p>Online Store V4.2</p><small>Import Base 41.8 Stable</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>
