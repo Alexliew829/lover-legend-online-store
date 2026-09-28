@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-V3.8-full-clean-r1-import41-8-readonly";
+const CACHE = "lover-legend-online-store-V3.9-performance-r1-import41-8-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=38-full-deploy-r1",
-  "./css/style.css?v=38-full-deploy-r1",
-  "./js/common.js?v=38-full-deploy-r1",
-  "./js/sync.js?v=38-full-deploy-r1",
-  "./js/app.js?v=38-full-deploy-r1",
-  "./manifest.json?v=38-full-deploy-r1",
+  "./index.html?v=39-performance-r1",
+  "./css/style.css?v=39-performance-r1",
+  "./js/common.js?v=39-performance-r1",
+  "./js/sync.js?v=39-performance-r1",
+  "./js/app.js?v=39-performance-r1",
+  "./manifest.json?v=39-performance-r1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -49,24 +49,29 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=38-full-deploy-r1", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=39-performance-r1", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=38-full-deploy-r1")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=39-performance-r1")) || (await caches.match("./index.html")))
     );
     return;
   }
 
+  // V3.9: static assets are versioned in index.html. Serve a cached copy first
+  // for instant repeat loads, while refreshing it in the background.
   event.respondWith(
-    fetch(event.request, { cache: "no-store" })
-      .then(response => {
-        if (response && response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(event.request, copy));
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request))
+    caches.match(event.request).then(cached => {
+      const network = fetch(event.request, { cache: "no-store" })
+        .then(response => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(cache => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(() => cached);
+      return cached || network;
+    })
   );
 });

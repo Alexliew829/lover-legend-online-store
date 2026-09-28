@@ -100,15 +100,22 @@ function cleanupLegacySettingsResidueV323() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  clearTransientSearchInputsOnReloadV304();
+  const onlineFastV39 = window.ONLINE_STORE_IMPORT_READ_ONLY_V20 === true;
+  if (!onlineFastV39) clearTransientSearchInputsOnReloadV304();
   setupAccessLock();
-  // V36.7: clean any stale PZ+BS duplicate cache before Dashboard/Inventory first paint.
-  if (typeof repairLocalBsCanonicalCacheV365 === "function") repairLocalBsCanonicalCacheV365();
-  cleanupLegacySettingsResidueV323();
-  repairLegacyImportDates();
+  // V3.9 PERFORMANCE: Online Store is a read-only Import consumer. Do not run
+  // inherited Import repair/settings/inventory initialization on startup. Those
+  // modules were the main source of long tasks and repeated full-list renders.
+  if (!onlineFastV39) {
+    if (typeof repairLocalBsCanonicalCacheV365 === "function") repairLocalBsCanonicalCacheV365();
+    cleanupLegacySettingsResidueV323();
+    repairLegacyImportDates();
+  }
   setupNavigation();
-  setupSettings();
-  setupInventoryMasterV299();
+  if (!onlineFastV39) {
+    setupSettings();
+    setupInventoryMasterV299();
+  }
   setupOnlineStoreV10();
   setupOnlineStoreAdminV27();
   const requestedPageV210 = String(new URLSearchParams(window.location.search).get("page") || "").trim().toLowerCase();
@@ -136,15 +143,21 @@ document.addEventListener("DOMContentLoaded", () => {
   if (requestedTargetV210) {
     window.setTimeout(() => document.querySelector(`.nav-btn[data-page="${requestedTargetV210}"]`)?.click(), 0);
   }
-  setupDashboard();
-  setupImportModule();
-  setupImportDraftV247();
-  setupImportHistory();
-  setupInventoryModule();
-  setupGlobalMobilePullDownClear();
+  if (onlineFastV39) {
+    // Paint only the lightweight Online dashboard. Import editors/history/media
+    // are intentionally not initialized in Online Store.
+    try { renderDashboard(); } catch (_) {}
+  } else {
+    setupDashboard();
+    setupImportModule();
+    setupImportDraftV247();
+    setupImportHistory();
+    setupInventoryModule();
+    setupGlobalMobilePullDownClear();
+    setupDataOperationSafety();
+  }
   registerServiceWorker();
   setupCloudSync();
-  setupDataOperationSafety();
 });
 
 
@@ -2832,7 +2845,7 @@ function setupNavigation() {
       }
 
       if (target === "dashboardPage") {
-        renderInventoryManagementList();
+        if (window.ONLINE_STORE_IMPORT_READ_ONLY_V20 !== true && typeof renderInventoryManagementList === "function") renderInventoryManagementList();
         renderDashboard();
       }
 
@@ -18982,7 +18995,7 @@ function showDataToolsStatus(message, isError = false) {
 
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js?v=38-full-deploy-r1").then(reg=>reg.update()).catch(error => {
+    navigator.serviceWorker.register("./sw.js?v=39-performance-r1").then(reg=>reg.update()).catch(error => {
       console.error("Service Worker registration failed:", error);
     });
   }
@@ -19311,7 +19324,7 @@ function getOnlineStoreImportProductsV30(){
 }
 async function refreshOnlineStoreImportProductsV30(force=false){
   const now=Date.now();
-  if(onlineStoreProductRefreshBusyV30||(!force&&now-onlineStoreProductRefreshLastAtV30<4000))return false;
+  if(onlineStoreProductRefreshBusyV30||(!force&&now-onlineStoreProductRefreshLastAtV30<15000))return false;
   onlineStoreProductRefreshBusyV30=true;onlineStoreProductRefreshLastAtV30=now;
   try{
     if(typeof window.refreshLatestCloudData==="function") await Promise.resolve(window.refreshLatestCloudData());
@@ -19832,7 +19845,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"3.8",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"3.9",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19847,7 +19860,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.8",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"3.9",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;
@@ -21131,7 +21144,7 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
 
 
 /* ================================================================
-   Online Store V3.8 - assigned tree recovery + live Import current minimum
+   Online Store V3.9 - assigned tree recovery + live Import current minimum
    ================================================================ */
 window.ONLINE_STORE_V38_ACTIVE=true;
 let onlineStoreAllTreesModeV38=false;
@@ -21356,3 +21369,28 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{
     }
   },true);
 },0));
+
+
+/* ================================================================
+   Online Store V3.9 - Performance Cleanup
+   - no legacy Import inventory/dashboard renderer on Online pages
+   - local-first lightweight dashboard
+   ================================================================ */
+window.ONLINE_STORE_V39_PERFORMANCE=true;
+function renderOnlineDashboardFastV39(){
+  const products=(typeof getOnlineStoreImportProductsV30==='function'?getOnlineStoreImportProductsV30():[]).filter(p=>(Number(p?.stock)||0)>0);
+  const productCount=products.length;
+  const stockCount=products.reduce((sum,p)=>sum+(Number(p?.stock)||0),0);
+  const inventoryValue=products.reduce((sum,p)=>sum+(Number(p?.stock)||0)*(Number(p?.averageCost)||0),0);
+  const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
+  set('productCount',formatNumber(productCount));
+  set('stockCount',formatNumber(stockCount));
+  set('inventoryValue',formatMoney(inventoryValue,'RM '));
+  const latest=products.map(p=>String(p?.lastImport||'')).filter(Boolean).sort((a,b)=>{try{return parseDDMMYYYY(b)-parseDDMMYYYY(a)}catch(_){return 0}})[0]||'';
+  set('lastImport',latest);
+  try{if(typeof updateShopPerformanceV27==='function')updateShopPerformanceV27();}catch(_){}
+  try{if(typeof renderSystemInformationV203==='function')renderSystemInformationV203();}catch(_){}
+}
+if(window.ONLINE_STORE_IMPORT_READ_ONLY_V20===true){
+  renderDashboard=renderOnlineDashboardFastV39;
+}
