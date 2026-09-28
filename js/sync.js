@@ -32,7 +32,7 @@ let cloudLastErrorMessage = "";
 window.ONLINE_STORE_IMPORT_READ_ONLY_V20 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
 const ONLINE_STORE_IMPORT_READ_ONLY_V20 = window.ONLINE_STORE_IMPORT_READ_ONLY_V20;
 const CLOUD_FOREGROUND_CHECK_GAP = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 5000 : 1500;
-const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 60000 : 8000;
+const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 15000 : 8000;
 const PROMOTION_LIGHT_SYNC_MS_V372 = 3000;
 // V2.6: Online Store uses a dedicated pull-only adapter. It never runs inherited
 // Import repair/push/promotion/minimum-price code against the Import API.
@@ -180,6 +180,10 @@ function setupCloudSync() {
     ) {
       scheduleForegroundCloudCheck(10);
     }
+  });
+
+  window.addEventListener("focus", () => {
+    if (cloudInitialSyncComplete) scheduleForegroundCloudCheck(120);
   });
 
   window.addEventListener("pageshow", event => {
@@ -723,7 +727,11 @@ function applyOnlineImportReadOnlyDataV20(data) {
   }
   if (typeof inventoryLastRenderedPreparedRowsV321 !== "undefined") inventoryLastRenderedPreparedRowsV321 = null;
   try { if (typeof renderDashboard === "function" && document.getElementById("dashboardPage")?.classList.contains("active")) renderDashboard(); } catch (_) {}
-  try { if (typeof renderOnlineStoreProductListV10 === "function" && document.getElementById("onlineStorePage")?.classList.contains("active")) renderOnlineStoreProductListV10(); } catch (_) {}
+  try {
+    const pageActive = document.getElementById("onlineStorePage")?.classList.contains("active");
+    const editorOpen = pageActive && document.getElementById("onlineStoreEditorV10")?.hidden === false;
+    if (typeof renderOnlineStoreProductListV10 === "function" && pageActive && !editorOpen) renderOnlineStoreProductListV10();
+  } catch (_) {}
   try { if (typeof window.refreshOnlineImportReadOnlyFieldsV21 === "function") window.refreshOnlineImportReadOnlyFieldsV21(); } catch (_) {}
   try { if (typeof renderStorePreviewV13 === "function" && document.getElementById("storePreviewPage")?.classList.contains("active")) renderStorePreviewV13(); } catch (_) {}
 }
@@ -830,7 +838,7 @@ async function runCloudSync() {
       (snapshot.batches || []).length > 0;
 
     // V8.7 hard bootstrap: this version's first successful sync is ALWAYS a full Pull.
-    // Legacy V4.20/V4.25/V4.26 dirty flags are discarded before any write can happen.
+    // Legacy V4.30/V4.35/V4.36 dirty flags are discarded before any write can happen.
     // No Push is allowed until the canonical Sheet has been pulled successfully.
     let remoteUpdated = false;
 
@@ -1694,7 +1702,11 @@ function applyRemoteData(data) {
 function refreshSystemViewsAfterSync() {
   if (ONLINE_STORE_IMPORT_READ_ONLY_V20) {
     try { if (typeof renderDashboard === "function" && document.getElementById("dashboardPage")?.classList.contains("active")) renderDashboard(); } catch (_) {}
-    try { if (typeof renderOnlineStoreProductListV10 === "function" && document.getElementById("onlineStorePage")?.classList.contains("active")) renderOnlineStoreProductListV10(); } catch (_) {}
+    try {
+      const pageActive = document.getElementById("onlineStorePage")?.classList.contains("active");
+      const editorOpen = pageActive && document.getElementById("onlineStoreEditorV10")?.hidden === false;
+      if (typeof renderOnlineStoreProductListV10 === "function" && pageActive && !editorOpen) renderOnlineStoreProductListV10();
+    } catch (_) {}
     try { if (typeof window.refreshOnlineImportReadOnlyFieldsV21 === "function") window.refreshOnlineImportReadOnlyFieldsV21(); } catch (_) {}
     return;
   }

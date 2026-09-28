@@ -2722,7 +2722,7 @@ function repairLegacyImportDates() {
 
     // V6.8: keep V6.8 data model unchanged. Legacy/non-array items are
     // skipped here instead of being parsed or rewritten during startup.
-    // This prevents the V4.24 compatibility repair from mutating synced data.
+    // This prevents the V4.34 compatibility repair from mutating synced data.
     const batchItems = Array.isArray(batch.items) ? batch.items : [];
 
     batchItems.forEach(item => {
@@ -19845,7 +19845,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"4.2",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"4.3",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19860,7 +19860,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"4.2",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"4.3",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;
@@ -21614,7 +21614,7 @@ function v41ReorderWorkbench(){
 function v41FastNavigate(target,button){
   const page=document.getElementById(target);if(!page)return;const current=document.querySelector('.page.active');if(current?.id==='onlineStorePage'&&target!=='onlineStorePage'&&window.onlineStoreRoomDirtyV16===true){if(!confirm('当前商品还有未保存修改，确认离开？'))return;}
   document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));if(button)button.classList.add('active');page.classList.add('active');updateAdminTopbarTitleV28(target);window.scrollTo({top:0,behavior:'auto'});
-  requestAnimationFrame(()=>{try{if(target==='dashboardPage')renderDashboard();else if(target==='onlineStorePage'){document.getElementById('contentTemplatesPanelV41')?.setAttribute('hidden','');showProductOverviewV32();const products=getOnlineStoreImportProductsV30();if(!products.length)refreshOnlineStoreImportProductsV30(false);}else if(target==='storePreviewPage')renderStorePreviewV13();else if(target==='onlineStoreHistoryPageV14')renderOnlineStoreHistoryV14();}catch(err){console.error('V4.2 deferred page render failed',err);}});
+  requestAnimationFrame(()=>{try{if(target==='dashboardPage')renderDashboard();else if(target==='onlineStorePage'){document.getElementById('contentTemplatesPanelV41')?.setAttribute('hidden','');showProductOverviewV32();const products=getOnlineStoreImportProductsV30();if(!products.length)refreshOnlineStoreImportProductsV30(false);}else if(target==='storePreviewPage')renderStorePreviewV13();else if(target==='onlineStoreHistoryPageV14')renderOnlineStoreHistoryV14();}catch(err){console.error('V4.3 deferred page render failed',err);}});
 }
 function v41InstallFastNav(){
   if(window.__v41FastNav)return;window.__v41FastNav=true;document.addEventListener('click',e=>{const btn=e.target.closest?.('.nav-btn[data-page]');if(!btn)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v41FastNavigate(btn.dataset.page,btn);},true);
@@ -21638,7 +21638,7 @@ function v41Setup(){
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v41Setup,0));
 
 /* ================================================================
-   Online Store V4.2 - Clean Automation + Unified Folding + Data Safety
+   Online Store V4.3 - Clean Automation + Unified Folding + Data Safety
    - conservative public-name cleanup
    - product details auto-use bonsai template description
    - care guide only, directly below product details
@@ -21869,7 +21869,7 @@ function v42Setup(){
 }
 window.addEventListener('DOMContentLoaded',()=>window.setTimeout(v42Setup,80));
 
-// V4.2 compact protection explanation: keep the numbers once, avoid duplicate blocks.
+// V4.3 compact protection explanation: keep the numbers once, avoid duplicate blocks.
 const updateOnlineProtectionFloorV21BaseV42=updateOnlineProtectionFloorV21;
 updateOnlineProtectionFloorV21=function(){
   const info=updateOnlineProtectionFloorV21BaseV42();
@@ -21878,4 +21878,247 @@ updateOnlineProtectionFloorV21=function(){
   const warning=document.getElementById('onlineStorePriceFloorWarningV21');
   if(warning&&!warning.hidden&&info){warning.textContent=`售价低于 Online 销售保护底线 RM ${formatOnlineMoneyInputV12(info.floor||0)}。保护线已先扣除 Import 直播佣金与 Import 运费，再加入 Online 专属费用，避免重复计算。`;}
   return info;
+};
+
+
+/* ================================================================
+   Online Store V4.3 - Independent Online Auto Minimum Price Engine
+   - Import average cost / Initial / Current remain read-only references
+   - Online protection floor starts from Import average cost, not Import minimum price
+   - Affiliate / Payment / Shipping / Packaging / target margin are Online-owned settings
+   - VND pot cost uses Online-owned rules with the same proven tier structure
+   - Working Settings only: Factory Baseline is intentionally NOT locked yet
+   - Import current minimum patches live after lightweight revision pulls
+   ================================================================ */
+window.ONLINE_STORE_V43_INDEPENDENT_MINIMUM = true;
+
+const V43_MARGIN_DEFAULTS = Object.freeze({m0_300:30,m300_500:35,m500_800:40,m800_5000:45,m5000_8000:50,m8000_plus:60});
+const V43_VND_POT_DEFAULTS = Object.freeze({under1m:35,m1_4:55,m4_10:105,m10_plus:180});
+const V43_FREIGHT_DEFAULTS = Object.freeze([
+  {key:'A',maxL:30,maxW:30,maxH:45,maxKg:5,cost:20},
+  {key:'B',maxL:60,maxW:45,maxH:60,maxKg:15,cost:50},
+  {key:'C',maxL:75,maxW:60,maxH:75,maxKg:30,cost:80},
+  {key:'D',maxL:90,maxW:90,maxH:90,maxKg:50,cost:120},
+  {key:'E',maxL:120,maxW:90,maxH:120,maxKg:75,cost:180}
+]);
+
+function v43Clone(x){return JSON.parse(JSON.stringify(x));}
+function v43Num(x,d=0){const n=Number(x);return Number.isFinite(n)?n:d;}
+function v43Pct(x,d=0){return Math.max(0,v43Num(x,d));}
+function v43Money(x,d=0){return Math.max(0,v43Num(x,d));}
+function v43RawUi(){try{return loadJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,{})||{};}catch(_){return {};}}
+
+const getOnlineStoreUiSettingsV12BaseV43=getOnlineStoreUiSettingsV12;
+getOnlineStoreUiSettingsV12=function(){
+  const base=getOnlineStoreUiSettingsV12BaseV43();
+  const raw=v43RawUi();
+  const old=raw.pricing||{};
+  const margin={...V43_MARGIN_DEFAULTS,...(old.marginTiers||{})};
+  const pots={...V43_VND_POT_DEFAULTS,...(old.vndPotTiers||{})};
+  const freight=Array.isArray(raw.shipping?.freightTiers)&&raw.shipping.freightTiers.length?raw.shipping.freightTiers.map((x,i)=>({...V43_FREIGHT_DEFAULTS[i],...x})):v43Clone(V43_FREIGHT_DEFAULTS);
+  return {
+    ...base,
+    pricing:{...base.pricing,...old,marginTiers:margin,vndPotTiers:pots,factoryBaseline:raw.pricing?.factoryBaseline||null},
+    affiliate:{defaultRate:v43Pct(raw.affiliate?.defaultRate,old.affiliateRate??base.pricing?.affiliateRate??10),...(raw.affiliate||{})},
+    finance:{paymentGatewayFee:v43Pct(raw.finance?.paymentGatewayFee,old.gatewayFee??base.pricing?.gatewayFee??2),...(raw.finance||{})},
+    shipping:{...(base.shipping||{}),...(raw.shipping||{}),freightTiers:freight,packagingCost:v43Money(raw.shipping?.packagingCost,old.packagingCost??base.pricing?.packagingCost??20)},
+    factoryBaselines:raw.factoryBaselines&&typeof raw.factoryBaselines==='object'?raw.factoryBaselines:{}
+  };
+};
+
+function v43SaveUi(mutator,historyText){
+  const ui=getOnlineStoreUiSettingsV12();mutator(ui);
+  // mirror legacy fields only for old display code; V4.3 calculations never use them as source-of-truth.
+  ui.pricing={...(ui.pricing||{}),affiliateRate:v43Pct(ui.affiliate?.defaultRate),gatewayFee:v43Pct(ui.finance?.paymentGatewayFee),packagingCost:v43Money(ui.shipping?.packagingCost)};
+  saveOnlineStoreUiSettingsV12(ui);
+  if(historyText)try{addOnlineStoreHistoryV14('settings','','',historyText);}catch(_){}
+  if(onlineStoreSelectedProductIdV10){try{updateOnlineProtectionFloorV21();updateOnlineStoreProfitDisplaysV13();}catch(_){}}
+  return ui;
+}
+
+function v43MarginRateForCost(cost){
+  const m=getOnlineStoreUiSettingsV12().pricing?.marginTiers||V43_MARGIN_DEFAULTS;const c=v43Money(cost);
+  if(c<=300)return v43Pct(m.m0_300,30);if(c<=500)return v43Pct(m.m300_500,35);if(c<800)return v43Pct(m.m500_800,40);if(c<5000)return v43Pct(m.m800_5000,45);if(c<8000)return v43Pct(m.m5000_8000,50);return v43Pct(m.m8000_plus,60);
+}
+function v43OnlineVndPotCost(product){
+  let original=null;try{const idx=getMinimumPriceOriginIndexV160();const id=String(product?.id||'').trim(),name=String(product?.name||'').trim().toLowerCase();original=idx.byId.get(id)||idx.byName.get(name);}catch(_){return 0;}
+  if(!original||String(original.currency||'').toUpperCase()!=='VND')return 0;
+  const r=getOnlineStoreUiSettingsV12().pricing?.vndPotTiers||V43_VND_POT_DEFAULTS;const u=v43Money(original.unitPrice);
+  if(u>=10000000)return v43Money(r.m10_plus);if(u>=4000000)return v43Money(r.m4_10);if(u>=1000000)return v43Money(r.m1_4);return v43Money(r.under1m);
+}
+getOnlineStoreAutomaticPotCostV14=v43OnlineVndPotCost;
+
+function v43MasterPackage(product){
+  const cfg=getOnlineStoreConfigV10(String(product?.id||''));const d=cfg?.standardDimensions||{};const reserve=v40PackageReserve();
+  const editorOpen=String(onlineStoreSelectedProductIdV10||'')===String(product?.id||'').trim().toUpperCase()&&document.getElementById('onlineStoreEditorV10')?.hidden===false;
+  const val=(id,stored)=>editorOpen?String(document.getElementById(id)?.value||stored||''):String(stored||'');
+  const crown=v43Money(val('onlineStoreMasterCrownV40',d.crownSpread)),width=v43Money(val('onlineStoreMasterWidthV40',d.overallWidth)),height=v43Money(val('onlineStoreMasterHeightV40',d.pottedHeight)),weight=v43Money(val('onlineStoreMasterWeightV43',d.weight));
+  return {length:crown>0?crown+reserve.length:0,width:width>0?width+reserve.width:0,height:height>0?height+reserve.height:0,weight};
+}
+function v43MatchFreight(metrics){
+  const m=metrics||{};if(!(m.length>0&&m.width>0&&m.height>0&&m.weight>0))return {key:'',cost:0,label:'pending',matched:false};
+  const tiers=getOnlineStoreUiSettingsV12().shipping?.freightTiers||V43_FREIGHT_DEFAULTS;
+  for(const t of tiers){if(m.length<=v43Money(t.maxL)&&m.width<=v43Money(t.maxW)&&m.height<=v43Money(t.maxH)&&m.weight<=v43Money(t.maxKg))return {key:String(t.key||''),cost:v43Money(t.cost),label:String(t.key||''),matched:true,tier:t};}
+  return {key:'SPECIAL',cost:0,label:'special',matched:false,special:true};
+}
+function v43AutomaticShipping(product,item=null){
+  if(item){const l=v43Money(item.packageLength),w=v43Money(item.packageWidth),h=v43Money(item.packageHeight),kg=v43Money(item.weight);if(l&&w&&h&&kg)return {...v43MatchFreight({length:l,width:w,height:h,weight:kg}),metrics:{length:l,width:w,height:h,weight:kg}};}
+  const metrics=v43MasterPackage(product);return {...v43MatchFreight(metrics),metrics};
+}
+function getOnlineStoreLiveCostConfigV14(product){const ship=v43AutomaticShipping(product);return {shipping:ship.cost,pot:v43OnlineVndPotCost(product),shippingTier:ship.key,shippingInfo:ship};}
+
+function calculateOnlineProtectionFloorV21(product,item=null){
+  const avg=v43Money(product?.averageCost),pot=v43OnlineVndPotCost(product),ship=v43AutomaticShipping(product,item),ui=getOnlineStoreUiSettingsV12();
+  const packaging=v43Money(ui.shipping?.packagingCost),affiliateRate=v43Pct(ui.affiliate?.defaultRate),gatewayRate=v43Pct(ui.finance?.paymentGatewayFee),targetMargin=v43MarginRateForCost(avg);
+  const fixedCost=avg+pot+v43Money(ship.cost)+packaging;const pct=affiliateRate+gatewayRate+targetMargin;const valid=pct<100;const floor=valid&&fixedCost>0?fixedCost/(1-pct/100):0;
+  return {averageCost:avg,pot,shipping:v43Money(ship.cost),shippingTier:ship.key,shippingSpecial:ship.special===true,shippingPending:!ship.matched&&!ship.special,packaging,fixedCost,affiliateRate,gatewayRate,targetMargin,percentRate:pct,floor,valid,baseMinimum:getImportInitialMinimumPriceV26(product),currentMinimum:getImportCurrentMinimumPriceV26(product)};
+}
+function v43Profit(price,product,item=null){
+  const selling=v43Money(price),info=calculateOnlineProtectionFloorV21(product,item),commission=selling*info.affiliateRate/100,gateway=selling*info.gatewayRate/100,totalCost=info.fixedCost+commission+gateway,profit=selling-totalCost,margin=selling>0?profit/selling*100:0;
+  return {...info,selling,commission,gateway,totalCost,profit,margin};
+}
+calculateOnlineStoreProfitV13=function(price,product){return v43Profit(price,product,null);};
+
+function v43ChildItemFromCard(card){return {packageLength:card?.querySelector('[data-v34-field="packageLength"]')?.value,packageWidth:card?.querySelector('[data-v34-field="packageWidth"]')?.value,packageHeight:card?.querySelector('[data-v34-field="packageHeight"]')?.value,weight:card?.querySelector('[data-online-field-v10="weight"]')?.value};}
+function updateOnlineProtectionFloorV21(){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return null;const info=calculateOnlineProtectionFloorV21(product);
+  const initial=document.getElementById('onlineStoreMinimumPriceV11'),floor=document.getElementById('onlineStorePriceFloorV21'),ship=document.getElementById('onlineStoreShippingCostV14'),pot=document.getElementById('onlineStorePotCostV14');
+  if(initial)initial.value=info.baseMinimum>0?formatOnlineMoneyInputV12(info.baseMinimum):'';if(floor)floor.value=info.floor>0?formatOnlineMoneyInputV12(info.floor):'';if(ship)ship.value=info.shipping>0?formatOnlineMoneyInputV12(info.shipping):'';if(pot)pot.value=info.pot>0?formatOnlineMoneyInputV12(info.pot):'0.00';
+  try{v37ApplyCurrentMinimumVisual(product);}catch(_){}
+  const sh=document.getElementById('onlineStoreShippingHintV43');if(sh){sh.textContent=info.shippingSpecial?'\u8d85\u8fc7 E \u6863\uff1a\u7279\u6b8a\u7269\u6d41 / \u4eba\u5de5\u62a5\u4ef7\uff0c\u5f53\u524d\u4e0d\u81ea\u52a8\u8ba1\u5165\u8fd0\u8d39\u3002':(info.shippingPending?'\u5f85\u8f93\u5165\u5b8c\u6574\u5305\u88c5\u957f / \u5bbd / \u9ad8\u4e0e\u91cd\u91cf\uff0c\u7cfb\u7edf\u624d\u4f1a\u81ea\u52a8\u5339\u914d\u7269\u6d41\u6863\u4f4d\u3002':`\u5df2\u81ea\u52a8\u5339\u914d ${info.shippingTier} \u6863\u7269\u6d41\uff1aRM ${formatOnlineMoneyInputV12(info.shipping)}\u3002`);}
+  const ph=document.getElementById('onlineStorePotHintV43');if(ph)ph.textContent=info.pot>0?`Online VND \u82b1\u76c6\u6210\u672c\u81ea\u52a8\u5957\u7528\uff1aRM ${formatOnlineMoneyInputV12(info.pot)}\uff1b\u4e0e Import \u82b1\u76c6\u89c4\u5219\u5b8c\u5168\u72ec\u7acb\u3002`:'\u975e VND \u4ea7\u54c1\u6216\u672a\u547d\u4e2d Online VND \u82b1\u76c6\u89c4\u5219\uff1aRM 0.00\u3002';
+  let box=document.getElementById('v41ProtectionBreakdown');if(!box&&floor){box=document.createElement('div');box.id='v41ProtectionBreakdown';box.className='v41-protection-breakdown v43-protection-breakdown';floor.closest('label')?.after(box);}
+  if(box)box.innerHTML=`<span>\u5e73\u5747\u6210\u672c <b>RM ${formatOnlineMoneyInputV12(info.averageCost)}</b></span><span>Online \u82b1\u76c6 <b>RM ${formatOnlineMoneyInputV12(info.pot)}</b></span><span>\u7269\u6d41 ${info.shippingTier||'\u5f85\u5339\u914d'} <b>RM ${formatOnlineMoneyInputV12(info.shipping)}</b></span><span>\u5305\u88c5 <b>RM ${formatOnlineMoneyInputV12(info.packaging)}</b></span><span>\u56fa\u5b9a\u6210\u672c <b>RM ${formatOnlineMoneyInputV12(info.fixedCost)}</b></span><span>Affiliate ${info.affiliateRate.toFixed(2)}% \u00b7 Payment ${info.gatewayRate.toFixed(2)}% \u00b7 \u76ee\u6807\u51c0\u5229 ${info.targetMargin.toFixed(2)}%</span>`;
+  const values=[parseOnlineNumberV12(document.getElementById('onlineStoreRegularPriceV10')?.value)];document.querySelectorAll('#v34TreeList [data-online-field-v10="regularPrice"]').forEach(el=>values.push(parseOnlineNumberV12(el.value)));const below=values.some(v=>v>0&&info.floor>0&&v<info.floor);const warning=document.getElementById('onlineStorePriceFloorWarningV21');if(warning){warning.hidden=!below;warning.textContent=below?`\u552e\u4ef7\u4f4e\u4e8e Online \u9500\u552e\u4fdd\u62a4\u5e95\u7ebf RM ${formatOnlineMoneyInputV12(info.floor)}\u3002\u8be5\u5e95\u7ebf\u7531 Import \u5e73\u5747\u6210\u672c + Online \u82b1\u76c6 / \u7269\u6d41 / \u5305\u88c5\uff0c\u518d\u6309 Affiliate\u3001Payment Fee \u4e0e\u76ee\u6807\u51c0\u5229\u7387\u53cd\u63a8\u3002`:'';}
+  return info;
+}
+
+function v43UpdateModeSummaries(){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;const randomPrice=parseOnlineNumberV12(document.getElementById('onlineStoreRegularPriceV10')?.value),rc=v43Profit(randomPrice,product);let rs=document.getElementById('v41RandomSummary');const host=document.getElementById('onlineStoreRandomProfitV13');if(!rs&&host){rs=document.createElement('div');rs.id='v41RandomSummary';rs.className='v41-mode-summary';host.before(rs);}if(rs)rs.innerHTML=randomPrice>0?`<span>\u552e\u4ef7 <b>RM ${formatOnlineMoneyInputV12(randomPrice)}</b></span><span>\u603b\u6210\u672c <b>RM ${formatOnlineMoneyInputV12(rc.totalCost)}</b></span><span>\u5229\u6da6 <b>${rc.profit<0?'-':''}RM ${formatOnlineMoneyInputV12(Math.abs(rc.profit))}</b></span><span>\u5229\u6da6\u7387 <b>${rc.margin.toFixed(2)}%</b></span>`:'<span>\u8f93\u5165\u968f\u673a\u53d1\u8d27\u552e\u4ef7\u540e\uff0c\u7cfb\u7edf\u81ea\u52a8\u8ba1\u7b97\u603b\u6210\u672c\u3001\u5229\u6da6\u4e0e\u4fdd\u62a4\u72b6\u6001\u3002</span>';
+  document.querySelectorAll('#v34TreeList [data-v34-child-card]').forEach(card=>{const price=parseOnlineNumberV12(card.querySelector('[data-online-field-v10="regularPrice"]')?.value),b=card.querySelector('.v41-child-profit');if(!b||!price)return;const item=v43ChildItemFromCard(card),c=v43Profit(price,product,item),floor=calculateOnlineProtectionFloorV21(product,item).floor,safe=!floor||price>=floor;b.className=`v41-child-profit ${c.profit<0?'loss':'profit'}`;b.innerHTML=`<span>\u603b\u6210\u672c <b>RM ${formatOnlineMoneyInputV12(c.totalCost)}</b></span><span>\u5229\u6da6 <b>${c.profit<0?'-':''}RM ${formatOnlineMoneyInputV12(Math.abs(c.profit))}</b></span><span>\u5229\u6da6\u7387 <b>${c.margin.toFixed(2)}%</b></span><span>\u7269\u6d41 <b>${c.shippingTier||'\u5f85\u5339\u914d'} ${c.shipping>0?'RM '+formatOnlineMoneyInputV12(c.shipping):''}</b></span><span class="${safe?'safe':'warn'}">${safe?'\u4ef7\u683c\u4fdd\u62a4\u5b89\u5168':`\u4f4e\u4e8e\u4fdd\u62a4\u7ebf RM ${formatOnlineMoneyInputV12(floor)}`}</span>`;});
+}
+const updateOnlineStoreProfitDisplaysV13BaseV43=updateOnlineStoreProfitDisplaysV13;
+updateOnlineStoreProfitDisplaysV13=function(){try{updateOnlineStoreProfitDisplaysV13BaseV43();}catch(_){}v43UpdateModeSummaries();};
+
+const normalizeOnlineStoreConfigV10BaseV43=normalizeOnlineStoreConfigV10;
+normalizeOnlineStoreConfigV10=function(productId,raw){const cfg=normalizeOnlineStoreConfigV10BaseV43(productId,raw);const sd=raw?.standardDimensions||{};cfg.standardDimensions={...(cfg.standardDimensions||{}),weight:v34Text(sd.weight)};return cfg;};
+const collectOnlineStoreConfigFromEditorV10BaseV43=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){const cfg=collectOnlineStoreConfigFromEditorV10BaseV43();cfg.standardDimensions={...(cfg.standardDimensions||{}),weight:v34Text(document.getElementById('onlineStoreMasterWeightV43')?.value)};return cfg;};
+
+function v43EnsureMasterWeight(){const grid=document.querySelector('.v40-master-dim-grid');if(!grid||document.getElementById('onlineStoreMasterWeightV43'))return;const label=document.createElement('label');label.innerHTML='\u6807\u51c6\u5305\u88c5\u91cd\u91cf (kg)<input id="onlineStoreMasterWeightV43" inputmode="decimal" placeholder="\u4f8b\u5982 15"/><small class="field-hint-v12">\u7528\u4e8e\u81ea\u52a8\u5339\u914d Online \u7269\u6d41\u6863\u4f4d\uff1b\u5b50\u7f16\u53f7\u53ef\u7528\u81ea\u5df1\u91cd\u91cf\u3002</small>';grid.appendChild(label);label.querySelector('input')?.addEventListener('input',()=>{v42MarkEditorDirty();updateOnlineProtectionFloorV21();updateOnlineStoreProfitDisplaysV13();});}
+
+const setOnlineStoreEditorValuesV10BaseV43=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  setOnlineStoreEditorValuesV10BaseV43(productId,preserveRoomV16);v43EnsureMasterWeight();const product=getOnlineStoreProductV10(productId),cfg=getOnlineStoreConfigV10(productId);if(!product)return;
+  const wt=document.getElementById('onlineStoreMasterWeightV43');if(wt)wt.value=cfg.standardDimensions?.weight||'';
+  const avgHint=document.getElementById('onlineStoreAverageCostHintV19');if(avgHint)avgHint.textContent=isVndProductV205(product,getMinimumPriceOriginIndexV160())?'\u53ea\u8bfb\uff1a\u6765\u81ea Import \u771f\u5b9e\u5e73\u5747\u6210\u672c\uff08VND \u4e0d\u542b\u82b1\u76c6\uff09\uff1bOnline \u82b1\u76c6\u6210\u672c\u7531 Online \u81ea\u5df1\u7684 VND \u89c4\u5219\u8ba1\u7b97\u3002':'\u53ea\u8bfb\uff1a\u6765\u81ea Import \u771f\u5b9e\u5e73\u5747\u6210\u672c\uff1bOnline \u4fdd\u62a4\u5e95\u7ebf\u4ece\u8fd9\u91cc\u5f00\u59cb\u8ba1\u7b97\u3002';
+  const label=document.getElementById('onlineStoreMinimumPriceLabelV26');if(label)label.textContent='Import \u521d\u59cb\u6700\u4f4e\u552e\u4ef7\uff08\u53ea\u8bfb\u53c2\u8003\uff09(RM)';const hint=document.getElementById('onlineStoreMinimumPriceHintV26');if(hint)hint.textContent='\u53ea\u8bfb\u53c2\u8003 / \u5ba1\u8ba1\uff1b\u4e0d\u53c2\u4e0e Online \u81ea\u52a8\u6700\u4f4e\u552e\u4ef7\u516c\u5f0f\u3002';
+  const ship=document.getElementById('onlineStoreShippingCostV14'),pot=document.getElementById('onlineStorePotCostV14');if(ship){ship.readOnly=true;ship.setAttribute('aria-readonly','true');}if(pot){pot.readOnly=true;pot.setAttribute('aria-readonly','true');}
+  updateOnlineProtectionFloorV21();updateOnlineStoreProfitDisplaysV13();v42ClearEditorDirty();
+};
+
+// Live Import mirror: patch only the currently open product fields; never rebuild the editor.
+window.refreshOnlineImportReadOnlyFieldsV21=function(){
+  if(!onlineStoreSelectedProductIdV10)return;const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;
+  const avg=document.getElementById('onlineStoreAverageCostV11');if(avg)avg.value=formatMoney(Number(product.averageCost)||0,'RM ');
+  const initial=document.getElementById('onlineStoreMinimumPriceV11');if(initial){const v=getImportInitialMinimumPriceV26(product);initial.value=v>0?formatOnlineMoneyInputV12(v):'';}
+  try{v37ApplyCurrentMinimumVisual(product);}catch(_){}
+  updateOnlineProtectionFloorV21();updateOnlineStoreProfitDisplaysV13();
+};
+
+function v43FactoryStatus(){return '\u539f\u5382\u57fa\u51c6\u5c1a\u672a\u8bbe\u5b9a';}
+function v43DisabledFactoryButton(){return `<button type="button" class="secondary-btn" disabled title="${v43FactoryStatus()}">${v43FactoryStatus()}</button>`;}
+function v43Field(label,id,value,suffix='',hint=''){return `<label>${label}<input id="${id}" inputmode="decimal" value="${String(value)}"/>${suffix?`<span class="v43-input-suffix">${suffix}</span>`:''}${hint?`<small class="field-hint-v12">${hint}</small>`:''}</label>`;}
+function v43BuildAutoMinPanel(){
+  if(document.getElementById('autoMinimumPanelV43'))return;const nav=document.querySelector('#onlineStorePage nav.module-tabs-v30');if(!nav)return;
+  const media=[...nav.querySelectorAll('button')].find(b=>/Coming Soon/.test(b.textContent||''));const tab=document.createElement('button');tab.type='button';tab.dataset.v43AutoMin='1';tab.textContent='\u81ea\u52a8\u6700\u4f4e\u552e\u4ef7';nav.insertBefore(tab,media||null);
+  const ui=getOnlineStoreUiSettingsV12(),m=ui.pricing.marginTiers,p=ui.pricing.vndPotTiers;const panel=document.createElement('section');panel.id='autoMinimumPanelV43';panel.className='v43-rules-panel';panel.hidden=true;
+  panel.innerHTML=`<div class="v43-rules-head"><div><strong>Online \u81ea\u52a8\u6700\u4f4e\u552e\u4ef7\u7ba1\u7406</strong><small>Working Settings \u00b7 \u53ea\u5f71\u54cd Online\uff1bImport \u5e73\u5747\u6210\u672c / Initial / Current \u5168\u90e8\u53ea\u8bfb\u3002</small></div><span class="v43-working-badge">Working Settings</span></div>
+  <div class="v43-source-strip"><span>Import \u53ea\u8bfb\uff1a\u5e73\u5747\u6210\u672c</span><b>+</b><span>Online \u56fa\u5b9a\u6210\u672c</span><b>\u00f7</b><span>1 - Affiliate - Payment - \u76ee\u6807\u51c0\u5229\u7387</span><b>=</b><span>Online \u9500\u552e\u4fdd\u62a4\u5e95\u7ebf</span></div>
+  <section class="panel v43-rule-card"><div class="v43-card-head"><div><strong>\u76ee\u6807\u51c0\u5229\u7387\uff08\u6309 Import \u5e73\u5747\u6210\u672c\uff09</strong><small>\u4e0e Import \u4f7f\u7528\u76f8\u540c\u5206\u6863\u7ed3\u6784\uff0c\u4f46\u6570\u503c\u5b8c\u5168\u72ec\u7acb\u3002</small></div></div><div class="v43-rule-grid">
+  ${v43Field('RM 0\u2013300 (%)','v43Margin0',m.m0_300)}${v43Field('RM 300.01\u2013500 (%)','v43Margin1',m.m300_500)}${v43Field('RM 500.01\u2013799.99 (%)','v43Margin2',m.m500_800)}${v43Field('RM 800\u20134,999.99 (%)','v43Margin3',m.m800_5000)}${v43Field('RM 5,000\u20137,999.99 (%)','v43Margin4',m.m5000_8000)}${v43Field('RM 8,000\u4ee5\u4e0a (%)','v43Margin5',m.m8000_plus)}
+  </div></section>
+  <section class="panel v43-rule-card"><div class="v43-card-head"><div><strong>VND \u4ea7\u54c1\u642d\u914d\u82b1\u76c6\u6210\u672c</strong><small>\u590d\u7528\u5df2\u9a8c\u8bc1\u7684\u5206\u6863\u65b9\u5f0f\uff0c\u4f46\u8fd9\u662f Online \u81ea\u5df1\u7684\u8bbe\u5b9a\uff0c\u4e0d\u8bfb\u53d6 Import \u7684\u82b1\u76c6\u89c4\u5219\u3002</small></div></div><div class="v43-rule-grid">
+  ${v43Field('VND < 1,000,000 \u00b7 RM','v43Pot0',p.under1m)}${v43Field('VND 1,000,000\u20133,999,999 \u00b7 RM','v43Pot1',p.m1_4)}${v43Field('VND 4,000,000\u20139,999,999 \u00b7 RM','v43Pot2',p.m4_10)}${v43Field('VND 10,000,000+ \u00b7 RM','v43Pot3',p.m10_plus)}
+  </div></section>
+  <div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveAutoMinimum">\u4fdd\u5b58 Working Settings</button>${v43DisabledFactoryButton()}<span id="v43AutoMinimumStatus"></span></div>
+  <div class="v43-linked-rules"><button type="button" class="secondary-btn nav-btn" data-page="affiliatePageV27">Affiliate \u4f63\u91d1 \u2192 \u8054\u76df\u7ba1\u7406</button><button type="button" class="secondary-btn nav-btn" data-page="financePageV27">Payment Fee \u2192 \u8d22\u52a1\u7ba1\u7406</button><button type="button" class="secondary-btn nav-btn" data-page="shippingPageV27">\u7269\u6d41 / \u5305\u88c5 \u2192 \u7269\u6d41\u7ba1\u7406</button></div>`;
+  const template=document.getElementById('contentTemplatesPanelV41');(template?.parentNode||nav.parentNode).insertBefore(panel,template?.nextSibling||nav.nextSibling);
+}
+function v43ShowAutoMin(){
+  if(window.__v42TemplateDirty&&!window.confirm('\u76c6\u666f\u5185\u5bb9\u6a21\u677f\u6709\u672a\u4fdd\u5b58\u4fee\u6539\u3002\n\n\u786e\u5b9a\u653e\u5f03\u5e76\u79bb\u5f00\uff1f'))return;window.__v42TemplateDirty=false;
+  if(v42HasUnsavedEditor()&&!v42ConfirmDiscardEditor())return;
+  document.getElementById('contentTemplatesPanelV41')?.setAttribute('hidden','');['roomFirstHubV27','productCategoryHubV32','productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10','onlineStoreEditorV10'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});const panel=document.getElementById('autoMinimumPanelV43');if(panel)panel.hidden=false;document.querySelectorAll('#onlineStorePage nav.module-tabs-v30 button').forEach(b=>b.classList.toggle('active',b.hasAttribute('data-v43-auto-min')));window.scrollTo({top:0,behavior:'auto'});
+}
+function v43HideAutoMin(){const p=document.getElementById('autoMinimumPanelV43');if(p)p.hidden=true;}
+
+function v43BuildShippingSettings(){
+  const page=document.getElementById('shippingPageV27');if(!page||document.getElementById('v43FreightRules'))return;const ui=getOnlineStoreUiSettingsV12(),tiers=ui.shipping.freightTiers||V43_FREIGHT_DEFAULTS;const sec=document.createElement('section');sec.className='panel v43-rule-card';sec.id='v43FreightRules';sec.innerHTML=`<div class="v43-card-head"><div><strong>Online \u5305\u88c5\u5c3a\u5bf8 / \u91cd\u91cf\u8fd0\u8d39\u6863</strong><small>\u6309\u80fd\u540c\u65f6\u6ee1\u8db3 L / W / H / kg \u7684\u6700\u5c0f\u6863\u4f4d\u81ea\u52a8\u5339\u914d\uff1b\u8d85\u8fc7 E \u6863\u8fdb\u5165\u7279\u6b8a\u7269\u6d41 / \u4eba\u5de5\u62a5\u4ef7\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-freight-grid">${tiers.map((t,i)=>`<div class="v43-freight-row"><strong>${t.key}</strong>${v43Field('L cm',`v43FreightL${i}`,t.maxL)}${v43Field('W cm',`v43FreightW${i}`,t.maxW)}${v43Field('H cm',`v43FreightH${i}`,t.maxH)}${v43Field('kg',`v43FreightKg${i}`,t.maxKg)}${v43Field('RM',`v43FreightCost${i}`,t.cost)}</div>`).join('')}</div><div class="v43-packaging-single">${v43Field('Online \u9ed8\u8ba4\u5305\u88c5\u6210\u672c (RM)','v43PackagingCost',ui.shipping.packagingCost,'','\u8fd9\u662f Online \u81ea\u5df1\u7684\u5305\u88c5\u6210\u672c\uff0c\u4f1a\u81ea\u52a8\u8ba1\u5165\u4fdd\u62a4\u5e95\u7ebf\u3002')}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveShippingRules">\u4fdd\u5b58 Working Settings</button>${v43DisabledFactoryButton()}<span id="v43ShippingStatus"></span></div>`;const reserve=document.getElementById('packageReserveSettingsV40');reserve?.after(sec);
+}
+function v43BuildFinanceSettings(){const page=document.getElementById('financePageV27');if(!page||document.getElementById('v43FinanceRules'))return;const ui=getOnlineStoreUiSettingsV12(),sec=document.createElement('section');sec.id='v43FinanceRules';sec.className='panel v43-rule-card';sec.innerHTML=`<div class="v43-card-head"><div><strong>Payment Gateway Fee</strong><small>\u8fd9\u662f Online \u6700\u4f4e\u552e\u4ef7\u516c\u5f0f\u4e2d\u7684\u6b63\u5f0f Payment Fee Source of Truth\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-rule-grid one">${v43Field('Payment Gateway Fee (%)','v43PaymentFee',ui.finance.paymentGatewayFee)}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveFinanceRules">\u4fdd\u5b58 Payment Fee</button>${v43DisabledFactoryButton()}<span id="v43FinanceStatus"></span></div>`;page.querySelector('.module-page-head-v27')?.after(sec);}
+function v43BuildAffiliateSettings(){const page=document.getElementById('affiliatePageV27');if(!page||document.getElementById('v43AffiliateRules'))return;const ui=getOnlineStoreUiSettingsV12(),sec=document.createElement('section');sec.id='v43AffiliateRules';sec.className='panel v43-rule-card';sec.innerHTML=`<div class="v43-card-head"><div><strong>\u9ed8\u8ba4 Affiliate \u4f63\u91d1</strong><small>\u8fd9\u662f Online \u6700\u4f4e\u552e\u4ef7\u516c\u5f0f\u4e2d\u7684\u6b63\u5f0f Affiliate Source of Truth\u3002\u6307\u5b9a Affiliate / Product / Campaign Override \u540e\u7eed\u518d\u5f00\u653e\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-rule-grid one">${v43Field('Affiliate \u4f63\u91d1 (%)','v43AffiliateRate',ui.affiliate.defaultRate)}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveAffiliateRules">\u4fdd\u5b58 Affiliate \u4f63\u91d1</button>${v43DisabledFactoryButton()}<span id="v43AffiliateStatus"></span></div>`;page.querySelector('.module-page-head-v27')?.after(sec);}
+function v43BuildSettingsControl(){const page=document.getElementById('settingsPage');if(!page||document.getElementById('v43BusinessControl'))return;const old=[...page.querySelectorAll('.settings-section-v12')].find(x=>/Pricing Rules|\u552e\u4ef7/.test(x.textContent||''));if(old)old.hidden=true;const sec=document.createElement('section');sec.id='v43BusinessControl';sec.className='panel settings-section-v12 v43-control-center';sec.innerHTML=`<div class="settings-section-head-v12"><div><h3>\u5546\u4e1a\u89c4\u5219\u603b\u5165\u53e3 / Business Rules</h3><p>\u6bcf\u9879\u89c4\u5219\u53ea\u6709\u4e00\u4e2a Source of Truth\uff1b\u8fd9\u91cc\u53ea\u5bfc\u822a\uff0c\u4e0d\u91cd\u590d\u4fdd\u5b58\u7b2c\u4e8c\u5957\u6570\u503c\u3002</p></div></div><div class="v43-control-grid"><button type="button" id="v43GoAutoMin">\u81ea\u52a8\u6700\u4f4e\u552e\u4ef7<small>\u76ee\u6807\u51c0\u5229\u7387 \u00b7 VND \u82b1\u76c6</small></button><button type="button" class="nav-btn" data-page="affiliatePageV27">\u8054\u76df\u4f63\u91d1<small>Affiliate</small></button><button type="button" class="nav-btn" data-page="financePageV27">Payment Fee<small>\u8d22\u52a1\u7ba1\u7406</small></button><button type="button" class="nav-btn" data-page="shippingPageV27">\u7269\u6d41 / \u5305\u88c5<small>\u5c3a\u5bf8\u91cd\u91cf\u8fd0\u8d39\u6863</small></button></div><div class="v43-factory-note"><strong>${v43FactoryStatus()}</strong><span>\u73b0\u9636\u6bb5\u6240\u6709\u53c2\u6570\u53ea\u4f5c\u4e3a Working Settings\u3002\u53ea\u6709\u4f60\u672a\u6765\u660e\u786e\u8981\u6c42\u65f6\uff0c\u624d\u4f1a\u9501\u5b9a Factory Baseline\u3002</span></div>`;const data=[...page.querySelectorAll('.settings-section-v12')].find(x=>/Data Management/.test(x.textContent||''));(data||page.querySelector('.online-store-settings-v12')?.lastElementChild)?.after(sec);}
+
+function v43ReadFreightForm(){return V43_FREIGHT_DEFAULTS.map((d,i)=>({key:d.key,maxL:v43Money(document.getElementById(`v43FreightL${i}`)?.value),maxW:v43Money(document.getElementById(`v43FreightW${i}`)?.value),maxH:v43Money(document.getElementById(`v43FreightH${i}`)?.value),maxKg:v43Money(document.getElementById(`v43FreightKg${i}`)?.value),cost:v43Money(document.getElementById(`v43FreightCost${i}`)?.value)}));}
+function v43ValidateFreight(tiers){for(const t of tiers){if(!(t.maxL>0&&t.maxW>0&&t.maxH>0&&t.maxKg>0&&t.cost>=0))return false;}for(let i=1;i<tiers.length;i++){const a=tiers[i-1],b=tiers[i];if(b.maxL<a.maxL||b.maxW<a.maxW||b.maxH<a.maxH||b.maxKg<a.maxKg)return false;}return true;}
+function v43SetupRuleEvents(){
+  document.addEventListener('click',e=>{
+    const auto=e.target.closest?.('[data-v43-auto-min]');if(auto){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v43ShowAutoMin();return;}
+    const go=e.target.closest?.('#v43GoAutoMin');if(go){e.preventDefault();const btn=document.querySelector('.nav-btn[data-page="onlineStorePage"]');v41FastNavigate('onlineStorePage',btn);setTimeout(v43ShowAutoMin,0);return;}
+    if(e.target.closest?.('#v43SaveAutoMinimum')){const ids=['v43Margin0','v43Margin1','v43Margin2','v43Margin3','v43Margin4','v43Margin5','v43Pot0','v43Pot1','v43Pot2','v43Pot3'];const vals=ids.map(id=>v43Money(document.getElementById(id)?.value));if(vals.slice(0,6).some(x=>x>=100)){alert('\u76ee\u6807\u51c0\u5229\u7387\u5fc5\u987b\u5c0f\u4e8e 100%\u3002');return;}v43SaveUi(ui=>{ui.pricing.marginTiers={m0_300:vals[0],m300_500:vals[1],m500_800:vals[2],m800_5000:vals[3],m5000_8000:vals[4],m8000_plus:vals[5]};ui.pricing.vndPotTiers={under1m:vals[6],m1_4:vals[7],m4_10:vals[8],m10_plus:vals[9]};},'V4.3 \u4fdd\u5b58 Online \u76ee\u6807\u51c0\u5229\u7387\u4e0e VND \u82b1\u76c6 Working Settings');const st=document.getElementById('v43AutoMinimumStatus');if(st)st.textContent='\u5df2\u4fdd\u5b58 \u00b7 \u5c1a\u672a\u8bbe\u5b9a\u539f\u5382\u57fa\u51c6';return;}
+    if(e.target.closest?.('#v43SaveShippingRules')){const tiers=v43ReadFreightForm();if(!v43ValidateFreight(tiers)){alert('\u7269\u6d41\u6863\u4f4d\u5fc5\u987b\u4ece A \u5230 E \u9010\u6b65\u653e\u5927\uff0c\u4e14 L/W/H/kg \u90fd\u5fc5\u987b\u5927\u4e8e 0\u3002');return;}const packaging=v43Money(document.getElementById('v43PackagingCost')?.value);v43SaveUi(ui=>{ui.shipping.freightTiers=tiers;ui.shipping.packagingCost=packaging;},'V4.3 \u4fdd\u5b58 Online \u7269\u6d41\u6863\u4f4d\u4e0e\u5305\u88c5 Working Settings');const st=document.getElementById('v43ShippingStatus');if(st)st.textContent='\u5df2\u4fdd\u5b58\uff0c\u4fdd\u62a4\u5e95\u7ebf\u5df2\u91cd\u7b97';return;}
+    if(e.target.closest?.('#v43SaveFinanceRules')){const fee=v43Pct(document.getElementById('v43PaymentFee')?.value);if(fee>=100){alert('Payment Fee \u5fc5\u987b\u5c0f\u4e8e 100%\u3002');return;}v43SaveUi(ui=>{ui.finance.paymentGatewayFee=fee;},'V4.3 \u4fdd\u5b58 Payment Gateway Fee Working Setting');const st=document.getElementById('v43FinanceStatus');if(st)st.textContent='\u5df2\u4fdd\u5b58';return;}
+    if(e.target.closest?.('#v43SaveAffiliateRules')){const rate=v43Pct(document.getElementById('v43AffiliateRate')?.value);if(rate>=100){alert('Affiliate \u4f63\u91d1\u5fc5\u987b\u5c0f\u4e8e 100%\u3002');return;}v43SaveUi(ui=>{ui.affiliate.defaultRate=rate;},'V4.3 \u4fdd\u5b58 Affiliate Working Setting');const st=document.getElementById('v43AffiliateStatus');if(st)st.textContent='\u5df2\u4fdd\u5b58';return;}
+  },true);
+  document.addEventListener('input',e=>{if(e.target.closest?.('#onlineStoreEditorV10')&&['onlineStoreMasterCrownV40','onlineStoreMasterWidthV40','onlineStoreMasterHeightV40','onlineStoreMasterWeightV43'].includes(e.target.id)){updateOnlineProtectionFloorV21();updateOnlineStoreProfitDisplaysV13();}if(e.target.closest?.('#v34TreeList')&&e.target.matches('[data-v34-field="packageLength"],[data-v34-field="packageWidth"],[data-v34-field="packageHeight"],[data-online-field-v10="weight"]'))v43UpdateModeSummaries();},true);
+}
+
+function v43RefreshStaticLabels(){
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V4.3 \u00b7 Import \u5e93\u5b58 / \u5e73\u5747\u6210\u672c / Initial / Current \u53ea\u8bfb \u00b7 Online \u72ec\u7acb\u8ba1\u7b97\u9500\u552e\u4fdd\u62a4\u5e95\u7ebf';
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V4.3';
+  const floor=document.getElementById('onlineStorePriceFloorV21')?.closest('label');if(floor){floor.childNodes[0].nodeValue='Online \u9500\u552e\u4fdd\u62a4\u5e95\u7ebf (RM)';const sm=floor.querySelector('small');if(sm)sm.textContent='\u81ea\u52a8\uff1aImport \u5e73\u5747\u6210\u672c + Online \u82b1\u76c6 + \u7269\u6d41 + \u5305\u88c5\uff0c\u518d\u6309 Affiliate\u3001Payment Fee \u4e0e\u76ee\u6807\u51c0\u5229\u7387\u53cd\u63a8\u3002';}
+}
+function v43Setup(){v43BuildAutoMinPanel();v43BuildShippingSettings();v43BuildFinanceSettings();v43BuildAffiliateSettings();v43BuildSettingsControl();v43EnsureMasterWeight();v43RefreshStaticLabels();v43SetupRuleEvents();}
+window.addEventListener('DOMContentLoaded',()=>setTimeout(v43Setup,140));
+
+// V4.3 route cleanup: only one Product Management subview may be visible at a time.
+const showProductOverviewV32BaseV43 = showProductOverviewV32;
+showProductOverviewV32 = function(){ v43HideAutoMin(); return showProductOverviewV32BaseV43(); };
+const enterProductRoomV32BaseV43 = enterProductRoomV32;
+enterProductRoomV32 = function(room){ v43HideAutoMin(); return enterProductRoomV32BaseV43(room); };
+if (typeof v38EnterAllTrees === 'function') {
+  const v38EnterAllTreesBaseV43 = v38EnterAllTrees;
+  v38EnterAllTrees = function(){ v43HideAutoMin(); return v38EnterAllTreesBaseV43(); };
+}
+if (typeof v42OpenTemplates === 'function') {
+  const v42OpenTemplatesBaseV43 = v42OpenTemplates;
+  v42OpenTemplates = function(fromProduct=false){ v43HideAutoMin(); return v42OpenTemplatesBaseV43(fromProduct); };
+}
+
+// V4.3 unsaved protection for module-owned Working Settings.
+window.__v43RulesDirty = false;
+document.addEventListener('input', e => {
+  if (e.target.closest?.('#autoMinimumPanelV43,#v43FreightRules,#v43FinanceRules,#v43AffiliateRules')) window.__v43RulesDirty = true;
+}, true);
+document.addEventListener('change', e => {
+  if (e.target.closest?.('#autoMinimumPanelV43,#v43FreightRules,#v43FinanceRules,#v43AffiliateRules')) window.__v43RulesDirty = true;
+}, true);
+document.addEventListener('click', e => {
+  if (e.target.closest?.('#v43SaveAutoMinimum,#v43SaveShippingRules,#v43SaveFinanceRules,#v43SaveAffiliateRules')) window.setTimeout(() => { window.__v43RulesDirty = false; }, 0);
+}, true);
+function v43ConfirmLeaveRules(){
+  if (!window.__v43RulesDirty) return true;
+  if (!window.confirm('\u5f53\u524d Working Settings \u8fd8\u6709\u672a\u4fdd\u5b58\u4fee\u6539\u3002\n\n\u786e\u5b9a\u653e\u5f03\u4fee\u6539\u5e76\u79bb\u5f00\uff1f')) return false;
+  window.__v43RulesDirty = false; return true;
+}
+const v41FastNavigateBaseV43 = v41FastNavigate;
+v41FastNavigate = function(target, button){
+  const activeRules = document.querySelector('#autoMinimumPanelV43:not([hidden]),#v43FreightRules,#v43FinanceRules,#v43AffiliateRules');
+  if (window.__v43RulesDirty && activeRules && !v43ConfirmLeaveRules()) return;
+  return v41FastNavigateBaseV43(target, button);
+};
+const v42RouteProductTabBaseV43 = v42RouteProductTab;
+v42RouteProductTab = function(btn){
+  if (document.getElementById('autoMinimumPanelV43')?.hidden === false && !v43ConfirmLeaveRules()) return;
+  return v42RouteProductTabBaseV43(btn);
 };
