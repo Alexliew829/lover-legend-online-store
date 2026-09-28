@@ -7042,3 +7042,21 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   .v43-linked-rules{display:grid;grid-template-columns:1fr}
   .v43-linked-rules button{width:100%}
 }
+
+
+/* V4.5 safe navigation / compact back controls */
+.v44-back-btn{white-space:nowrap;min-height:42px;font-weight:700;border-radius:12px}
+.online-store-editor-head-v10{gap:10px;align-items:flex-start}
+.online-store-editor-head-v10 #v44BackProducts{margin-left:auto}
+.online-store-editor-head-v10 #onlineStoreCloseEditorV10{margin-left:0}
+#autoMinimumPanelV43 .v43-rules-head{display:flex;align-items:flex-start;gap:12px}
+#autoMinimumPanelV43 .v43-rules-head .v44-back-btn{margin-left:auto}
+#onlineStoreTemplateStatusV41>div:first-child{display:flex;justify-content:flex-end;align-items:center}
+#onlineStoreTemplateStatusV41>div:first-child strong{font-size:1.02rem}
+@media(max-width:720px){.online-store-editor-head-v10{flex-wrap:wrap}.online-store-editor-head-v10 #v44BackProducts{margin-left:0}.online-store-editor-head-v10 #v44BackProducts,.online-store-editor-head-v10 #onlineStoreCloseEditorV10{flex:1 1 auto}#autoMinimumPanelV43 .v43-rules-head{flex-wrap:wrap}#autoMinimumPanelV43 .v43-rules-head .v44-back-btn{margin-left:0;width:100%}}
+
+
+/* V4.5 final visual safety */
+#onlineStorePage.page.active{min-height:520px}
+#v43FreightRules .v43-packaging-single{margin-top:14px;padding-top:12px;border-top:1px solid rgba(28,108,72,.12)}
+#v43FreightRules .v43-packaging-single label{font-weight:700}

@@ -31,9 +31,22 @@ let promotionLightSyncBusyV372 = false;
 let cloudLastErrorMessage = "";
 window.ONLINE_STORE_IMPORT_READ_ONLY_V20 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
 const ONLINE_STORE_IMPORT_READ_ONLY_V20 = window.ONLINE_STORE_IMPORT_READ_ONLY_V20;
-const CLOUD_FOREGROUND_CHECK_GAP = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 5000 : 1500;
-const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 15000 : 8000;
+const CLOUD_FOREGROUND_CHECK_GAP = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 700 : 1500;
+const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 2500 : 8000;
 const PROMOTION_LIGHT_SYNC_MS_V372 = 3000;
+let onlineStoreLegacyCloudStateClearedV45 = false;
+function hasOnlineImportMirrorV45() {
+  try {
+    const raw = localStorage.getItem("importSystemProducts");
+    return Boolean(raw && raw !== "[]" && raw !== "null");
+  } catch (_) { return false; }
+}
+function requestOnlineRevisionCheckV45(delay = 0) {
+  if (!ONLINE_STORE_IMPORT_READ_ONLY_V20) { scheduleForegroundCloudCheck(delay); return; }
+  if (document.hidden || !navigator.onLine || !cloudInitialSyncComplete || cloudApplyingRemote) return;
+  scheduleForegroundCloudCheck(delay);
+}
+window.requestOnlineRevisionCheckV45 = requestOnlineRevisionCheckV45;
 // V2.6: Online Store uses a dedicated pull-only adapter. It never runs inherited
 // Import repair/push/promotion/minimum-price code against the Import API.
 // The mirror namespace is refreshed in V2.6 so no old pending price-write state can survive.
@@ -145,12 +158,17 @@ function setupCloudSync() {
   renderCloudMeta(startupConfigV338);
   // V37.2 repairs a stale PZ+BS local cache before deciding whether Local-First is safe.
   if (!ONLINE_STORE_IMPORT_READ_ONLY_V20) repairLocalBsCanonicalCacheV365();
-  const startupSnapshotV338 = makeLocalSnapshot();
-  const cachedCanonicalV365 = isCanonicalBsSnapshotV365(startupSnapshotV338.products || []);
-  const hasCachedCoreV338 =
-    (startupSnapshotV338.products || []).length > 0 ||
-    (startupSnapshotV338.imports || []).length > 0 ||
-    (startupSnapshotV338.batches || []).length > 0;
+  const startupSnapshotV338 = ONLINE_STORE_IMPORT_READ_ONLY_V20
+    ? { products: [], imports: [], batches: [] }
+    : makeLocalSnapshot();
+  const cachedCanonicalV365 = ONLINE_STORE_IMPORT_READ_ONLY_V20
+    ? true
+    : isCanonicalBsSnapshotV365(startupSnapshotV338.products || []);
+  const hasCachedCoreV338 = ONLINE_STORE_IMPORT_READ_ONLY_V20
+    ? hasOnlineImportMirrorV45()
+    : ((startupSnapshotV338.products || []).length > 0 ||
+       (startupSnapshotV338.imports || []).length > 0 ||
+       (startupSnapshotV338.batches || []).length > 0);
   // V36.4 Local-First: when a valid V32.5-style bootstrap and cached core data
   // already exist, show the last successful state immediately while the
   // revision check runs silently in the background.
@@ -170,7 +188,7 @@ function setupCloudSync() {
       return;
     }
 
-    scheduleForegroundCloudCheck(10);
+    requestOnlineRevisionCheckV45(10);
   });
 
   document.addEventListener("visibilitychange", () => {
@@ -178,12 +196,12 @@ function setupCloudSync() {
       !document.hidden &&
       cloudInitialSyncComplete
     ) {
-      scheduleForegroundCloudCheck(10);
+      requestOnlineRevisionCheckV45(10);
     }
   });
 
   window.addEventListener("focus", () => {
-    if (cloudInitialSyncComplete) scheduleForegroundCloudCheck(120);
+    if (cloudInitialSyncComplete) requestOnlineRevisionCheckV45(40);
   });
 
   window.addEventListener("pageshow", event => {
@@ -191,19 +209,17 @@ function setupCloudSync() {
     // 初次同步未完成前忽略，避免打开 App 后同步两次。
     if (!cloudInitialSyncComplete) return;
 
-    scheduleForegroundCloudCheck(
-      event.persisted ? 10 : 80
-    );
+    requestOnlineRevisionCheckV45(event.persisted ? 10 : 40);
   });
 
-  // V37.2: while the page is visible, do a lightweight revision check every 8 seconds.
+  // V4.5: while visible, Online Store performs one coalesced lightweight revision check every 2.5 seconds.
   // An unchanged revision returns only metadata, so another device's single-product
   // minimum-price/manual-protection edit is picked up automatically without a manual refresh.
   window.clearInterval(cloudBackgroundRevisionTimerV367);
   cloudBackgroundRevisionTimerV367 = window.setInterval(() => {
     if (document.hidden || !navigator.onLine || !cloudInitialSyncComplete || cloudApplyingRemote || cloudSyncBusy) return;
-    if (getCloudQueue().dirty) return;
-    scheduleForegroundCloudCheck(0);
+    if (!ONLINE_STORE_IMPORT_READ_ONLY_V20 && getCloudQueue().dirty) return;
+    requestOnlineRevisionCheckV45(0);
   }, CLOUD_BACKGROUND_REVISION_MS_V367);
 
   // Online Store V1.9 never mirrors Import promotion state. Import promotion
@@ -219,7 +235,7 @@ function setupCloudSync() {
   // read-only revision check is deferred slightly so it cannot block initial UI.
   if (ONLINE_STORE_IMPORT_READ_ONLY_V20 && hasCachedCoreV338 && Number(startupConfigV338.revision) > 0) {
     cloudInitialSyncComplete = true;
-    window.setTimeout(() => runCloudSync(), 3000);
+    window.setTimeout(() => runCloudSync(), 120);
   } else {
     window.setTimeout(() => runCloudSync(), 0);
   }
@@ -716,24 +732,36 @@ function applyOnlineImportReadOnlyDataV20(data) {
     ? replaceProductIdsDeepV364(batches, BS_CANONICAL_ALIASES_V365) : batches;
   // Write the read-only Import history mirror first so VND pot/origin logic can
   // preserve the same VND cost interpretation as Import; promotion pricing is not mirrored.
-  localStorage.setItem("importSystemImports", JSON.stringify(safeImports));
-  localStorage.setItem("importSystemBatches", JSON.stringify(safeBatches));
-  localStorage.setItem("importSystemSettings", JSON.stringify(buildOnlineSafeImportSettingsV20(remoteSettingsV39)));
-  if (typeof invalidateMinimumPriceOriginIndexV160 === "function") invalidateMinimumPriceOriginIndexV160();
+  const importsJsonV44 = JSON.stringify(safeImports);
+  const batchesJsonV44 = JSON.stringify(safeBatches);
+  const settingsJsonV44 = JSON.stringify(buildOnlineSafeImportSettingsV20(remoteSettingsV39));
+  const importsChangedV44 = localStorage.getItem("importSystemImports") !== importsJsonV44;
+  const batchesChangedV44 = localStorage.getItem("importSystemBatches") !== batchesJsonV44;
+  if (importsChangedV44) localStorage.setItem("importSystemImports", importsJsonV44);
+  if (batchesChangedV44) localStorage.setItem("importSystemBatches", batchesJsonV44);
+  if (localStorage.getItem("importSystemSettings") !== settingsJsonV44) localStorage.setItem("importSystemSettings", settingsJsonV44);
+  if ((importsChangedV44 || batchesChangedV44) && typeof invalidateMinimumPriceOriginIndexV160 === "function") invalidateMinimumPriceOriginIndexV160();
   const products = normalizeOnlineImportProductsV20(data.products, remoteSettingsV39);
-  localStorage.setItem("importSystemProducts", JSON.stringify(products));
+  const productsJsonV44 = JSON.stringify(products);
+  if (localStorage.getItem("importSystemProducts") !== productsJsonV44) localStorage.setItem("importSystemProducts", productsJsonV44);
   if (typeof inventoryPreparedRowsCacheV321 !== "undefined") {
     inventoryPreparedRowsCacheV321 = { rawProducts:null, settings:null, imports:null, batches:null, sales:null, rows:[] };
   }
   if (typeof inventoryLastRenderedPreparedRowsV321 !== "undefined") inventoryLastRenderedPreparedRowsV321 = null;
-  try { if (typeof renderDashboard === "function" && document.getElementById("dashboardPage")?.classList.contains("active")) renderDashboard(); } catch (_) {}
-  try {
-    const pageActive = document.getElementById("onlineStorePage")?.classList.contains("active");
-    const editorOpen = pageActive && document.getElementById("onlineStoreEditorV10")?.hidden === false;
-    if (typeof renderOnlineStoreProductListV10 === "function" && pageActive && !editorOpen) renderOnlineStoreProductListV10();
-  } catch (_) {}
+  // V4.5: update the currently open product immediately, but postpone heavy list/dashboard/preview renders.
+  // This lets the revision + mirror write finish quickly and keeps input/navigation responsive.
   try { if (typeof window.refreshOnlineImportReadOnlyFieldsV21 === "function") window.refreshOnlineImportReadOnlyFieldsV21(); } catch (_) {}
-  try { if (typeof renderStorePreviewV13 === "function" && document.getElementById("storePreviewPage")?.classList.contains("active")) renderStorePreviewV13(); } catch (_) {}
+  const refreshVisibleViewsV44 = () => {
+    try { if (typeof renderDashboard === "function" && document.getElementById("dashboardPage")?.classList.contains("active")) renderDashboard(); } catch (_) {}
+    try {
+      const pageActive = document.getElementById("onlineStorePage")?.classList.contains("active");
+      const editorOpen = pageActive && document.getElementById("onlineStoreEditorV10")?.hidden === false;
+      if (typeof renderOnlineStoreProductListV10 === "function" && pageActive && !editorOpen) renderOnlineStoreProductListV10();
+    } catch (_) {}
+    try { if (typeof renderStorePreviewV13 === "function" && document.getElementById("storePreviewPage")?.classList.contains("active")) renderStorePreviewV13(); } catch (_) {}
+  };
+  if (typeof window.requestIdleCallback === "function") window.requestIdleCallback(refreshVisibleViewsV44, {timeout:700});
+  else window.setTimeout(refreshVisibleViewsV44, 60);
 }
 
 let onlineReadOnlyUnchangedChecksV24 = 0;
@@ -743,8 +771,7 @@ const ONLINE_READONLY_FORCE_FULL_GAP_MS_V24 = 900000;
 
 async function pullOnlineImportReadOnlyV20(forceFull = false) {
   const config = getCloudConfig();
-  const localProducts = loadJSON("importSystemProducts", []);
-  const hasLocal = Array.isArray(localProducts) && localProducts.length > 0;
+  const hasLocal = hasOnlineImportMirrorV45();
   const nowV24 = Date.now();
   const safetyFullV24 = !forceFull && hasLocal &&
     onlineReadOnlyUnchangedChecksV24 >= ONLINE_READONLY_FORCE_FULL_AFTER_UNCHANGED_V24 &&
@@ -762,10 +789,8 @@ async function pullOnlineImportReadOnlyV20(forceFull = false) {
   window.ONLINE_STORE_IMPORT_API_VERSION_V23 = String(data?.clientVersion || data?.apiVersion || window.ONLINE_STORE_IMPORT_API_VERSION_V23 || "");
   if (data?.unchanged) {
     onlineReadOnlyUnchangedChecksV24 += 1;
-    config.revision = Number(data.revision) || Number(config.revision) || 0;
-    config.lastSyncAt = new Date().toISOString();
-    saveCloudConfig(config);
-    renderCloudMeta(config);
+    // V4.5: an unchanged revision means no data was synchronized. Avoid a
+    // localStorage write + System Information repaint every 2.5 seconds.
     return false;
   }
   onlineReadOnlyUnchangedChecksV24 = 0;
@@ -799,11 +824,13 @@ async function runCloudSync() {
     // V2.1: one read-only Pull only. No Import repair, push, promotion sync,
     // password bootstrap, minimum-price update or write credential handling.
     if (ONLINE_STORE_IMPORT_READ_ONLY_V20) {
-      clearLegacyPendingCloudState();
-      try { localStorage.removeItem(MINIMUM_PRICE_PENDING_KEY_V345); } catch (_) {}
-      try { if (typeof setMinimumPricePendingV345 === "function") setMinimumPricePendingV345(null); } catch (_) {}
+      if (!onlineStoreLegacyCloudStateClearedV45) {
+        clearLegacyPendingCloudState();
+        try { localStorage.removeItem(MINIMUM_PRICE_PENDING_KEY_V345); } catch (_) {}
+        onlineStoreLegacyCloudStateClearedV45 = true;
+      }
       const onlineConfigV20 = getCloudConfig();
-      const onlineHasMirrorV20 = (loadJSON("importSystemProducts", []) || []).length > 0;
+      const onlineHasMirrorV20 = hasOnlineImportMirrorV45();
       if (!cloudInitialSyncComplete || !onlineHasMirrorV20) setCloudState("syncing");
       const remoteUpdatedV20 = await pullOnlineImportReadOnlyV20(!onlineHasMirrorV20 || !(Number(onlineConfigV20.revision) > 0));
       if (remoteUpdatedV20) showLatestDataSyncedToast();
@@ -883,13 +910,21 @@ async function runCloudSync() {
     console.error("Google sync failed:", error);
   } finally {
     cloudSyncBusy = false;
-    const finalQueueV338 = getCloudQueue();
-    if (cloudInitialSyncComplete && !finalQueueV338.dirty && navigator.onLine) {
-      setCloudState("synced");
-      if (!ONLINE_STORE_IMPORT_READ_ONLY_V20 && getMinimumPricePendingV345()?.productId) window.setTimeout(retryPendingMinimumPriceV345, 250);
-    }
-    if (cloudSyncRequestedWhileBusy || finalQueueV338.dirty) {
-      cloudSyncTimer = window.setTimeout(() => runCloudSync(), 40);
+    if (ONLINE_STORE_IMPORT_READ_ONLY_V20) {
+      if (cloudInitialSyncComplete && navigator.onLine) setCloudState("synced");
+      if (cloudSyncRequestedWhileBusy) {
+        cloudSyncRequestedWhileBusy = false;
+        cloudSyncTimer = window.setTimeout(() => runCloudSync(), 80);
+      }
+    } else {
+      const finalQueueV338 = getCloudQueue();
+      if (cloudInitialSyncComplete && !finalQueueV338.dirty && navigator.onLine) {
+        setCloudState("synced");
+        if (getMinimumPricePendingV345()?.productId) window.setTimeout(retryPendingMinimumPriceV345, 250);
+      }
+      if (cloudSyncRequestedWhileBusy || finalQueueV338.dirty) {
+        cloudSyncTimer = window.setTimeout(() => runCloudSync(), 40);
+      }
     }
   }
 }
@@ -1759,6 +1794,9 @@ function renderCloudMeta(config = getCloudConfig()) {
 function setCloudState(state, error = null) {
   const element = document.getElementById("googleSyncStatus");
   if (!element) return;
+  const nextErrorV45 = error ? String(error?.message || error || "").trim() : "";
+  if (element.dataset.cloudStateV45 === state && !nextErrorV45) return;
+  element.dataset.cloudStateV45 = state;
 
   const icon = element.querySelector(".dashboard-sync-icon");
   const text = element.querySelector(".dashboard-sync-text");
