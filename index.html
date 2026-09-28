@@ -15,7 +15,7 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=40-systematic-r1" rel="manifest"/>
+<link href="./manifest.json?v=41-runtime-r1" rel="manifest"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
 <link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
@@ -47,12 +47,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=40-systematic-r1" rel="preload"/>
-<link href="./css/style.css?v=40-systematic-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=40-systematic-r1" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=40-systematic-r1"></script>
-<script defer="" src="./js/sync.js?v=40-systematic-r1"></script>
-<script defer="" src="./js/app.js?v=40-systematic-r1"></script>
+<link as="style" href="./css/style.css?v=41-runtime-r1" rel="preload"/>
+<link href="./css/style.css?v=41-runtime-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=41-runtime-r1" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=41-runtime-r1"></script>
+<script defer="" src="./js/sync.js?v=41-runtime-r1"></script>
+<script defer="" src="./js/app.js?v=41-runtime-r1"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog" hidden>
@@ -98,7 +98,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V4.0</div>
+  <div class="sidebar-version-v27">Online Store V4.1</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -108,7 +108,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V4.0 · Import Base V41.8 · Import Data Read-Only</small>
+      <small>Online Store V4.1 · Import Base V41.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -246,10 +246,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V4.0 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
+<div class="muted">Online Store V4.1 · Import 库存 / 平均成本 / 最低售价基准全部只读 · Online 只负责销售</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V4.0</span>
+<span class="online-store-version-v10">V4.1</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
   <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
@@ -257,8 +257,22 @@
   <button type="button" data-product-room-tab-v30="vip">VIP Room</button>
   <button type="button" data-product-room-tab-v30="premium">Premium</button>
   <button type="button" data-product-room-tab-v30="entry">Starter</button>
+  <button type="button" data-v41-content-templates="1">盆景内容模板</button>
   <button type="button" disabled>媒体管理 <small>Coming Soon</small></button>
 </nav>
+<section class="v41-template-panel" id="contentTemplatesPanelV41" hidden>
+  <div class="v41-template-head"><div><strong>盆景内容模板 / Bonsai Content Templates</strong><small>同一树种只建立一次；系统按产品名称自动匹配并套用。商品与子编号不重复存相同文案。</small></div><button type="button" class="secondary-btn" id="closeContentTemplatesV41">返回商品总览</button></div>
+  <div class="v41-template-editor">
+    <div class="v41-template-grid">
+      <label>树种 / 模板名称<input id="contentTemplateNameV41" class="text-left-input" placeholder="例如：水梅 / 黄杨 / 罗汉松"/></label>
+      <label>自动匹配关键词<input id="contentTemplateKeywordV41" class="text-left-input" placeholder="例如：水梅（产品名包含此词就自动套用）"/></label>
+    </div>
+    <label>盆景介绍 / Bonsai Description<textarea id="contentTemplateDescriptionV41" rows="4" placeholder="例如：水梅是大马的特产，喜欢阳光直射，会开白色花。"></textarea></label>
+    <label>养护指南 / Care Guide<textarea id="contentTemplateCareV41" rows="7" placeholder="一次粘贴完整养护文案，保留换行。"></textarea></label>
+    <div class="v41-template-actions"><button type="button" class="primary-btn" id="saveContentTemplateV41">保存模板</button><button type="button" class="secondary-btn" id="clearContentTemplateV41">新建 / 清空</button><span id="contentTemplateStatusV41"></span></div>
+  </div>
+  <div id="contentTemplateListV41" class="v41-template-list"></div>
+</section>
 <section class="room-first-hub-v27" id="roomFirstHubV27">
   <div class="room-first-head-v27"><div><strong>盆景商品房间</strong><small>点击房间会直接进入该房间，再搜索和选择产品。</small></div></div>
   <div class="room-first-grid-v27">
@@ -318,7 +332,7 @@
 <label><span id="onlineStoreAverageCostLabelV19">平均成本（Import · 只读）</span><input id="onlineStoreAverageCostV11" placeholder="由 Import / Inventory System 自动读取" readonly="" type="text"/><small class="field-hint-v12" id="onlineStoreAverageCostHintV19">只读：来自 Import V41.8 的真实平均成本。</small></label>
 <label><span id="onlineStoreMinimumPriceLabelV26">Import 初始最低售价（Online 保护基准）(RM)</span><input id="onlineStoreMinimumPriceV11" placeholder="由 Import / Inventory System 自动读取" readonly="" type="text"/><small class="field-hint-v12" id="onlineStoreMinimumPriceHintV26">只读：优先使用 Import Initial Minimum Price；若 Initial 尚未建立或为 0，才 fallback Current Minimum Price。</small></label>
 <label><span>Import 当前最低售价（只读）(RM)</span><input id="onlineStoreCurrentMinimumPriceV37" placeholder="实时读取 Import Current Minimum Price" readonly="" type="text"/><small class="field-hint-v12" id="onlineStoreCurrentMinimumHintV37">只读：跟随 Import 当前最低售价与状态；Online 不可修改。</small></label>
-<label>Online 销售保护底线 (RM)<input id="onlineStorePriceFloorV21" placeholder="自动计算" readonly="" type="text"/><small class="field-hint-v12">自动：以 Import 最低售价基准为起点，再加入 Affiliate、Payment Fee、包装与配送等 Online 专属费用。</small></label>
+<label>Online 销售保护底线 (RM)<input id="onlineStorePriceFloorV21" placeholder="自动计算" readonly="" type="text"/><small class="field-hint-v12">自动：先从 Import 最低售价基准扣除直播佣金与 Import 木架/本地运费，再加入 Affiliate、Payment Fee、包装与 Online 配送等专属费用，避免重复计算。</small></label>
 <label>Online 配送成本 (RM)<input id="onlineStoreShippingCostV14" inputmode="decimal" placeholder="下一阶段按 Import 木架＋本地运费规则自动带入，可修改" type="text"/><small class="field-hint-v12">Online 专属：后续自动带入标准值，并允许人工覆盖；绝不回写 Import。</small></label>
 <label>Online 花盆成本 (RM)<input id="onlineStorePotCostV14" inputmode="decimal" placeholder="VND 下一阶段按 Import V41.8 花盆规则自动带入，可修改" type="text"/><small class="field-hint-v12">Online 专属覆盖值；Import 平均成本与基准最低售价仍保持只读。</small></label>
 </div>
@@ -334,24 +348,23 @@
     <div class="v40-shared-head"><div><strong>母产品标准资料 / Shared Product Defaults</strong><small>只输入一次。新增子编号自动继承；只有个别差异才需要单独修改。</small></div><span class="v40-auto-badge">系统自动套用</span></div>
     <div class="v40-section-label">标准盆景尺寸</div>
     <div class="v34-form-grid four v40-master-dim-grid">
-      <label>冠幅 (cm)<input id="onlineStoreMasterCrownV40" inputmode="decimal" placeholder="例如 60"/></label>
-      <label>含盆高度 (cm)<input id="onlineStoreMasterHeightV40" inputmode="decimal" placeholder="例如 70"/></label>
-      <label>整体宽度 (cm)<input id="onlineStoreMasterWidthV40" inputmode="decimal" placeholder="例如 55"/></label>
+      <label>冠幅 (cm) · 长<input id="onlineStoreMasterCrownV40" inputmode="decimal" placeholder="例如 60"/></label>
+      <label>整体宽度 (cm) · 宽<input id="onlineStoreMasterWidthV40" inputmode="decimal" placeholder="例如 55"/></label>
+      <label>含盆高度 (cm) · 高<input id="onlineStoreMasterHeightV40" inputmode="decimal" placeholder="例如 70"/></label>
       <label>花盆尺寸<input id="onlineStoreMasterPotSizeV40" placeholder="例如 45 × 32 × 15 cm"/></label>
       <label>树龄<input id="onlineStoreMasterTreeAgeV40" placeholder="例如 20 年"/></label>
       <label>树头 / Trunk Base (cm)<input id="onlineStoreMasterTrunkV40" inputmode="decimal"/></label>
       <label>根盘 (cm)<input id="onlineStoreMasterNebariV40" inputmode="decimal"/></label>
     </div>
     <div class="v40-auto-result" id="onlineStoreMasterPackagePreviewV40">输入冠幅 / 高度 / 宽度后，系统自动生成包装尺寸建议。</div>
-    <div class="v40-section-label">养护教程 / Care Guide</div>
-    <div class="v40-care-grid">
-      <label>浇水<textarea id="onlineStoreCareWaterV40" rows="2" placeholder="例如：表土略干后浇透"></textarea></label>
-      <label>光照<textarea id="onlineStoreCareLightV40" rows="2" placeholder="例如：明亮散射光 / 半日照"></textarea></label>
-      <label>施肥<textarea id="onlineStoreCareFertilizerV40" rows="2" placeholder="例如：生长期薄肥勤施"></textarea></label>
-      <label>修剪<textarea id="onlineStoreCarePruningV40" rows="2" placeholder="例如：新梢成熟后修剪"></textarea></label>
-      <label class="v40-care-wide">环境 / 注意事项<textarea id="onlineStoreCareNotesV40" rows="2" placeholder="温度、通风、雨季或其他提醒"></textarea></label>
+    <div class="v40-section-label">自动套用内容</div>
+    <div class="v41-auto-content" id="onlineStoreTemplateStatusV41">
+      <div><span>盆景内容模板</span><strong id="onlineStoreTemplateNameV41">尚未匹配</strong></div>
+      <p id="onlineStoreTemplateDescriptionPreviewV41">系统会按树种关键词自动套用盆景介绍与养护指南。</p>
+      <p id="onlineStoreTemplateCarePreviewV41" class="v41-care-preview"></p>
+      <div class="v41-auto-content-actions"><button type="button" class="secondary-btn" id="openContentTemplatesFromProductV41">管理模板</button><button type="button" class="ghost-btn" id="refreshProductTemplateV41">重新自动匹配</button></div>
     </div>
-    <div class="field-hint-v12">系统负责把这些资料分层整理到前台；子编号无需重复输入。</div>
+    <div class="field-hint-v12">树种共用内容只建立一次；母产品与子编号自动引用，不需要重复输入。</div>
   </div>
 </section>
 <div class="muted online-store-price-note-v11">Import 最低售价与平均成本在 Online Store 全部只读；商品编辑这里只管理正常售价、成本与利润，促销统一由「营销管理」处理，绝不回写 Import。</div>
@@ -392,7 +405,7 @@
   <div><span>平均成本</span><strong id="onlineStoreCostAverageV14">RM 0.00</strong></div>
   <div><span>运费 / 配送</span><strong id="onlineStoreCostShippingV14">RM 0.00</strong></div>
   <div><span>花盆成本</span><strong id="onlineStoreCostPotV14">RM 0.00</strong></div>
-  <div><span>佣金</span><strong id="onlineStoreCostCommissionV14">RM 0.00</strong></div>
+  <div><span>Affiliate 佣金</span><strong id="onlineStoreCostCommissionV14">RM 0.00</strong></div>
   <div><span>Payment Fee</span><strong id="onlineStoreCostGatewayV14">RM 0.00</strong></div>
   <div><span>包装成本</span><strong id="onlineStoreCostPackagingV14">RM 0.00</strong></div>
   <div class="cost-total-v14"><span>总成本</span><strong id="onlineStoreCostTotalV14">RM 0.00</strong></div>
@@ -401,7 +414,7 @@
   <div class="online-store-profit-card-v13"><span>正常售价利润</span><strong id="onlineStoreRegularProfitV13">RM 0.00</strong><small id="onlineStoreRegularMarginV13">利润率 0.00%</small></div>
   <div class="online-store-profit-card-v13 v36-promotion-profit-compat" hidden><span>促销售价利润</span><strong id="onlineStorePromotionProfitV13">—</strong><small id="onlineStorePromotionMarginV13">促销由营销管理处理</small></div>
 </div>
-<small class="field-hint-v12 online-store-profit-note-v13">利润会随着售价即时更新。总成本包含：平均成本 + 运费 + 花盆 + 佣金 + Payment Fee + 包装成本。最低售价为蓝色价格保护值。</small>
+<small class="field-hint-v12 online-store-profit-note-v13">利润会随着售价即时更新。总成本包含：平均成本 + Online 配送 + 花盆 + Affiliate + Payment Fee + 包装成本。Import 直播佣金与 Import 运费不会重复加入 Online。</small>
 <div class="online-store-wide-label-v10">
   <strong class="media-section-title-v14">代表照片（最多5张）</strong>
   <div class="media-toolbar-v14"><input id="onlineStoreRandomPhotoUrlV14" placeholder="粘贴 Photo URL" type="url"/><button class="secondary-btn" id="onlineStoreAddPhotoUrlV14" type="button">＋ 加入链接</button><button class="secondary-btn" id="onlineStoreChoosePhotosV14" type="button">相册选择</button><button class="secondary-btn" id="onlineStoreTakePhotoV14" type="button">拍照</button></div>
@@ -716,7 +729,7 @@
   <section class="panel aftersales-placeholder-v29"><div><strong>退款 / 售后</strong><p>售后记录绑定原订单；沟通优先通过 WhatsApp，系统保存正式状态、原因、金额与备注。</p></div><button type="button" class="secondary-btn">WhatsApp 顾客</button></section>
 </section>
 <section class="page" id="shippingPageV27">
-  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V4.0 UI</span></div>
+  <div class="module-page-head-v27"><div><h2>物流管理</h2><p>Shipping · 配送设置、运费估算、发货记录与配送异常。</p></div><span class="module-status-v27">V4.1 UI</span></div>
   <section class="panel v40-package-reserve-panel" id="packageReserveSettingsV40">
     <div class="v40-shared-head"><div><strong>包装预留设置 / Package Reserve</strong><small>系统根据母产品标准尺寸自动生成包装建议；以后新增子编号直接继承。</small></div><span class="v40-auto-badge">自动化</span></div>
     <div class="v40-reserve-grid">
@@ -835,7 +848,7 @@
 <button class="primary-btn" id="saveHolidayModeV29" type="button">保存 Holiday Mode</button>
 </section>
 <section class="panel settings-section-v12 password-security-v16">
-<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V4.0 系统化与自动化阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
+<div class="settings-section-head-v12"><div><h3>密码与安全 / Password & Security</h3><p>V4.1 系统化与自动化阶段暂时禁用后台密码，完成界面与流程后再重新启用。</p></div></div>
 <div class="password-protection-row-v16">
   <div><strong>后台密码保护</strong><small id="onlineStorePasswordStateV16">检查中...</small></div>
   <button class="primary-btn" id="onlineStorePasswordToggleV16" type="button">检查中...</button>
@@ -1129,7 +1142,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V4.0</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V4.1</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1150,7 +1163,7 @@
 <aside class="admin-assist-v27" aria-label="辅助信息">
   <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V4.0</p><small>Import Base 41.8 Stable</small></section>
+  <section><strong>当前版本</strong><p>Online Store V4.1</p><small>Import Base 41.8 Stable</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>

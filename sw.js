@@ -1,4 +1,4 @@
-const CACHE = "lover-legend-online-store-V4.0-systematic-r1-import41-8-readonly";
+const CACHE = "lover-legend-online-store-V4.1-runtime-r1-import41-8-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
@@ -58,7 +58,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // V4.0: static assets are versioned in index.html. Serve a cached copy first
+  // V4.1: static assets are versioned in index.html. Serve a cached copy first
   // for instant repeat loads, while refreshing it in the background.
   event.respondWith(
     caches.match(event.request).then(cached => {

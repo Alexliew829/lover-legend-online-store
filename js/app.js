@@ -19845,7 +19845,7 @@ function setupOnlineStoreSettingsV12(){
   document.getElementById("resetOnlineStorePricingRulesV12")?.addEventListener("click",e=>{if(!confirm("回到原厂设置？\n\n这只会恢复 Online Store 的售价/利润/折扣参数，不会删除库存、产品或订单资料。"))return;if(!confirm("再次确认：恢复默认售价设置？"))return;const next=getOnlineStoreUiSettingsV12();next.pricing={targetMargin:30,discountRate:10,affiliateRate:10,gatewayFee:2,packagingCost:20};next.allocation={randomMinimumQty:5};saveOnlineStoreUiSettingsV12(next);window.__onlineStoreSettingsDirtyV21=false;addOnlineStoreHistoryV14("settings","","","售价、利润与折扣恢复原厂");[["onlineStoreTargetMarginV12",30],["onlineStoreDiscountRateV12",10],["onlineStoreAffiliateRateV12",10],["onlineStoreGatewayFeeV12",2],["onlineStorePackagingCostV12",20],["onlineStoreRandomMinimumV16",5]].forEach(([id,v])=>setVal(id,formatOnlineMoneyInputV12(v)));e.currentTarget.textContent="已恢复原厂";setTimeout(()=>{if(e.currentTarget.isConnected)e.currentTarget.textContent="回到原厂设置 / Reset to Factory";},1800);});
   document.getElementById("onlineStoreBackupV12")?.addEventListener("click",e=>{
     if(!confirm("开始 Online Store Backup？\n\n只备份 Online Store 自己的销售/商城设置，不包含 Import 库存与成本。"))return;
-    const payload={system:"Lover Legend Online Store",version:"4.0",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
+    const payload={system:"Lover Legend Online Store",version:"4.1",exportedAt:new Date().toISOString(),state:getOnlineStoreStateV10(),ui:getOnlineStoreUiSettingsV12(),history:getOnlineStoreHistoryV14()};
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
     const url=URL.createObjectURL(blob),a=document.createElement("a");
     const d=new Date(),pad=n=>String(n).padStart(2,"0");
@@ -19860,7 +19860,7 @@ function setupOnlineStoreSettingsV12(){
       const data=JSON.parse(await file.text());
       if(data?.system!=="Lover Legend Online Store"||!data?.state||!data?.ui)throw new Error("不是有效的 Online Store Backup");
       if(!confirm("再次确认：恢复这个 Online Store Backup？"))return;
-      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"4.0",products:data.state.products||{}});
+      saveJSON(ONLINE_STORE_STATE_STORAGE_KEY_V18,{version:"4.1",products:data.state.products||{}});
       saveJSON(ONLINE_STORE_UI_STORAGE_KEY_V18,data.ui||{});
       saveJSON(ONLINE_STORE_HISTORY_STORAGE_KEY_V18,Array.isArray(data.history)?data.history.slice(0,100):[]);
       applyOnlineStoreBrandingV12();renderOnlineStoreProductListV10();renderOnlineStoreHistoryV14();renderStorePreviewV13();window.__onlineStoreSettingsDirtyV21=false;
@@ -21475,7 +21475,7 @@ function v40ChildCard(item,motherPrice){
     <div class="v34-tree-editor v35-tree-editor" hidden><input data-online-field-v10="tier" type="hidden" value="${v34Esc(tier)}"/><input data-online-field-v10="accessZone" type="hidden" value="${tier==='collector'?'vip':'standard'}"/><input data-online-field-v10="published" type="checkbox" hidden ${item.published!==false&&status!=='sold'?'checked':''}/><input data-v34-field="priceMode" type="hidden" value="${v34Esc(mode)}"/><input data-v34-field="saleChannel" type="hidden" value="${v34Esc(saleChannel)}"/><input data-v40-field="dimensionMode" type="hidden" value="${inherited?'inherit':'override'}"/>
     <div class="v35-editor-title"><div><strong>${v34Esc(item.id)}</strong><span>数量固定 1 · ${inherited?'自动使用母产品资料':'个别尺寸'}</span></div><div class="v36-editor-top-actions"><button type="button" class="danger-outline-btn v36-delete-editor" data-v35-delete-child="${v34Esc(item.id)}">${draft?'删除编辑器':'删除子编号'}</button><button type="button" class="secondary-btn" data-v34-collapse-child="${v34Esc(item.id)}">收起</button></div></div>
     <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">1</span><div><h4>人工确认：售价与状态</h4><small>系统已带入房间、在售状态与母产品售价；只有需要不同才修改。</small></div></div><div class="v34-form-grid three"><label>分配区域<select data-online-field-v10="tierSelect"><option value="premium" ${tier==='premium'?'selected':''}>精品馆</option><option value="collector" ${tier==='collector'?'selected':''}>贵宾室</option><option value="entry" ${tier==='entry'?'selected':''}>入门首选</option></select></label><label>状态<select data-online-field-v10="status"><option value="available" ${status!=='sold'?'selected':''}>在售</option><option value="sold" ${status==='sold'?'selected':''}>Sold</option></select></label><label>售价 (RM)<div class="v34-inline"><input data-online-field-v10="regularPrice" inputmode="decimal" value="${rp>0?formatOnlineMoneyInputV12(rp):''}" placeholder="输入售价"/><button type="button" class="secondary-btn v34-follow-price">跟随母价</button></div></label><input data-online-field-v10="promotionPrice" type="hidden" value="0"/></div></section>
-    <section class="v34-subsection v35-subsection v40-auto-size-section"><div class="v35-subtitle"><span class="v35-step">2</span><div><h4>系统自动：尺寸与包装</h4><small>${inherited?'使用母产品标准尺寸，并按 Shipping 预留设置自动生成包装尺寸。':'此棵使用个别尺寸；包装仍自动计算。'}</small></div></div><div class="v40-inherited-summary"><span>冠幅 <b>${v34Esc(d.crownSpread||'—')}</b></span><span>高 <b>${v34Esc(d.pottedHeight||'—')}</b></span><span>宽 <b>${v34Esc(d.overallWidth||'—')}</b></span><span>花盆 <b>${v34Esc(d.potSize||'—')}</b></span><button type="button" class="secondary-btn v40-toggle-dim">${inherited?'这棵尺寸不同':'恢复母产品尺寸'}</button></div><div class="v40-child-dim-fields" ${inherited?'hidden':''}><div class="v34-form-grid four"><label>冠幅 (cm)<input data-v34-field="crownSpread" inputmode="decimal" value="${v34Esc(d.crownSpread||'')}"/></label><label>含盆高度 (cm)<input data-v34-field="pottedHeight" inputmode="decimal" value="${v34Esc(d.pottedHeight||'')}"/></label><label>整体宽度 (cm)<input data-v34-field="overallWidth" inputmode="decimal" value="${v34Esc(d.overallWidth||'')}"/></label><label>花盆尺寸<input data-online-field-v10="potSize" value="${v34Esc(d.potSize||'')}"/></label><label>树龄<input data-v34-field="treeAge" value="${v34Esc(d.treeAge||'')}"/></label><label>树头 (cm)<input data-v34-field="trunkBase" inputmode="decimal" value="${v34Esc(d.trunkBase||'')}"/></label><label>根盘 (cm)<input data-v34-field="nebari" inputmode="decimal" value="${v34Esc(d.nebari||'')}"/></label></div></div>${inherited?`<input data-v34-field="crownSpread" type="hidden" value="${v34Esc(d.crownSpread||'')}"/><input data-v34-field="pottedHeight" type="hidden" value="${v34Esc(d.pottedHeight||'')}"/><input data-v34-field="overallWidth" type="hidden" value="${v34Esc(d.overallWidth||'')}"/><input data-online-field-v10="potSize" type="hidden" value="${v34Esc(d.potSize||'')}"/><input data-v34-field="treeAge" type="hidden" value="${v34Esc(d.treeAge||'')}"/><input data-v34-field="trunkBase" type="hidden" value="${v34Esc(d.trunkBase||'')}"/><input data-v34-field="nebari" type="hidden" value="${v34Esc(d.nebari||'')}"/>`:''}<div class="v40-package-result"><strong>包装建议</strong><span>L <input data-v34-field="packageLength" inputmode="decimal" value="${v34Esc(packL)}"/> cm</span><span>W <input data-v34-field="packageWidth" inputmode="decimal" value="${v34Esc(packW)}"/> cm</span><span>H <input data-v34-field="packageHeight" inputmode="decimal" value="${v34Esc(packH)}"/> cm</span><label>重量 <input data-online-field-v10="weight" inputmode="decimal" value="${v34Esc(item.weight||'')}" placeholder="人工填写"/> kg</label></div></section>
+    <section class="v34-subsection v35-subsection v40-auto-size-section"><div class="v35-subtitle"><span class="v35-step">2</span><div><h4>系统自动：尺寸与包装</h4><small>${inherited?'使用母产品标准尺寸，并按 Shipping 预留设置自动生成包装尺寸。':'此棵使用个别尺寸；包装仍自动计算。'}</small></div></div><div class="v40-inherited-summary"><span>冠幅 <b>${v34Esc(d.crownSpread||'—')}</b></span><span>宽 <b>${v34Esc(d.overallWidth||'—')}</b></span><span>高 <b>${v34Esc(d.pottedHeight||'—')}</b></span><span>花盆 <b>${v34Esc(d.potSize||'—')}</b></span><button type="button" class="secondary-btn v40-toggle-dim">${inherited?'这棵尺寸不同':'恢复母产品尺寸'}</button></div><div class="v40-child-dim-fields" ${inherited?'hidden':''}><div class="v34-form-grid four"><label>冠幅 (cm) · 长<input data-v34-field="crownSpread" inputmode="decimal" value="${v34Esc(d.crownSpread||'')}"/></label><label>整体宽度 (cm) · 宽<input data-v34-field="overallWidth" inputmode="decimal" value="${v34Esc(d.overallWidth||'')}"/></label><label>含盆高度 (cm) · 高<input data-v34-field="pottedHeight" inputmode="decimal" value="${v34Esc(d.pottedHeight||'')}"/></label><label>花盆尺寸<input data-online-field-v10="potSize" value="${v34Esc(d.potSize||'')}"/></label><label>树龄<input data-v34-field="treeAge" value="${v34Esc(d.treeAge||'')}"/></label><label>树头 (cm)<input data-v34-field="trunkBase" inputmode="decimal" value="${v34Esc(d.trunkBase||'')}"/></label><label>根盘 (cm)<input data-v34-field="nebari" inputmode="decimal" value="${v34Esc(d.nebari||'')}"/></label></div></div>${inherited?`<input data-v34-field="crownSpread" type="hidden" value="${v34Esc(d.crownSpread||'')}"/><input data-v34-field="pottedHeight" type="hidden" value="${v34Esc(d.pottedHeight||'')}"/><input data-v34-field="overallWidth" type="hidden" value="${v34Esc(d.overallWidth||'')}"/><input data-online-field-v10="potSize" type="hidden" value="${v34Esc(d.potSize||'')}"/><input data-v34-field="treeAge" type="hidden" value="${v34Esc(d.treeAge||'')}"/><input data-v34-field="trunkBase" type="hidden" value="${v34Esc(d.trunkBase||'')}"/><input data-v34-field="nebari" type="hidden" value="${v34Esc(d.nebari||'')}"/>`:''}<div class="v40-package-result"><strong>包装建议</strong><span>L <input data-v34-field="packageLength" inputmode="decimal" value="${v34Esc(packL)}"/> cm</span><span>W <input data-v34-field="packageWidth" inputmode="decimal" value="${v34Esc(packW)}"/> cm</span><span>H <input data-v34-field="packageHeight" inputmode="decimal" value="${v34Esc(packH)}"/> cm</span><label>重量 <input data-online-field-v10="weight" inputmode="decimal" value="${v34Esc(item.weight||'')}" placeholder="人工填写"/> kg</label></div></section>
     <section class="v34-subsection v35-subsection"><div class="v35-subtitle"><span class="v35-step">3</span><div><h4>人工输入：照片 / 视频</h4><small>这部分必须对应真实这一棵；第一张照片自动成为 Preview。</small></div></div><div class="v35-media-stack">${v35MediaPreviewHtml('photos',photos,item.id)}${v35MediaPreviewHtml('videos',videos,item.id)}</div></section>
     <details class="v34-note"><summary>备注（只有需要时才填）</summary><textarea data-online-field-v10="note" rows="2">${v34Esc(item.note||'')}</textarea></details><div class="v34-tree-actions"><button type="button" class="primary-btn" data-v34-collapse-child="${v34Esc(item.id)}">检查完成</button></div></div></article>`;
 }
@@ -21508,3 +21508,131 @@ renderOnlineStoreProductListV10=function(){
   if(!document.getElementById('onlineStorePage')?.classList.contains('active'))return;
   if(v40RenderQueued)return;v40RenderQueued=true;requestAnimationFrame(()=>{v40RenderQueued=false;renderOnlineStoreProductListV10BaseV40();});
 };
+
+
+/* ================================================================
+   Online Store V4.1 - Runtime Stability + Systematic Automation
+   - one-click navigation, no blank-page teardown
+   - Import channel costs are stripped before Online protection costs
+   - child dimensions inherit mother defaults correctly
+   - species content templates are centralized
+   - mother cost baseline + child/random result summaries
+   ================================================================ */
+window.ONLINE_STORE_V41_RUNTIME_STABLE=true;
+
+// ---------- Content templates: one species, one reusable content source ----------
+const V41_CONTENT_TEMPLATE_KEY='onlineStoreContentTemplatesV41';
+function v41LoadTemplates(){try{const v=JSON.parse(localStorage.getItem(V41_CONTENT_TEMPLATE_KEY)||'{}');return v&&typeof v==='object'&&!Array.isArray(v)?v:{}}catch(_){return {}}}
+function v41SaveTemplates(v){localStorage.setItem(V41_CONTENT_TEMPLATE_KEY,JSON.stringify(v||{}));}
+function v41TemplateKey(v){return String(v||'').trim().toLowerCase();}
+function v41AutoTemplateForProduct(product, preferred=''){
+  const all=v41LoadTemplates(); const pref=v41TemplateKey(preferred); if(pref&&all[pref])return {key:pref,...all[pref]};
+  const name=String(product?.name||'').toLowerCase();
+  const rows=Object.entries(all).map(([key,t])=>({key,...t})).sort((a,b)=>String(b.keyword||b.name||'').length-String(a.keyword||a.name||'').length);
+  return rows.find(t=>{const q=String(t.keyword||t.name||'').trim().toLowerCase();return q&&name.includes(q)})||null;
+}
+function v41RenderTemplateList(){
+  const host=document.getElementById('contentTemplateListV41');if(!host)return;const all=v41LoadTemplates();const rows=Object.entries(all);
+  host.innerHTML=rows.length?rows.map(([key,t])=>`<article class="v41-template-card" data-v41-template-key="${v34Esc(key)}"><div><strong>${v34Esc(t.name||key)}</strong><small>匹配：${v34Esc(t.keyword||t.name||key)}</small></div><p>${v34Esc(t.description||'尚未填写盆景介绍')}</p><div class="v41-template-card-actions"><button type="button" class="secondary-btn" data-v41-edit-template="${v34Esc(key)}">编辑</button><button type="button" class="danger-outline-btn" data-v41-delete-template="${v34Esc(key)}">删除</button></div></article>`).join(''):'<div class="empty-state">尚未建立盆景内容模板。先建立“水梅 / 黄杨 / 罗汉松”等模板，以后商品自动套用。</div>';
+}
+function v41ShowTemplates(){
+  document.getElementById('roomFirstHubV27')?.setAttribute('hidden','');document.getElementById('productCategoryHubV32')?.setAttribute('hidden','');document.getElementById('productEnteredHeaderV32')?.setAttribute('hidden','');document.getElementById('roomProductToolsV27')?.setAttribute('hidden','');document.getElementById('onlineStoreProductListV10')?.setAttribute('hidden','');document.getElementById('onlineStoreEditorV10')?.setAttribute('hidden','');
+  const p=document.getElementById('contentTemplatesPanelV41');if(p)p.hidden=false;document.querySelectorAll('.module-tabs-v30 button').forEach(b=>b.classList.toggle('active',b.hasAttribute('data-v41-content-templates')));v41RenderTemplateList();
+}
+function v41HideTemplates(){const p=document.getElementById('contentTemplatesPanelV41');if(p)p.hidden=true;if(typeof showProductOverviewV32==='function')showProductOverviewV32();}
+function v41RefreshProductTemplateStatus(forceAuto=false){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;const cfg=getOnlineStoreConfigV10(onlineStoreSelectedProductIdV10);const t=v41AutoTemplateForProduct(product,forceAuto?'':cfg.contentTemplateKey);
+  const name=document.getElementById('onlineStoreTemplateNameV41'),desc=document.getElementById('onlineStoreTemplateDescriptionPreviewV41'),care=document.getElementById('onlineStoreTemplateCarePreviewV41');
+  if(name)name.textContent=t?.name||'尚未匹配';if(desc)desc.textContent=t?.description||'尚未建立匹配的盆景介绍模板。';if(care){care.textContent=t?.careGuide||'';care.hidden=!t?.careGuide;}
+  window.__v41CurrentTemplateKey=t?.key||'';
+}
+const normalizeOnlineStoreConfigV10BaseV41=normalizeOnlineStoreConfigV10;
+normalizeOnlineStoreConfigV10=function(productId,raw){const cfg=normalizeOnlineStoreConfigV10BaseV41(productId,raw);cfg.contentTemplateKey=String(raw?.contentTemplateKey||cfg.contentTemplateKey||'');return cfg;};
+const setOnlineStoreEditorValuesV10BaseV41=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){setOnlineStoreEditorValuesV10BaseV41(productId,preserveRoomV16);requestAnimationFrame(()=>{v41RefreshProductTemplateStatus(false);v41RefreshInheritedDimensions();v41UpdateCostUi();});};
+const collectOnlineStoreConfigFromEditorV10BaseV41=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){const cfg=collectOnlineStoreConfigFromEditorV10BaseV41();cfg.contentTemplateKey=window.__v41CurrentTemplateKey||cfg.contentTemplateKey||'';delete cfg.careGuide;return cfg;};
+
+// ---------- Dimensions: mother is the source; auto package ignores stale 5/5/8 values ----------
+const v40MasterDimsFromDomBaseV41=v40MasterDimsFromDom;
+v40MasterDimsFromDom=function(){
+  const d=v40MasterDimsFromDomBaseV41();if(v40HasDims(d))return d;
+  const cfg=onlineStoreSelectedProductIdV10?getOnlineStoreConfigV10(onlineStoreSelectedProductIdV10):null;return {...(cfg?.standardDimensions||d)};
+};
+function v41RefreshInheritedDimensions(){
+  const d=v40MasterDimsFromDom(),r=v40PackageReserve();
+  document.querySelectorAll('#v34TreeList [data-v34-child-card]').forEach(card=>{
+    if(String(card.querySelector('[data-v40-field="dimensionMode"]')?.value||'inherit')!=='inherit')return;
+    const values={crownSpread:d.crownSpread,overallWidth:d.overallWidth,pottedHeight:d.pottedHeight,potSize:d.potSize,treeAge:d.treeAge,trunkBase:d.trunkBase,nebari:d.nebari};
+    Object.entries(values).forEach(([k,v])=>{const sel=k==='potSize'?'[data-online-field-v10="potSize"]':`[data-v34-field="${k}"]`;card.querySelectorAll(sel).forEach(el=>el.value=v||'');});
+    const summary=card.querySelector('.v40-inherited-summary');if(summary){const bs=summary.querySelectorAll('b');if(bs[0])bs[0].textContent=d.crownSpread||'—';if(bs[1])bs[1].textContent=d.overallWidth||'—';if(bs[2])bs[2].textContent=d.pottedHeight||'—';if(bs[3])bs[3].textContent=d.potSize||'—';}
+    const c=v34Num(d.crownSpread),w=v34Num(d.overallWidth),h=v34Num(d.pottedHeight);const set=(f,v)=>{const e=card.querySelector(`[data-v34-field="${f}"]`);if(e)e.value=v?String(v):'';};set('packageLength',c?c+r.length:0);set('packageWidth',w?w+r.width:0);set('packageHeight',h?h+r.height:0);v35RefreshTreeRow(card);
+  });
+}
+
+const v40ChildCardBaseV41=v40ChildCard;
+function v41ChildCard(item,motherPrice){
+  const normalized={...item};const dimMode=String(item?.dimensionMode||'inherit');if(dimMode!=='override'&&String(item?.packageMode||'auto')==='auto'){normalized.packageLength='';normalized.packageWidth='';normalized.packageHeight='';}
+  let html=v40ChildCardBaseV41(normalized,motherPrice);
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);const price=String(item?.priceMode||'')==='follow'?Number(motherPrice||0):Number(item?.regularPrice||motherPrice||0);const cost=product?calculateOnlineStoreProfitV13(price,product):null;const floor=product?calculateOnlineProtectionFloorV21(product).floor:0;const safe=price>0&&(!floor||price>=floor);const summary=cost&&price>0?`<div class="v41-child-profit ${cost.profit<0?'loss':'profit'}"><span>总成本 <b>RM ${formatOnlineMoneyInputV12(cost.totalCost)}</b></span><span>利润 <b>${cost.profit<0?'-':''}RM ${formatOnlineMoneyInputV12(Math.abs(cost.profit))}</b></span><span>利润率 <b>${cost.margin.toFixed(2)}%</b></span><span class="${safe?'safe':'warn'}">${safe?'价格保护安全':`低于保护线 RM ${formatOnlineMoneyInputV12(floor)}`}</span></div>`:'';
+  html=html.replace('<section class="v34-subsection v35-subsection v40-auto-size-section">',summary+'<section class="v34-subsection v35-subsection v40-auto-size-section">');
+  return html;
+}
+v35TreeCard=v41ChildCard;
+
+// ---------- Price protection: strip Import Live channel cost before adding Online channel cost ----------
+function v41ImportChannelBreakdown(product){
+  const baseMinimum=getImportBaseMinimumPriceV21(product);const rules=getMinimumPriceRulesV160();const source=getImportMinimumPriceSourceV26(product);const promotion=typeof getPromotionSettingsV183==='function'?getPromotionSettingsV183():null;
+  const importCommissionRate=(source==='current'&&promotion)?Math.max(0,Number(promotion.commissionRate)||0):Math.max(0,Number(rules.commissionRate)||0);
+  const importCommission=baseMinimum*importCommissionRate/100;const freight=(typeof getMinimumFreightTierV188==='function'?getMinimumFreightTierV188(baseMinimum,rules).amount:0)||0;const netBase=Math.max(0,baseMinimum-importCommission-freight);
+  return {baseMinimum,source,importCommissionRate,importCommission,freight,netBase};
+}
+calculateOnlineProtectionFloorV21=function(product){
+  const imp=v41ImportChannelBreakdown(product);const pricing=getOnlineStoreUiSettingsV12().pricing||{};const affiliateRate=Math.max(0,Number(pricing.affiliateRate)||0),gatewayRate=Math.max(0,Number(pricing.gatewayFee)||0),packaging=Math.max(0,Number(pricing.packagingCost)||0),extra=getOnlineStoreLiveCostConfigV14(product),percentRate=Math.min(99,affiliateRate+gatewayRate),fixedOnline=Math.max(0,Number(extra.shipping)||0)+packaging;const floor=imp.netBase>0?(imp.netBase+fixedOnline)/(1-percentRate/100):0;return {...imp,floor,affiliateRate,gatewayRate,packaging,shipping:extra.shipping,fixedOnline};
+};
+const updateOnlineProtectionFloorV21BaseV41=updateOnlineProtectionFloorV21;
+updateOnlineProtectionFloorV21=function(){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;const info=calculateOnlineProtectionFloorV21(product);const base=document.getElementById('onlineStoreMinimumPriceV11'),floor=document.getElementById('onlineStorePriceFloorV21');if(base)base.value=formatOnlineMoneyInputV12(info.baseMinimum);if(floor)floor.value=formatOnlineMoneyInputV12(info.floor);
+  let box=document.getElementById('v41ProtectionBreakdown');if(!box&&floor){box=document.createElement('div');box.id='v41ProtectionBreakdown';box.className='v41-protection-breakdown';floor.closest('label')?.after(box);}if(box)box.innerHTML=`<span>Import 基准 <b>RM ${formatOnlineMoneyInputV12(info.baseMinimum)}</b></span><span>扣直播佣金 ${info.importCommissionRate.toFixed(2)}% <b>-RM ${formatOnlineMoneyInputV12(info.importCommission)}</b></span><span>扣 Import 运费 <b>-RM ${formatOnlineMoneyInputV12(info.freight)}</b></span><span>净保护基准 <b>RM ${formatOnlineMoneyInputV12(info.netBase)}</b></span><span>＋ Online 包装/配送 <b>RM ${formatOnlineMoneyInputV12(info.fixedOnline)}</b></span><span>＋ Affiliate ${info.affiliateRate.toFixed(2)}% / Payment ${info.gatewayRate.toFixed(2)}%</span>`;
+  const vals=[parseOnlineNumberV12(document.getElementById('onlineStoreRegularPriceV10')?.value)];document.querySelectorAll('#v34TreeList [data-online-field-v10="regularPrice"]').forEach(el=>vals.push(parseOnlineNumberV12(el.value)));const below=vals.filter(v=>v>0&&info.floor>0&&v<info.floor);const warning=document.getElementById('onlineStorePriceFloorWarningV21');if(warning){warning.hidden=!below.length;warning.textContent=below.length?`售价低于 Online 销售保护底线 RM ${formatOnlineMoneyInputV12(info.floor)}。Import 基准 RM ${formatOnlineMoneyInputV12(info.baseMinimum)} 已先扣除直播佣金 RM ${formatOnlineMoneyInputV12(info.importCommission)} 与 Import 运费 RM ${formatOnlineMoneyInputV12(info.freight)}，再加入 Online 专属费用，避免重复计算。`:'';}return info;
+};
+
+const updateOnlineStoreProfitDisplaysV13BaseV41=updateOnlineStoreProfitDisplaysV13;
+updateOnlineStoreProfitDisplaysV13=function(){updateOnlineStoreProfitDisplaysV13BaseV41();v41UpdateCostUi();};
+function v41UpdateCostUi(){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;const randomPrice=parseOnlineNumberV12(document.getElementById('onlineStoreRegularPriceV10')?.value);const rc=calculateOnlineStoreProfitV13(randomPrice,product);let rs=document.getElementById('v41RandomSummary');const host=document.getElementById('onlineStoreRandomProfitV13');if(!rs&&host){rs=document.createElement('div');rs.id='v41RandomSummary';rs.className='v41-mode-summary';host.before(rs);}if(rs)rs.innerHTML=randomPrice>0?`<span>售价 <b>RM ${formatOnlineMoneyInputV12(randomPrice)}</b></span><span>总成本 <b>RM ${formatOnlineMoneyInputV12(rc.totalCost)}</b></span><span>利润 <b>${rc.profit<0?'-':''}RM ${formatOnlineMoneyInputV12(Math.abs(rc.profit))}</b></span><span>利润率 <b>${rc.margin.toFixed(2)}%</b></span>`:'<span>输入随机发货售价后，系统自动计算总成本、利润与保护状态。</span>';
+  document.querySelectorAll('#v34TreeList [data-v34-child-card]').forEach(card=>{const input=card.querySelector('[data-online-field-v10="regularPrice"]');const price=parseOnlineNumberV12(input?.value);let b=card.querySelector('.v41-child-profit');if(!b||!price)return;const c=calculateOnlineStoreProfitV13(price,product),floor=calculateOnlineProtectionFloorV21(product).floor,safe=!floor||price>=floor;b.className=`v41-child-profit ${c.profit<0?'loss':'profit'}`;b.innerHTML=`<span>总成本 <b>RM ${formatOnlineMoneyInputV12(c.totalCost)}</b></span><span>利润 <b>${c.profit<0?'-':''}RM ${formatOnlineMoneyInputV12(Math.abs(c.profit))}</b></span><span>利润率 <b>${c.margin.toFixed(2)}%</b></span><span class="${safe?'safe':'warn'}">${safe?'价格保护安全':`低于保护线 RM ${formatOnlineMoneyInputV12(floor)}`}</span>`;});
+}
+
+// ---------- Workbench hierarchy: mother baseline once, then mode results ----------
+function v41ReorderWorkbench(){
+  const main=document.querySelector('#v34Workbench .v34-main'),cost=document.getElementById('v34CostWrap'),single=document.getElementById('v34SingleTrees'),random=document.getElementById('v34RandomWrap');if(main&&cost&&single)main.insertBefore(cost,single);if(cost){cost.querySelector('summary span').textContent='价格与成本基准';cost.querySelector('summary small').textContent='母产品共用，只显示一次；子编号与 Random 自动继承并显示结果。';}
+  const breakdown=document.querySelector('#onlineRoomRandomBlockV16 .online-store-cost-breakdown-v14');if(breakdown)breakdown.classList.add('v41-hide-duplicate-cost');
+}
+
+// ---------- One-click navigation + blank-screen guard ----------
+function v41FastNavigate(target,button){
+  const page=document.getElementById(target);if(!page)return;const current=document.querySelector('.page.active');if(current?.id==='onlineStorePage'&&target!=='onlineStorePage'&&window.onlineStoreRoomDirtyV16===true){if(!confirm('当前商品还有未保存修改，确认离开？'))return;}
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));if(button)button.classList.add('active');page.classList.add('active');updateAdminTopbarTitleV28(target);window.scrollTo({top:0,behavior:'auto'});
+  requestAnimationFrame(()=>{try{if(target==='dashboardPage')renderDashboard();else if(target==='onlineStorePage'){document.getElementById('contentTemplatesPanelV41')?.setAttribute('hidden','');showProductOverviewV32();const products=getOnlineStoreImportProductsV30();if(!products.length)refreshOnlineStoreImportProductsV30(false);}else if(target==='storePreviewPage')renderStorePreviewV13();else if(target==='onlineStoreHistoryPageV14')renderOnlineStoreHistoryV14();}catch(err){console.error('V4.1 deferred page render failed',err);}});
+}
+function v41InstallFastNav(){
+  if(window.__v41FastNav)return;window.__v41FastNav=true;document.addEventListener('click',e=>{const btn=e.target.closest?.('.nav-btn[data-page]');if(!btn)return;e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v41FastNavigate(btn.dataset.page,btn);},true);
+}
+
+function v41Setup(){
+  v41InstallFastNav();v41ReorderWorkbench();v41RenderTemplateList();
+  const page=document.getElementById('onlineStorePage');page?.addEventListener('click',e=>{
+    if(e.target.closest('[data-v41-content-templates]')){e.preventDefault();e.stopImmediatePropagation();v41ShowTemplates();return;}
+    if(e.target.closest('#closeContentTemplatesV41')){v41HideTemplates();return;}
+    if(e.target.closest('#openContentTemplatesFromProductV41')){v41ShowTemplates();return;}
+    if(e.target.closest('#refreshProductTemplateV41')){v41RefreshProductTemplateStatus(true);onlineStoreRoomDirtyV16=true;return;}
+    const edit=e.target.closest('[data-v41-edit-template]');if(edit){const all=v41LoadTemplates(),key=edit.dataset.v41EditTemplate,t=all[key];if(!t)return;document.getElementById('contentTemplateNameV41').value=t.name||'';document.getElementById('contentTemplateKeywordV41').value=t.keyword||'';document.getElementById('contentTemplateDescriptionV41').value=t.description||'';document.getElementById('contentTemplateCareV41').value=t.careGuide||'';window.__v41EditingTemplateKey=key;return;}
+    const del=e.target.closest('[data-v41-delete-template]');if(del){const key=del.dataset.v41DeleteTemplate,all=v41LoadTemplates();if(!confirm(`删除模板“${all[key]?.name||key}”？\n\n不会删除商品，只会取消自动套用。`))return;delete all[key];v41SaveTemplates(all);v41RenderTemplateList();return;}
+  },true);
+  document.getElementById('saveContentTemplateV41')?.addEventListener('click',()=>{const name=String(document.getElementById('contentTemplateNameV41')?.value||'').trim(),keyword=String(document.getElementById('contentTemplateKeywordV41')?.value||name).trim(),description=String(document.getElementById('contentTemplateDescriptionV41')?.value||'').trim(),careGuide=String(document.getElementById('contentTemplateCareV41')?.value||'').trim();if(!name||!keyword){alert('请填写模板名称和匹配关键词。');return;}const all=v41LoadTemplates(),old=window.__v41EditingTemplateKey,key=v41TemplateKey(name);if(old&&old!==key)delete all[old];all[key]={name,keyword,description,careGuide,updatedAt:new Date().toISOString()};v41SaveTemplates(all);window.__v41EditingTemplateKey=key;v41RenderTemplateList();const st=document.getElementById('contentTemplateStatusV41');if(st)st.textContent='已保存 · 同树种商品会自动套用';v41RefreshProductTemplateStatus(false);});
+  document.getElementById('clearContentTemplateV41')?.addEventListener('click',()=>{['contentTemplateNameV41','contentTemplateKeywordV41','contentTemplateDescriptionV41','contentTemplateCareV41'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});window.__v41EditingTemplateKey='';});
+  ['onlineStoreMasterCrownV40','onlineStoreMasterWidthV40','onlineStoreMasterHeightV40'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>requestAnimationFrame(v41RefreshInheritedDimensions)));
+  window.setTimeout(()=>{v41ReorderWorkbench();v41RefreshInheritedDimensions();v41UpdateCostUi();},50);
+}
+window.addEventListener('DOMContentLoaded',()=>setTimeout(v41Setup,0));

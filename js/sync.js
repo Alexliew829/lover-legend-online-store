@@ -32,7 +32,7 @@ let cloudLastErrorMessage = "";
 window.ONLINE_STORE_IMPORT_READ_ONLY_V20 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
 const ONLINE_STORE_IMPORT_READ_ONLY_V20 = window.ONLINE_STORE_IMPORT_READ_ONLY_V20;
 const CLOUD_FOREGROUND_CHECK_GAP = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 5000 : 1500;
-const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 30000 : 8000;
+const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 60000 : 8000;
 const PROMOTION_LIGHT_SYNC_MS_V372 = 3000;
 // V2.6: Online Store uses a dedicated pull-only adapter. It never runs inherited
 // Import repair/push/promotion/minimum-price code against the Import API.
@@ -154,7 +154,9 @@ function setupCloudSync() {
   // V36.4 Local-First: when a valid V32.5-style bootstrap and cached core data
   // already exist, show the last successful state immediately while the
   // revision check runs silently in the background.
-  if (isCloudBootstrapComplete() && Number(startupConfigV338.revision) > 0 && hasCachedCoreV338 && cachedCanonicalV365 && !getCloudQueue().dirty) {
+  if (ONLINE_STORE_IMPORT_READ_ONLY_V20 && Number(startupConfigV338.revision) > 0 && hasCachedCoreV338) {
+    setCloudState("synced");
+  } else if (isCloudBootstrapComplete() && Number(startupConfigV338.revision) > 0 && hasCachedCoreV338 && cachedCanonicalV365 && !getCloudQueue().dirty) {
     setCloudState("synced");
   } else {
     setCloudState("syncing");
@@ -213,7 +215,7 @@ function setupCloudSync() {
   // read-only revision check is deferred slightly so it cannot block initial UI.
   if (ONLINE_STORE_IMPORT_READ_ONLY_V20 && hasCachedCoreV338 && Number(startupConfigV338.revision) > 0) {
     cloudInitialSyncComplete = true;
-    window.setTimeout(() => runCloudSync(), 1200);
+    window.setTimeout(() => runCloudSync(), 3000);
   } else {
     window.setTimeout(() => runCloudSync(), 0);
   }
@@ -720,7 +722,7 @@ function applyOnlineImportReadOnlyDataV20(data) {
     inventoryPreparedRowsCacheV321 = { rawProducts:null, settings:null, imports:null, batches:null, sales:null, rows:[] };
   }
   if (typeof inventoryLastRenderedPreparedRowsV321 !== "undefined") inventoryLastRenderedPreparedRowsV321 = null;
-  try { if (typeof renderDashboard === "function") renderDashboard(); } catch (_) {}
+  try { if (typeof renderDashboard === "function" && document.getElementById("dashboardPage")?.classList.contains("active")) renderDashboard(); } catch (_) {}
   try { if (typeof renderOnlineStoreProductListV10 === "function" && document.getElementById("onlineStorePage")?.classList.contains("active")) renderOnlineStoreProductListV10(); } catch (_) {}
   try { if (typeof window.refreshOnlineImportReadOnlyFieldsV21 === "function") window.refreshOnlineImportReadOnlyFieldsV21(); } catch (_) {}
   try { if (typeof renderStorePreviewV13 === "function" && document.getElementById("storePreviewPage")?.classList.contains("active")) renderStorePreviewV13(); } catch (_) {}
@@ -728,8 +730,8 @@ function applyOnlineImportReadOnlyDataV20(data) {
 
 let onlineReadOnlyUnchangedChecksV24 = 0;
 let onlineReadOnlyLastFullPullAtV24 = 0;
-const ONLINE_READONLY_FORCE_FULL_AFTER_UNCHANGED_V24 = 10;
-const ONLINE_READONLY_FORCE_FULL_GAP_MS_V24 = 300000;
+const ONLINE_READONLY_FORCE_FULL_AFTER_UNCHANGED_V24 = 30;
+const ONLINE_READONLY_FORCE_FULL_GAP_MS_V24 = 900000;
 
 async function pullOnlineImportReadOnlyV20(forceFull = false) {
   const config = getCloudConfig();
@@ -1691,7 +1693,7 @@ function applyRemoteData(data) {
 
 function refreshSystemViewsAfterSync() {
   if (ONLINE_STORE_IMPORT_READ_ONLY_V20) {
-    try { if (typeof renderDashboard === "function") renderDashboard(); } catch (_) {}
+    try { if (typeof renderDashboard === "function" && document.getElementById("dashboardPage")?.classList.contains("active")) renderDashboard(); } catch (_) {}
     try { if (typeof renderOnlineStoreProductListV10 === "function" && document.getElementById("onlineStorePage")?.classList.contains("active")) renderOnlineStoreProductListV10(); } catch (_) {}
     try { if (typeof window.refreshOnlineImportReadOnlyFieldsV21 === "function") window.refreshOnlineImportReadOnlyFieldsV21(); } catch (_) {}
     return;
