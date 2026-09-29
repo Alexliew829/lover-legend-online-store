@@ -1,23 +1,30 @@
-Lover Legend Online Store V5.9 PATCH from V5.8
-Build 5900
+Lover Legend Online Store V6.0 PATCH from V5.9
+Build 6000
 
-V5.9 verified changes
-- Reworked Online A-E package size tiers from real Line Clear shipment dimensions supplied by the user.
-- A Small: 50 x 30 x 30 cm, 5 kg.
-- B Medium-Small: 65 x 45 x 45 cm, 15 kg.
-- C Medium-Large: 80 x 60 x 60 cm, 35 kg.
-- D Large: 100 x 75 x 60 cm, 55 kg.
-- E Oversize: 120 x 100 x 90 cm, 75 kg.
-- Existing RM reference freight values are preserved (A 20 / B 50 / C 80 / D 120 / E 180) because the supplied waybills show dimensions and service class, not final billed postage.
-- Freight matching now normalizes the three package dimensions from longest to shortest before tier comparison, so rotating L/W/H does not change the matched tier.
-- Existing V5.8 saved tier dimensions are upgraded in-memory to the V5.9 tier shape while preserving each saved RM cost. Custom non-legacy tier dimensions remain untouched.
-- Line Clear Weight / L / W / H inputs are now text + numeric keyboard inputs, fully removing browser spinner arrows on Chrome/Edge/Firefox/mobile.
-- Sender postcode remains default 43300 and editable.
-- Express remains default service; Premium remains selectable with its independent algorithm.
-- Line Clear estimator stays local arithmetic only: no Import sync, full render, polling, MutationObserver, or automatic network request.
-- Child inline copy feedback and mobile child photo focus from V5.8 are retained.
-- Apps Script / Code.gs unchanged; no redeploy required.
+V6.0 Line Clear Reference Shipping
+- Product page "参考运费（RM）" now defaults to a local Line Clear Express estimate when standard package size + weight are available.
+- Example: a 30 x 30 x 45 cm / 5 kg package in Peninsular Express calculates 6.75 kg volumetric / 7 kg billing and RM13.78 including 6% SST under the current local rate table.
+- Reference shipping remains editable: user may change RM13.78 to RM15.00 for practical customer quoting.
+- Manual edits are explicitly marked "手动调整" and are stored per mother product.
+- "恢复建议值" returns the field to the current Line Clear suggestion.
+- Existing V5.9 shippingCost values are NOT silently treated as manual overrides. Only an explicit V6.0 manual edit sets shippingCostManual=true.
+- A-E remains packaging tier guidance / fallback only. When Line Clear cannot produce a standard estimate (for example Oversize), A-E can still provide a fallback reference.
+- Buyer-paid reference shipping remains excluded from Online protection floor and actual product profit. Only seller-paid shipping enters seller cost.
+- Child/item package calculations use the same local Line Clear estimate logic when complete dimensions and weight are available.
+
+Performance & Runtime Cleanup (integer V6.0)
+- No new cloud sync, fetch, polling, MutationObserver or full-page render path was added.
+- Line Clear reference calculations are local arithmetic only.
+- sync.js is intentionally unchanged from V5.9.
+- Cleanup does not touch Sold history, orders/payments, Import sync records, Audit Log or permanent Child history.
+
+Existing V5.9 features retained
+- A-E packaging tiers based on real shipment shapes and orientation-independent dimension matching.
+- Sender postcode default 43300, editable.
+- Express default + Premium selectable.
+- Child ID inline copy feedback (ID -> 已复制 -> ID), no bottom-right toast.
+- Mobile Individual Trees photo focal position adjustment.
 
 Deployment
-- Replace the Frontend files in GitHub Pages with this patch.
-- Version: V5.9 / Build 5900.
+- Frontend PATCH only. No Apps Script / Code.gs redeploy is required.
+- Replace the Frontend files from this ZIP and deploy GitHub Pages as usual.
