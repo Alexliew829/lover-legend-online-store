@@ -7195,3 +7195,31 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   #onlineStoreEditorV10 .v50-care-fold .v42-care-guide-title small{grid-column:1/-1;justify-self:start!important}
   #onlineStoreEditorV10 .v48-care-species{justify-self:start!important}
 }
+
+/* Online Store V5.1 - Pricing Clarity + Content Inheritance ---------------- */
+#onlineStoreEditorV10 .v47-reference-profit,
+#onlineStoreEditorV10 .v47-reference-margin{display:none!important}
+#onlineStoreEditorV10 .v51-protection-value-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;min-height:48px}
+#onlineStoreEditorV10 .v51-protection-value-row #onlineStorePriceFloorV21{width:100%;margin:0!important}
+#onlineStoreEditorV10 .v51-protection-margin-badge{font-size:13px;font-weight:800;white-space:nowrap;color:#66756c;padding-right:2px}
+#onlineStoreEditorV10 .v51-protection-margin-badge.profit{color:#087a46}
+#onlineStoreEditorV10 .v51-protection-margin-badge.loss{color:#c0392b}
+#onlineStoreEditorV10 #onlineStoreMasterPackagePreviewV40[hidden],
+#onlineStoreEditorV10 .v40-package-result[hidden]{display:none!important}
+#onlineStoreEditorV10 .v51-level-content{margin:12px 0;padding:12px 14px;border:1px solid #dce9e0;border-radius:12px;background:#fbfdfb;display:grid;gap:10px}
+#onlineStoreEditorV10 .v51-level-content-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#onlineStoreEditorV10 .v51-level-content-head strong{color:#0d623d;font-size:15px}
+#onlineStoreEditorV10 .v51-level-content-head small{color:#718078;font-size:12px;text-align:right}
+#onlineStoreEditorV10 .v51-level-content label{display:grid;gap:5px;font-weight:700;color:#294c3a}
+#onlineStoreEditorV10 .v51-content-preview{padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #e0ebe4;font-weight:500;color:#24372c;line-height:1.5;white-space:pre-wrap;max-height:132px;overflow:auto}
+#onlineStoreEditorV10 .v51-content-preview.care{max-height:160px}
+#onlineStoreEditorV10 .v41-protection-breakdown em{font-style:normal;font-size:12px;color:#66756c;margin-left:4px}
+.v51-shipping-responsibility{margin:12px 0;padding:12px 14px;border:1px solid #dce9e0;border-radius:12px;background:#fbfdfb;max-width:620px}
+.v51-shipping-responsibility label{display:grid;gap:6px;font-weight:800;color:#174f35}
+.v51-shipping-responsibility select{height:46px;border:1px solid #d3e2d8;border-radius:10px;padding:0 12px;background:#fff;font:inherit}
+.v51-shipping-responsibility small{font-weight:500;color:#718078;line-height:1.45}
+@media(max-width:600px){
+  #onlineStoreEditorV10 .v51-level-content-head{align-items:flex-start;flex-direction:column;gap:3px}
+  #onlineStoreEditorV10 .v51-level-content-head small{text-align:left}
+  #onlineStoreEditorV10 .v51-protection-value-row{grid-template-columns:minmax(0,1fr) auto}
+}
