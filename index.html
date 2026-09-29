@@ -98,7 +98,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V5.5</div>
+  <div class="sidebar-version-v27">Online Store V5.6</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -108,7 +108,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V5.5 · Import Base V41.8 · Import Data Read-Only</small>
+      <small>Online Store V5.6 · Import Base V41.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -246,10 +246,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V5.5 · Import 库存 / 平均成本 / 最低售价只读 · Online 独立计算销售保护底线</div>
+<div class="muted">Online Store V5.6 · Import 库存 / 平均成本 / 最低售价只读 · Online 独立计算销售保护底线</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V5.5</span>
+<span class="online-store-version-v10">V5.6</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
   <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
@@ -742,7 +742,33 @@
   </section>
   <nav class="module-tabs-v30" id="shippingTabsV31"><button class="active" type="button" data-module-tab-v31="shipping-methods">配送方式</button><button type="button" data-module-tab-v31="freight-estimate">运费估算</button><button type="button" data-module-tab-v31="shipping-records">发货记录</button><button type="button" data-module-tab-v31="shipping-issues">配送异常</button></nav>
   <div class="module-card-grid-v27 seller-module-grid-v30" id="shippingMethodsPanelV31"><article><strong>West Malaysia Courier</strong><p>Line Clear / City-Link 等本地配送。</p><span class="status-success-v29">可设置</span></article><article><strong>Klang Valley</strong><p>Lalamove · 顾客承担实际配送费。</p><span class="status-info-v29">可设置</span></article><article><strong>Pickup / Meetup</strong><p>门店自取或约定地点交收。</p><span>RM 0.00</span></article><article><strong>Singapore</strong><p>Private Driver · 商品付款与实际运费分开。</p><span class="status-info-v29">预留</span></article></div>
-  <section class="panel freight-estimator-shell-v30" id="freightEstimatePanelV31" hidden><div class="dashboard-block-head-v30"><div><strong>Freight Estimate</strong><small>后续接入尺寸、重量与目的地区域计算；当前仅建立操作位置。</small></div><span class="module-status-v27">下一阶段接公式</span></div><div class="freight-input-grid-v30"><input placeholder="Length (cm)" disabled><input placeholder="Width (cm)" disabled><input placeholder="Height (cm)" disabled><input placeholder="Weight (kg)" disabled><select disabled><option>Destination Zone</option></select><button type="button" class="secondary-btn" disabled>计算运费</button></div></section>
+  <section class="panel freight-estimator-shell-v30 v56-lineclear-panel" id="freightEstimatePanelV31" hidden>
+    <div class="dashboard-block-head-v30 v56-lineclear-head">
+      <div><strong>Line Clear 运费计算器 / Postage Calculator</strong><small>本地即时估算，不触发 Import Sync / Full Render。官方费率：April 2026；最终收费以 Line Clear 实际称重、量方及官方 Quote 为准。</small></div>
+      <span class="module-status-v27">Official Rate · Apr 2026</span>
+    </div>
+    <div class="v56-lineclear-note">Express 计费重量取实际重量与体积重量较高者；体积重 = L × W × H ÷ 6000。超过 Express 尺寸 / 重量范围时只提示 Oversize，不硬算正式价格。</div>
+    <div class="v56-lineclear-form">
+      <label>寄件邮编 / Sender Postcode<div class="v56-inline-field"><input id="v56LineClearSender" type="text" inputmode="numeric" maxlength="5" placeholder="例如 43200"><button type="button" class="secondary-btn" id="v56SaveLineClearSender">保存默认</button></div></label>
+      <label>收件邮编 / Recipient Postcode<input id="v56LineClearRecipient" type="text" inputmode="numeric" maxlength="5" placeholder="顾客邮编"><small class="v56-field-hint">本地估算按 Destination Zone；邮编用于官方 Quote / 后续自动判断。</small></label>
+      <label>目的地区域 / Destination Zone<select id="v56LineClearZone"><option value="peninsular">Peninsular Malaysia</option><option value="kuching">Sarawak · Kuching</option><option value="sarawak-other">Sarawak · Other Towns</option><option value="kk">Sabah · Kota Kinabalu</option><option value="sabah-other">Sabah · Other Towns</option></select></label>
+      <label>服务 / Service<select id="v56LineClearService"><option value="express">Express · 1–3 days</option></select></label>
+      <label>实际重量 / Actual Weight (kg)<input id="v56LineClearWeight" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"></label>
+      <fieldset class="v56-size-fieldset"><legend>包装尺寸 / Package Size (cm)</legend><div><label>L<input id="v56LineClearL" type="number" min="0" step="1" inputmode="decimal" placeholder="L"></label><span>×</span><label>W<input id="v56LineClearW" type="number" min="0" step="1" inputmode="decimal" placeholder="W"></label><span>×</span><label>H<input id="v56LineClearH" type="number" min="0" step="1" inputmode="decimal" placeholder="H"></label></div></fieldset>
+    </div>
+    <div class="v56-lineclear-metrics">
+      <div><span>实际重量</span><strong id="v56LineClearActual">—</strong></div>
+      <div><span>体积重量</span><strong id="v56LineClearVol">—</strong></div>
+      <div class="emphasis"><span>计费重量</span><strong id="v56LineClearChargeable">—</strong></div>
+      <div><span>当前 A–E 档</span><strong id="v56LineClearOwnTier">—</strong></div>
+    </div>
+    <div class="v56-lineclear-result" id="v56LineClearResult">
+      <div class="v56-lineclear-price"><span>Line Clear 参考运费</span><strong id="v56LineClearPrice">RM —</strong><small id="v56LineClearPriceMeta">输入重量与尺寸后即时计算</small></div>
+      <div class="v56-lineclear-compare"><span>你的 Online 参考运费</span><strong id="v56LineClearOwnPrice">RM —</strong><small id="v56LineClearDiff">A–E 档位只作比较，不会自动被 Line Clear 覆盖。</small></div>
+    </div>
+    <div class="v56-lineclear-warning" id="v56LineClearWarning">请输入实际重量与包装 L / W / H。</div>
+    <div class="v56-lineclear-actions"><button type="button" class="secondary-btn" id="v56LineClearReset">清空计算</button><a class="secondary-btn v56-official-quote" href="https://www.lineclearexpress.com/quotation/" target="_blank" rel="noopener noreferrer">Line Clear 官方报价 ↗</a></div>
+  </section>
   <section class="panel module-tab-placeholder-v31" id="shippingPlaceholderV31" hidden><div class="empty-state">暂无资料</div></section>
 </section>
 <section class="page" id="marketingPageV27">
@@ -1115,7 +1141,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V5.5</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V5.6</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1136,7 +1162,7 @@
 <aside class="admin-assist-v27" aria-label="辅助信息">
   <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V5.5</p><small>Import Base 41.8 Stable</small></section>
+  <section><strong>当前版本</strong><p>Online Store V5.6</p><small>Import Base 41.8 Stable</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>
