@@ -15,7 +15,7 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=48-product-flow-r1" rel="manifest"/>
+<link href="./manifest.json?v=50-performance-runtime-cleanup-r1" rel="manifest"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
 <link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
@@ -47,12 +47,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=48-product-flow-r1" rel="preload"/>
-<link href="./css/style.css?v=48-product-flow-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=48-product-flow-r1" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=48-product-flow-r1"></script>
-<script defer="" src="./js/sync.js?v=48-product-flow-r1"></script>
-<script defer="" src="./js/app.js?v=48-product-flow-r1"></script>
+<link as="style" href="./css/style.css?v=50-performance-runtime-cleanup-r1" rel="preload"/>
+<link href="./css/style.css?v=50-performance-runtime-cleanup-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=50-performance-runtime-cleanup-r1" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=50-performance-runtime-cleanup-r1"></script>
+<script defer="" src="./js/sync.js?v=50-performance-runtime-cleanup-r1"></script>
+<script defer="" src="./js/app.js?v=50-performance-runtime-cleanup-r1"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog" hidden>
@@ -98,7 +98,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V4.9</div>
+  <div class="sidebar-version-v27">Online Store V5.0</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -108,7 +108,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V4.9 · Import Base V41.8 · Import Data Read-Only</small>
+      <small>Online Store V5.0 · Import Base V41.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -246,10 +246,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V4.9 · Import 库存 / 平均成本 / 最低售价只读 · Online 独立计算销售保护底线</div>
+<div class="muted">Online Store V5.0 · Import 库存 / 平均成本 / 最低售价只读 · Online 独立计算销售保护底线</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V4.9</span>
+<span class="online-store-version-v10">V5.0</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
   <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
@@ -352,7 +352,7 @@
       <label>冠幅 (cm) · 长<input id="onlineStoreMasterCrownV40" inputmode="decimal" placeholder="例如 60"/></label>
       <label>整体宽度 (cm) · 宽<input id="onlineStoreMasterWidthV40" inputmode="decimal" placeholder="例如 55"/></label>
       <label>含盆高度 (cm) · 高<input id="onlineStoreMasterHeightV40" inputmode="decimal" placeholder="例如 70"/></label>
-      <label>花盆尺寸<input id="onlineStoreMasterPotSizeV40" placeholder="例如 45 × 32 × 15 cm"/></label>
+      <label class="v50-pot-dim-field"><span>花盆尺寸</span><div class="v50-pot-dim-inputs"><input id="onlineStoreMasterPotLengthV50" inputmode="numeric" maxlength="3" placeholder="长"/><span>×</span><input id="onlineStoreMasterPotWidthV50" inputmode="numeric" maxlength="3" placeholder="宽"/><span>×</span><input id="onlineStoreMasterPotHeightV50" inputmode="numeric" maxlength="3" placeholder="高"/></div><input id="onlineStoreMasterPotSizeV40" type="hidden"/></label>
       <label>树龄<input id="onlineStoreMasterTreeAgeV40" placeholder="例如 20 年"/></label>
       <label>树头 / Trunk Base (cm)<input id="onlineStoreMasterTrunkV40" inputmode="decimal"/></label>
       <label>根盘 (cm)<input id="onlineStoreMasterNebariV40" inputmode="decimal"/></label>
@@ -1117,7 +1117,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V4.9</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V5.0</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1138,7 +1138,7 @@
 <aside class="admin-assist-v27" aria-label="辅助信息">
   <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V4.9</p><small>Import Base 41.8 Stable</small></section>
+  <section><strong>当前版本</strong><p>Online Store V5.0</p><small>Import Base 41.8 Stable</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>
