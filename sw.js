@@ -1,4 +1,4 @@
-const CACHE = "lover-legend-online-store-V4.8-product-flow-r1";
+const CACHE = "lover-legend-online-store-V4.9-child-integrity-r1";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
@@ -58,7 +58,7 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // V4.8-layout-route-r1"no-store" })
+  // V4.9-layout-route-r1"no-store" })
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();

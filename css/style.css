@@ -7098,7 +7098,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 @media(max-width:560px){.v47-top-grid,#onlineStoreEditorV10 .online-store-price-foundation-v11{grid-template-columns:1fr!important}.v47-top-grid .v46-public-name-field{grid-column:auto}.v47-editor-actions{width:100%;justify-content:flex-end}.v47-editor-actions .secondary-btn{flex:0 1 auto;padding:9px 12px;font-size:14px}#productCategoryHubV32 .product-category-grid-v32{grid-template-columns:1fr}}
 
 
-/* Online Store V4.8 -------------------------------------------------------- */
+/* Online Store V4.9 -------------------------------------------------------- */
 .v48-top-grid{display:grid!important;grid-template-columns:minmax(300px,1.4fr) minmax(190px,.8fr) minmax(190px,.8fr)!important;gap:12px!important;align-items:stretch}
 .v48-top-grid>label{display:grid!important;grid-template-rows:auto 48px auto;gap:6px;align-content:start}
 .v48-top-grid input,#onlineStoreEditorV10 .v48-price-grid input{height:48px!important;min-height:48px!important;padding:10px 14px!important;border-radius:12px!important;font-size:16px!important;box-sizing:border-box!important;font-variant-numeric:tabular-nums}
@@ -7127,3 +7127,37 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 @media(max-width:600px){.v48-top-grid,#onlineStoreEditorV10 .v48-price-grid{grid-template-columns:1fr!important}.v48-top-grid .v46-public-name-field{grid-column:auto}.v48-editor-actions{width:100%;gap:8px}.v48-editor-actions>.secondary-btn,.v48-editor-actions>.v48-action-btn{height:42px!important;min-height:42px!important;padding:0 12px!important;font-size:14px!important}.v48-care-compact .v42-care-guide-title{grid-template-columns:1fr!important;gap:3px!important}.v48-care-compact .v42-care-guide-title small,.v48-care-species{justify-self:start}}
 .v48-obsolete-initial,.v48-obsolete-initial[hidden]{display:none!important}
 #onlineStoreEditorV10 .v48-price-grid>.v48-obsolete-initial,#onlineStoreEditorV10 .v48-price-grid>.v48-obsolete-initial[hidden]{display:none!important}
+
+/* Online Store V4.9 -------------------------------------------------------- */
+#onlineStoreEditorV10 .online-store-editor-head-v10{display:flex;align-items:flex-start;gap:14px}
+#onlineStoreEditorV10 .v48-editor-actions{margin-left:auto!important;justify-content:flex-end!important}
+
+/* One natural product flow; Shared Product Defaults no longer looks like a nested card. */
+#onlineStoreEditorV10 .v49-details-flow{display:flex;flex-direction:column;gap:12px}
+#onlineStoreEditorV10 .v49-content-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important}
+#onlineStoreEditorV10 .v49-content-grid>label{min-width:0}
+#onlineStoreEditorV10 .v49-content-grid .v46-public-name-field input{max-width:100%}
+#onlineStoreEditorV10 .v49-shared-unwrapped{border:0!important;background:transparent!important;padding:0!important;margin:0!important;box-shadow:none!important}
+#onlineStoreEditorV10 .v49-shared-unwrapped>.v40-shared-head{display:none!important}
+#onlineStoreEditorV10 .v49-shared-unwrapped .v40-auto-result{margin:0 0 8px!important;padding:10px 12px!important;border-radius:10px!important}
+#onlineStoreEditorV10 .v49-shared-unwrapped .v40-section-label{margin:0 0 8px!important;padding:0!important;font-size:16px!important;font-weight:800!important}
+#onlineStoreEditorV10 .v49-shared-unwrapped .v40-master-dim-grid{margin:0!important}
+
+/* Price/cost lives after dimensions and uses one geometry. */
+#onlineStoreEditorV10 .v49-price-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px 14px!important;margin-top:0!important;padding-top:12px!important;border-top:1px solid #dbe8df}
+#onlineStoreEditorV10 .v49-price-grid>.v49-money-field{display:grid!important;grid-template-rows:auto 48px auto;gap:6px;min-width:0;align-content:start}
+#onlineStoreEditorV10 .v49-price-grid>.v49-money-field input{height:48px!important;min-height:48px!important;padding:10px 14px!important;border-radius:12px!important;font-size:16px!important;box-sizing:border-box!important;font-variant-numeric:tabular-nums}
+#onlineStoreEditorV10 .v49-price-grid>.v49-price-priority{order:-10}
+#onlineStoreEditorV10 .v49-price-grid>.v48-obsolete-initial{display:none!important}
+
+/* Care guide must be compact with no artificial spacer. */
+#onlineStoreEditorV10 .v48-care-compact{min-height:0!important;height:auto!important;padding:10px 14px!important;margin:2px 0!important}
+#onlineStoreEditorV10 .v48-care-compact .v42-care-guide-title{margin:0 0 4px!important;min-height:0!important}
+#onlineStoreEditorV10 .v48-care-compact .v41-auto-content{min-height:0!important;height:auto!important;margin:0!important;padding:0!important}
+#onlineStoreEditorV10 .v48-care-compact .v41-care-preview{min-height:0!important;max-height:150px!important;margin:0!important;padding:0!important;line-height:1.5!important}
+
+.v49-allocation-note{display:inline-flex;align-items:center;color:#617267;font-size:13px;margin-left:8px}
+#v34AddTree[hidden]{display:none!important}
+
+@media(max-width:900px){#onlineStoreEditorV10 .v49-price-grid{grid-template-columns:1fr 1fr!important}}
+@media(max-width:600px){#onlineStoreEditorV10 .v49-price-grid{grid-template-columns:1fr!important}#onlineStoreEditorV10 .v48-editor-actions{width:100%;justify-content:flex-end!important}.v49-allocation-note{display:block;margin:6px 0 0}}
