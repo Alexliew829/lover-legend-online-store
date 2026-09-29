@@ -15,7 +15,7 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=53-parent-master-r1" rel="manifest"/>
+<link href="./manifest.json?v=54-parent-master-room-cleanup-r1" rel="manifest"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="shortcut icon"/>
 <link href="./assets/icons/online-store-orange-v15.ico?v=16" rel="icon" sizes="any"/>
 <link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=16" rel="icon" sizes="16x16" type="image/png"/>
@@ -47,12 +47,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=53-parent-master-r1" rel="preload"/>
-<link href="./css/style.css?v=53-parent-master-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=53-parent-master-r1" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=53-parent-master-r1"></script>
-<script defer="" src="./js/sync.js?v=53-parent-master-r1"></script>
-<script defer="" src="./js/app.js?v=53-parent-master-r1"></script>
+<link as="style" href="./css/style.css?v=54-parent-master-room-cleanup-r1" rel="preload"/>
+<link href="./css/style.css?v=54-parent-master-room-cleanup-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=54-parent-master-room-cleanup-r1" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=54-parent-master-room-cleanup-r1"></script>
+<script defer="" src="./js/sync.js?v=54-parent-master-room-cleanup-r1"></script>
+<script defer="" src="./js/app.js?v=54-parent-master-room-cleanup-r1"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog" hidden>
@@ -98,7 +98,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V5.3</div>
+  <div class="sidebar-version-v27">Online Store V5.4</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -108,7 +108,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V5.3 · Import Base V41.8 · Import Data Read-Only</small>
+      <small>Online Store V5.4 · Import Base V41.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -186,73 +186,19 @@
 </div>
 <div class="import-anomaly-list-v201" id="importAnomalyListV201"></div>
 </section>
-<section class="panel dashboard-import-panel-v27">
-<div class="section-title-row inventory-title-row">
-<h3>Import 库存摘要</h3>
-<div class="inventory-title-summary">
-<span class="inventory-filter-stock"><i class="desktop-label-v265">当前库存：</i><i class="mobile-label-v265">库存：</i><strong id="inventoryFilteredStock">0</strong></span>
-<span class="inventory-filter-value"><i class="desktop-label-v265">库存成本：</i><i class="mobile-label-v265">成本：</i><strong id="inventoryFilteredValue">RM 0.00</strong></span>
-<span class="muted" id="inventoryPageCount">0 项</span>
-</div>
-</div>
-<div class="inventory-toolbar">
-<input class="search-input text-left-input" id="inventorySearch" placeholder="搜索中文/英文产品名、编号、类别、进口编号、运输单号或原成本"/>
-<select id="inventorySort">
-<option value="latest">最近进口</option>
-<option value="latest-sold">最近售出</option>
-<option value="price-control">售价控制</option>
-<option value="name">产品名称</option>
-<option value="bestseller-desc">畅销商品</option>
-<option value="profit-desc">利润最高</option>
-<option value="stock-desc">库存最多</option>
-<option value="stock-asc">库存最少</option>
-<option value="value-desc">库存成本最高</option>
-<option value="cost-desc">平均成本最高</option>
-</select>
-</div>
-<section class="original-cost-panel" hidden="" id="originalCostPanel">
-<div class="original-cost-panel-head">
-<div>
-<strong>原成本清单</strong>
-<span class="muted" id="originalCostPanelDate"></span>
-</div>
-<div class="original-cost-panel-actions">
-<button class="secondary-btn" id="exportOriginalCostExcelBtn" type="button">导出 Excel</button>
-<button class="secondary-btn" id="closeOriginalCostPanelBtn" type="button">收起 ▲</button>
-</div>
-</div>
-<div class="original-cost-table-wrap">
-<table class="original-cost-table">
-<thead>
-<tr>
-<th>产品名</th>
-<th>当前库存</th>
-<th>原成本</th>
-<th>平均成本</th>
-<th id="originalCostMinimumHeaderV315">最低售价</th>
-</tr>
-</thead>
-<tbody id="originalCostTableBody"></tbody>
-</table>
-</div>
-</section>
-<div class="inventory-management-list" id="inventoryManagementList">
-<div class="empty-state">暂无库存资料</div>
-</div>
-</section>
 </section>
 <section class="page" id="onlineStorePage">
 <section class="panel online-store-panel-v10">
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V5.3 · Import 库存 / 平均成本 / 最低售价只读 · Online 独立计算销售保护底线</div>
+<div class="muted">Online Store V5.4 · Import 库存 / 平均成本 / 最低售价只读 · Online 独立计算销售保护底线</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V5.3</span>
+<span class="online-store-version-v10">V5.4</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
-  <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
+  <button type="button" class="active" data-product-room-tab-v30="">母产品总览</button>
   <button type="button" data-v38-all-trees="1">全部子编号</button>
   <button type="button" data-product-room-tab-v30="vip">VIP Room</button>
   <button type="button" data-product-room-tab-v30="premium">Premium</button>
@@ -293,7 +239,7 @@
   </div>
 </section>
 <section class="product-entered-header-v32" id="productEnteredHeaderV32" hidden>
-  <button type="button" class="ghost-btn" id="productRoomExitV32">← 返回商品总览</button>
+  <button type="button" class="ghost-btn" id="productRoomExitV32">← 返回母产品总览</button>
   <div><strong id="productEnteredTitleV32">—</strong><small id="productEnteredHintV32">输入关键词后才显示搜索结果。</small></div>
 </section>
 <div class="online-store-search-row-v10 room-product-tools-v27 product-search-tools-v32" hidden id="roomProductToolsV27">
@@ -1115,7 +1061,7 @@
 </section>
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V5.3</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V5.4</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1136,7 +1082,7 @@
 <aside class="admin-assist-v27" aria-label="辅助信息">
   <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V5.3</p><small>Import Base 41.8 Stable</small></section>
+  <section><strong>当前版本</strong><p>Online Store V5.4</p><small>Import Base 41.8 Stable</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>

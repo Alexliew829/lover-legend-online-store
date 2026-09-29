@@ -7196,7 +7196,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   #onlineStoreEditorV10 .v48-care-species{justify-self:start!important}
 }
 
-/* Online Store V5.2 - Pricing Clarity + Content Inheritance ---------------- */
+/* Online Store V5.4 - Pricing Clarity + Content Inheritance ---------------- */
 #onlineStoreEditorV10 #onlineStoreEditorV10 .v47-reference-margin{display:none!important}
 #onlineStoreEditorV10 .v51-protection-value-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;min-height:48px}
 #onlineStoreEditorV10 .v51-protection-value-row #onlineStorePriceFloorV21{width:100%;margin:0!important}
@@ -7223,11 +7223,11 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   #onlineStoreEditorV10 .v51-protection-value-row{grid-template-columns:minmax(0,1fr) auto}
 }
 
-/* V5.2 pricing cleanup */
+/* V5.4 pricing cleanup */
 #onlineStoreEditorV10 .v51-protection-margin-badge{font-size:12px!important;font-weight:800;opacity:.92;align-self:center}
 #onlineStoreEditorV10 .v51-protection-value-row{grid-template-columns:minmax(0,1fr) auto!important}
 
-/* V5.2 Affiliate master switch */
+/* V5.4 Affiliate master switch */
 .v52-affiliate-switch-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 16px;margin:12px 0;border:1px solid #d9e8dd;border-radius:14px;background:#f8fbf8}
 .v52-affiliate-switch-row>div{display:flex;flex-direction:column;gap:4px;min-width:0}
 .v52-affiliate-switch-row strong{font-size:16px;color:#104f31}
@@ -7242,32 +7242,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 .v52-switch b.enabled{color:#176b45}
 @media(max-width:700px){.v52-affiliate-switch-row{align-items:flex-start;flex-direction:column}.v52-switch{align-self:flex-end}}
 
-/* V5.3 Parent Master + room allocation cleanup */
-.v53-parent-master-panel{margin-top:16px;padding:16px}
-.v53-parent-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
-.v53-parent-head h3{margin:0 0 4px;font-size:20px;color:#123f2b}
-.v53-parent-head p{margin:0;color:#68776e;line-height:1.45}
-.v53-parent-head>span{font-weight:800;color:#176b45;white-space:nowrap}
-.v53-parent-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.v53-parent-card{border:1px solid #d7e4da;border-radius:16px;padding:14px;background:#fff;box-shadow:0 4px 14px rgba(23,82,51,.04)}
-.v53-parent-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
-.v53-parent-card-head>div{display:flex;align-items:center;gap:9px;min-width:0}
-.v53-parent-card-head strong{font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.v53-parent-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.v53-parent-grid span{display:flex;flex-direction:column;gap:3px;background:#f3f8f5;border-radius:10px;padding:9px 10px;min-width:0}
-.v53-parent-grid i{font-style:normal;font-size:12px;color:#66766d}
-.v53-parent-grid b{font-size:14px;color:#103d2a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.v53-parent-alloc{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
-.v53-parent-alloc span{border:1px solid #dce8df;border-radius:999px;padding:5px 9px;font-size:12px;color:#53635a;background:#fbfdfb}
-.v53-parent-alloc b{color:#176b45}
-.v53-room-assignment-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:10px 4px 12px}
-.v53-room-assignment-head>div{display:flex;flex-direction:column;gap:3px}.v53-room-assignment-head small{color:#6c7a71}
-.v53-room-assignment-head>span{font-weight:800;color:#176b45}
-.v53-room-child-row{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid #d7e4da;border-radius:14px;padding:12px 14px;margin-bottom:10px;background:#fff}
-.v53-room-main{display:flex;align-items:center;justify-content:space-between;gap:20px;flex:1;min-width:0}
-.v53-room-id{display:flex;flex-direction:column;gap:3px;min-width:0}.v53-room-id small{color:#65756c;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.v53-child-copy{border:0;background:none;padding:0;text-align:left;color:#087a43;font:inherit;font-weight:900;cursor:pointer;width:max-content}.v53-child-copy:hover{text-decoration:underline}
-.v53-room-meta{display:flex;align-items:center;gap:12px;white-space:nowrap}.v53-room-meta span{font-size:12px;border-radius:999px;background:#f2f7f4;padding:5px 8px}.v53-room-meta em{font-style:normal;font-weight:800}.v53-room-meta em.active{color:#087a43}.v53-room-meta em.sold{color:#777}
-.v34-child-id strong,.v38-tree-index-main strong{cursor:pointer;color:#087a43}.v34-child-id strong:hover,.v38-tree-index-main strong:hover{text-decoration:underline}
-@media(max-width:900px){.v53-parent-cards{grid-template-columns:1fr}.v53-parent-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.v53-room-main{align-items:flex-start;flex-direction:column;gap:8px}.v53-room-child-row{align-items:flex-start}.v53-room-meta{flex-wrap:wrap}}
-@media(max-width:600px){.v53-parent-grid{grid-template-columns:1fr 1fr}.v53-parent-card-head{align-items:flex-start}.v53-parent-card-head>div{align-items:flex-start;flex-direction:column}.v53-room-child-row{flex-direction:column}.v53-room-child-row>button{align-self:flex-end}}
+
+/* ===== Online Store V5.4 Parent Master / Room Allocation cleanup ===== */
+.v54-parent-summary-head,.v54-room-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;margin:4px 0 10px;padding:8px 2px}.v54-parent-summary-head>div,.v54-room-head>div{display:grid;gap:3px}.v54-parent-summary-head strong,.v54-room-head strong{font-size:18px}.v54-parent-summary-head small,.v54-room-head small{color:var(--muted,#6b7280)}.v54-parent-summary-head>span,.v54-room-head>span{font-weight:800;color:#475569}.v54-parent-card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(15,23,42,.05)}.v54-parent-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.v54-parent-top>div{display:grid;grid-template-columns:auto 1fr;gap:4px 9px;align-items:center}.v54-parent-id{font-size:16px;font-weight:900}.v54-parent-top strong{font-size:16px}.v54-parent-top small{grid-column:2;color:#64748b}.v54-parent-metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:12px}.v54-parent-metrics span{display:grid;gap:2px;background:#f8fafc;border:1px solid #edf2f7;border-radius:10px;padding:8px 9px;min-width:0}.v54-parent-metrics i{font-style:normal;font-size:11px;color:#64748b}.v54-parent-metrics b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v54-room-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:12px 14px;margin-bottom:8px}.v54-room-row.random{border-style:dashed}.v54-room-main{display:flex;align-items:center;justify-content:space-between;gap:18px;flex:1;min-width:0}.v54-room-main>div:first-child{display:grid;gap:3px;min-width:0}.v54-room-main>div:first-child>strong,.v54-child-id{font-size:16px;font-weight:900}.v54-room-main>div:first-child>span{font-size:12px;color:#64748b}.v54-room-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.v54-room-meta span{font-size:12px;color:#64748b}.v54-room-meta b{color:#0f172a}.v54-room-meta em{font-style:normal;font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;background:#f1f5f9}.v54-room-meta em.active{background:#dcfce7;color:#166534}.v54-room-meta em.sold{background:#e5e7eb;color:#475569}.v54-room-meta em.draft{background:#fff7ed;color:#9a3412}
+@media(max-width:760px){.v54-parent-card{padding:12px}.v54-parent-top{align-items:center}.v54-parent-top .primary-btn{white-space:nowrap;padding:8px 10px}.v54-parent-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.v54-parent-metrics span:nth-last-child(1){grid-column:span 2}.v54-room-row{align-items:stretch}.v54-room-main{display:grid;gap:8px}.v54-room-meta{justify-content:flex-start}.v54-room-row>.secondary-btn{align-self:center;white-space:nowrap}.v54-parent-summary-head small,.v54-room-head small{font-size:12px}}
