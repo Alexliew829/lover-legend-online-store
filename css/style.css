@@ -7196,7 +7196,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   #onlineStoreEditorV10 .v48-care-species{justify-self:start!important}
 }
 
-/* Online Store V5.6 - Pricing Clarity + Content Inheritance ---------------- */
+/* Online Store V5.7 - Pricing Clarity + Content Inheritance ---------------- */
 #onlineStoreEditorV10 #onlineStoreEditorV10 .v47-reference-margin{display:none!important}
 #onlineStoreEditorV10 .v51-protection-value-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;min-height:48px}
 #onlineStoreEditorV10 .v51-protection-value-row #onlineStorePriceFloorV21{width:100%;margin:0!important}
@@ -7223,11 +7223,11 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   #onlineStoreEditorV10 .v51-protection-value-row{grid-template-columns:minmax(0,1fr) auto}
 }
 
-/* V5.6 pricing cleanup */
+/* V5.7 pricing cleanup */
 #onlineStoreEditorV10 .v51-protection-margin-badge{font-size:12px!important;font-weight:800;opacity:.92;align-self:center}
 #onlineStoreEditorV10 .v51-protection-value-row{grid-template-columns:minmax(0,1fr) auto!important}
 
-/* V5.6 Affiliate master switch */
+/* V5.7 Affiliate master switch */
 .v52-affiliate-switch-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 16px;margin:12px 0;border:1px solid #d9e8dd;border-radius:14px;background:#f8fbf8}
 .v52-affiliate-switch-row>div{display:flex;flex-direction:column;gap:4px;min-width:0}
 .v52-affiliate-switch-row strong{font-size:16px;color:#104f31}
@@ -7242,21 +7242,18 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 .v52-switch b.enabled{color:#176b45}
 @media(max-width:700px){.v52-affiliate-switch-row{align-items:flex-start;flex-direction:column}.v52-switch{align-self:flex-end}}
 
-/* Online Store V5.6 - lightweight child copy / room source affordances */
+/* Online Store V5.7 - lightweight child copy / room source affordances */
 .v55-copy-child-id,.v34-child-id[data-v55-copy-child]{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
 .v55-room-link{cursor:pointer}
 .v55-room-link:hover{text-decoration:underline}
-.v55-child-copy-toast{position:fixed;right:20px;bottom:20px;z-index:10050;padding:9px 13px;border-radius:999px;background:#173f2b;color:#fff;font-weight:800;font-size:13px;opacity:0;transform:translateY(6px);pointer-events:none;transition:opacity .12s ease,transform .12s ease;box-shadow:0 6px 18px rgba(0,0,0,.16)}
-.v55-child-copy-toast.show{opacity:1;transform:translateY(0)}
-@media(max-width:700px){.v55-child-copy-toast{right:12px;bottom:74px;max-width:calc(100vw - 24px)}}
 
 
 /* ================================================================
-   Online Store V5.6 - Mobile child photo focus + Line Clear estimator
+   Online Store V5.7 - Mobile child photo focus + Line Clear estimator
    Pure CSS layout; no sync/runtime observers.
    ================================================================ */
 @media(max-width:760px){
-  .v38-tree-thumb img,.v34-photo-cell img,.v35-photo-cell img{object-position:center 35%;}
+  .v38-tree-thumb img,.v34-photo-cell img,.v35-photo-cell img{object-position:center 20%!important;}
 }
 .v56-lineclear-panel{display:block}
 .v56-lineclear-panel[hidden]{display:none!important}
@@ -7293,3 +7290,12 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 }
 
 .v56-field-hint{font-size:10px!important;font-weight:600!important;color:#819087;line-height:1.35}
+
+/* V5.7 - Line Clear lives inside visible logistics Working Settings */
+#v43FreightRules .v57-lineclear-inline{margin:18px 0 4px;padding:16px;border:1px solid #d8e7dc;border-radius:15px;background:#fbfdfb;box-shadow:none}
+#v43FreightRules .v57-lineclear-inline .dashboard-block-head-v30{margin-bottom:8px}
+#shippingTabsV31 [data-module-tab-v31="freight-estimate"][hidden]{display:none!important}
+@media(max-width:760px){
+  .v38-tree-thumb img,.v34-photo-cell img,.v35-photo-cell img{object-position:center 20%!important;}
+  #v43FreightRules .v57-lineclear-inline{padding:12px;margin-top:14px}
+}

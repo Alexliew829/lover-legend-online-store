@@ -1,27 +1,17 @@
-Lover Legend Online Store V5.6 PATCH from V5.5
-Build 5600
+Lover Legend Online Store V5.7 PATCH from V5.6
+Build 5700
 
-Key updates
-- Performance-safe patch only; no V5.4 parent/room architecture rewrite is included.
-- All read-only Child IDs can be clicked to copy with a lightweight "已复制" toast.
-- Individual Trees child ID now copies on click; photo and Edit buttons keep the editor open/collapse action.
-- All Individual Trees carries the child's actual room into the product editor.
-- Clicking Starter / Premium / VIP room label from a child row opens that child with the same room selected.
-- Starter / Premium / VIP each calculate the 5-active-child limit independently. One full room no longer blocks another room.
-- Existing V5.2 Affiliate, pricing, save/dirty/safe-navigation, inheritance and sync logic are retained.
-- No new polling, MutationObserver, full Import sync, revision loop, or network request was added.
+Verified V5.7 fixes
+- Line Clear Postage Calculator is now embedded directly inside Logistics Management > Online packaging size/weight A-E Working Settings.
+- Placement: A-E tiers -> Online default packaging material cost -> Line Clear calculator -> Save Working Settings.
+- The old Freight Estimate tab is hidden to avoid a duplicate / misleading second entry.
+- Line Clear remains local-only arithmetic: no Import sync, full render, polling, MutationObserver, or automatic network request.
+- Child ID copy feedback is now inline: JL0023-1 -> 已复制 -> JL0023-1. The bottom-right copy toast was removed.
+- Applies to All Individual Trees and Individual Trees child-ID display positions; existing navigation/edit controls retain their own action.
+- Mobile child photo crop focus is moved upward with a direct !important selector (center 20%) while keeping frame/card dimensions unchanged.
+- V5.5/V5.6 room-source and independent 5-child-per-room rules are retained.
+- Apps Script / Code.gs unchanged; no redeploy required.
 
 Deployment
 - Replace the files in the Frontend folder in GitHub Pages with this patch.
-- Apps Script / Code.gs: no change; no redeploy required.
-- Version: V5.6 / Build 5600.
-
-
-V5.6 changes:
-- Added Line Clear Postage Calculator inside Logistics Management > Freight Estimate.
-- Local-only calculation: no Import sync, no full render, no polling/observer/network request.
-- Uses April 2026 Line Clear Express reference rate structure; shows SST, chargeable weight and Oversize warning.
-- Compares Line Clear estimate with existing Online A-E freight tier without overwriting A-E settings.
-- Saves only default sender postcode when user explicitly presses Save Default.
-- Mobile child-card photo crop focus moved upward via CSS only.
-- Apps Script / Code.gs unchanged.
+- Version: V5.7 / Build 5700.
