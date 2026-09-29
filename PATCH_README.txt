@@ -1,16 +1,16 @@
-V5.4 PATCH from V5.2
-Build: 5400
+Lover Legend Online Store V5.2 PATCH from V5.1
+Build 5200
 
-Scope
-- Frontend only. No Apps Script / Code.gs API change.
-- Remove duplicate dashboard Import inventory summary.
-- Do not add Parent Master overview to Home.
-- Product Management -> Mother Product Overview is the only Parent Master summary.
-- One Parent Product Master -> many Child / Random room allocations.
-- VIP / Premium / Starter show Child / Random allocations only; no duplicate Parent Product card/data copy.
-- Parent shared data continues to live in the existing single product editor.
-- Room rows provide Child ID/status/price/edit; Starter also shows Random allocation.
-- All current-version labels, VERSION, version.json, manifest and service-worker cache updated to V5.4.
+Key updates
+- Affiliate master switch added. Default: OFF. Configured commission remains 10.00% unless changed.
+- When Affiliate is OFF, Affiliate cost is 0% in Online protection floor and actual-profit calculations.
+- When Affiliate is ON, the configured Affiliate rate participates immediately in protection-floor and profit calculations.
+- Reference profit / reference margin standalone cards removed; target margin remains as a small badge inside Online sales protection floor.
+- Buyer-paid reference shipping remains excluded from seller cost/profit by default.
+- Product Details / Care Guide inheritance retained for mother / child / Random levels.
+- V5.0 save/dirty/safe-navigation and child-ID integrity protections retained.
 
-Deploy
-Replace Frontend files only. Apps Script / Code.gs does not require redeployment for this patch.
+Deployment
+- Replace the files in the Frontend folder in GitHub Pages with this patch.
+- Apps Script / Code.gs: no change; no redeploy required.
+- Version: V5.2 / Build 5200.

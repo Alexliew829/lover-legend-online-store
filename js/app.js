@@ -3697,7 +3697,7 @@ function renderSystemInformationV203() {
   const stock = active.reduce((sum, item) => sum + (Number(item?.stock) || 0), 0);
   const config = typeof getCloudConfig === "function" ? getCloudConfig() : {};
   const set = (id, text) => { const el=document.getElementById(id); if(el) el.textContent=text; };
-  set("systemInfoVersionV203", "V5.4");
+  set("systemInfoVersionV203", "V5.2");
   set("systemInfoApiVersionV203", systemHealthV203.apiOk === true ? `V${systemHealthV203.apiVersion || APP_VERSION}` : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoGoogleSheetV203", systemHealthV203.apiOk === true ? "已连接 Google Web App" : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoLastSyncV203", formatSystemDateTimeV203(config.lastSyncAt) || "尚未同步");
@@ -21984,8 +21984,8 @@ function v43SetupRuleEvents(){
 }
 
 function v43RefreshStaticLabels(){
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 \u00b7 Import \u6570\u636e\u53ea\u8bfb \u00b7 Online \u72ec\u7acb\u81ea\u52a8\u6700\u4f4e\u552e\u4ef7';
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.2 \u00b7 Import \u6570\u636e\u53ea\u8bfb \u00b7 Online \u72ec\u7acb\u81ea\u52a8\u6700\u4f4e\u552e\u4ef7';
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.2';
   const floor=document.getElementById('onlineStorePriceFloorV21')?.closest('label');if(floor){floor.childNodes[0].nodeValue='Online \u9500\u552e\u4fdd\u62a4\u5e95\u7ebf (RM)';const sm=floor.querySelector('small');if(sm)sm.textContent='\u81ea\u52a8\uff1aImport \u5e73\u5747\u6210\u672c + Online \u82b1\u76c6 + \u7269\u6d41 + \u5305\u88c5\uff0c\u518d\u6309 Affiliate\u3001Payment Fee \u4e0e\u76ee\u6807\u51c0\u5229\u7387\u53cd\u63a8\u3002';}
 }
 function v43Setup(){v43BuildAutoMinPanel();v43BuildShippingSettings();v43BuildFinanceSettings();v43BuildAffiliateSettings();v43BuildSettingsControl();v43EnsureMasterWeight();v43RefreshStaticLabels();v43SetupRuleEvents();}
@@ -22035,7 +22035,7 @@ v42RouteProductTab = function(btn){
 
 
 /* ================================================================
-   Online Store V5.4 - Sync Priority + Safe Navigation + Final Price Engine
+   Online Store V5.2 - Sync Priority + Safe Navigation + Final Price Engine
    - Final runtime assignment fixes V4.3 legacy-wrapper precedence.
    - Background revision checks are handled by sync.js; navigation never waits for cloud.
    - Product overview navigation is restored synchronously before old editor DOM is hidden.
@@ -22182,10 +22182,10 @@ window.refreshOnlineImportReadOnlyFieldsV21=function(){
 };
 
 function v44RefreshLabels(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.4');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 · Import 数据只读 · Online 独立自动最低售价 · 快速后台 Revision Check';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.4';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.2 · Import 数据只读 · Online 独立自动最低售价 · 快速后台 Revision Check';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.2';
 }
 function v44Setup(){v44InstallBackButtons();v44CleanCareGuide();v44RefreshLabels();try{if(onlineStoreSelectedProductIdV10)updateOnlineProtectionFloorV21();}catch(_){} }
 window.addEventListener('DOMContentLoaded',()=>window.setTimeout(v44Setup,180));
@@ -22223,7 +22223,7 @@ v44Setup=function(){v44SetupBase();v44ConsolidateSettingsPage();v44ClarifyPackag
 
 
 /* ================================================================
-   Online Store V5.4 - Performance & Runtime Cleanup
+   Online Store V5.2 - Performance & Runtime Cleanup
    Conservative consolidation only: no business-rule changes here.
    - obsolete duplicate declarations removed above
    - Online runtime skips Import-only reload housekeeping
@@ -22233,7 +22233,7 @@ window.ONLINE_STORE_RUNTIME_CLEANUP_V45 = true;
 
 
 /* ================================================================
-   Online Store V5.4 - Safe Product Navigation + QA Consolidation
+   Online Store V5.2 - Safe Product Navigation + QA Consolidation
    - One canonical Product Management router
    - No Product Management click may trigger Import pull/full reload
    - Current-minimum profit/margin, safe room removal, long-term test cleanup
@@ -22408,10 +22408,10 @@ function v46SetupHistoryCleanup(){
 }
 
 function v46RefreshStaticUi(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.4');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 · Safe Product Navigation · Import Read-Only · Online 独立自动最低售价';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.4';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.2 · Safe Product Navigation · Import Read-Only · Online 独立自动最低售价';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.2';
   v46NormalizeMoneyFields();v46RefreshRemoveRoomButton();
 }
 function v46Setup(){v46RunOneTimeHistoryMigration();v46SetupHistoryCleanup();v46RefreshStaticUi();}
@@ -22436,7 +22436,7 @@ document.addEventListener('click',e=>{
 
 
 /* ================================================================
-   Online Store V5.4 - Product Editor Flow + Stable Product Routing
+   Online Store V5.2 - Product Editor Flow + Stable Product Routing
    - window-capture canonical Product Management navigation
    - shared defaults before price/protection calculations
    - reference profit uses Online protection floor; actual profit uses mother price
@@ -22510,7 +22510,7 @@ window.addEventListener('click',function(e){
 
 function v47EnsureProfitFields(){
   const grid=document.querySelector('#onlineStoreEditorV10 .online-store-price-foundation-v11');if(!grid)return;
-  // V5.4: reference profit / margin no longer occupy separate cards.
+  // V5.2: reference profit / margin no longer occupy separate cards.
   ['onlineStoreCurrentMinNetProfitV46','onlineStoreCurrentMinNetMarginV46'].forEach(id=>document.getElementById(id)?.closest('label')?.remove());
   if(!document.getElementById('onlineStoreActualNetProfitV47')){
     const a=document.createElement('label');a.className='v47-actual-profit';a.innerHTML='Online 实际净利（RM）<input id="onlineStoreActualNetProfitV47" readonly type="text" placeholder="输入母产品默认售价后自动计算"/><small class="field-hint-v12">按母产品默认售价计算。</small>';
@@ -22564,7 +22564,7 @@ function v47PolishOverview(){
   document.querySelectorAll('#productCategoryHubV32 [data-product-category-v32]').forEach(b=>b.classList.remove('active'));
 }
 function v47RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.4');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.4';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 · Stable Product Routing · Import Read-Only · Online 独立自动最低售价';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.2');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.2';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.2 · Stable Product Routing · Import Read-Only · Online 独立自动最低售价';
 }
 function v47Setup(){v47RefreshStatic();v47PolishOverview();v47ReflowProductEditor();v47PolishRemoveRoom();try{v47UpdateProfitDisplays();}catch(_){}}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v47Setup,70));
@@ -22573,7 +22573,7 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){v47SetEd
 
 
 /* ================================================================
-   Online Store V5.4 - Product Flow & Visual Consistency
+   Online Store V5.2 - Product Flow & Visual Consistency
    - remove Import Initial Minimum from Online decision UI
    - Shared Product Defaults truly precede Shipping/protection
    - consistent money/read-only field geometry
@@ -22584,11 +22584,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){v47SetEd
 window.ONLINE_STORE_V48_ACTIVE = true;
 
 function v48RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.4');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.4';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 · Product Flow Cleanup · Import Read-Only · Online 独立自动最低售价';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V5.4 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.2 · Product Flow Cleanup · Import Read-Only · Online 独立自动最低售价';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V5.2 · Import Base V41.8 · Import Data Read-Only';
 }
 // Older delayed setup callbacks must not paint an older version after V5.0.
 try{v43RefreshStaticLabels=v48RefreshStatic;}catch(_){}
@@ -22786,7 +22786,7 @@ navigateToProductManagementV47=navigateToProductManagementV48;
 navigateToProductManagementV46=navigateToProductManagementV48;
 
 /* ================================================================
-   Online Store V5.4 - Product Flow + Child Allocation Integrity
+   Online Store V5.2 - Product Flow + Child Allocation Integrity
    - product content -> package/dimensions -> price/cost -> sales modes
    - no separate Shared Product Defaults shell
    - safe close navigation
@@ -22798,11 +22798,11 @@ navigateToProductManagementV46=navigateToProductManagementV48;
 window.ONLINE_STORE_V49_ACTIVE = true;
 
 function v49RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.4');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.4';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 · Product Flow + Child Allocation Integrity · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V5.4 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.2 · Product Flow + Child Allocation Integrity · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V5.2 · Import Base V41.8 · Import Data Read-Only';
 }
 try{v48RefreshStatic=v49RefreshStatic;}catch(_){}
 try{v47RefreshStatic=v49RefreshStatic;}catch(_){}
@@ -22979,7 +22979,7 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v49Setup,360));
 
 
 /* ================================================================
-   Online Store V5.4 - Performance & Runtime Cleanup
+   Online Store V5.2 - Performance & Runtime Cleanup
    - one Save Controller / Dirty Controller / Safe Navigation Controller
    - removes stale save/close listener races
    - child draft blocks creating the next child until saved or deleted
@@ -22994,11 +22994,11 @@ let v50Saving = false;
 let v50Dirty = false;
 
 function v50RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.4');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.4';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 · Performance & Runtime Cleanup · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V5.4 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.2 · Performance & Runtime Cleanup · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V5.2 · Import Base V41.8 · Import Data Read-Only';
 }
 
 // ---------- V5.0 single Dirty Controller ----------
@@ -23184,7 +23184,7 @@ function v50Setup(){v50RunPerformanceCleanup();v50RefreshStatic();v50PolishEdito
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v50Setup,80));
 
 /* ================================================================
-   Online Store V5.4 - Pricing Clarity + Content Inheritance
+   Online Store V5.2 - Pricing Clarity + Content Inheritance
    - Shipping is a reference fee by default (buyer pays), not seller cost
    - Reference profit cards removed; target margin is compact in protection floor
    - Product Details / Care Guide visible at mother, child and Random levels
@@ -23193,11 +23193,11 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v50Setup,80));
 window.ONLINE_STORE_V51_ACTIVE = true;
 
 function v51RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.4');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.4';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 · Pricing Clarity + Content Inheritance · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V5.4 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.2 · Pricing Clarity + Content Inheritance · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V5.2 · Import Base V41.8 · Import Data Read-Only';
 }
 
 // Online Store owns the shipping commercial rule. Default is buyer-pays.
@@ -23212,7 +23212,7 @@ function v51SellerShippingAmount(referenceFee){
   return mode==='seller'?v43Money(referenceFee):0;
 }
 
-// Canonical V5.4 protection calculation: shipping reference is not a seller cost when buyer pays.
+// Canonical V5.2 protection calculation: shipping reference is not a seller cost when buyer pays.
 calculateOnlineProtectionFloorV21=function(product,item=null){
   const avg=v43Money(product?.averageCost),pot=v43OnlineVndPotCost(product),ship=v43AutomaticShipping(product,item),ui=getOnlineStoreUiSettingsV12();
   const packaging=v43Money(ui.shipping?.packagingCost),affiliateRate=v43Pct(ui.affiliate?.defaultRate),gatewayRate=v43Pct(ui.finance?.paymentGatewayFee),targetMargin=v43MarginRateForCost(avg);
@@ -23333,7 +23333,7 @@ window.addEventListener('load',()=>setTimeout(()=>{v51RefreshStatic();v51EnsureS
 
 
 /* ================================================================
-   Online Store V5.4 - Pricing UI final cleanup
+   Online Store V5.2 - Pricing UI final cleanup
    - Reference profit amount/card removed
    - Reference margin card removed; target margin stays as small badge in protection floor
    - Actual Online profit remains tied to mother product selling price
@@ -23353,7 +23353,7 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v52FinalPricingPass,16
 window.addEventListener('load',()=>setTimeout(v52FinalPricingPass,520));
 
 /* ================================================================
-   Online Store V5.4 - Affiliate master switch
+   Online Store V5.2 - Affiliate master switch
    - Configured commission rate is retained (factory/default 10%)
    - Affiliate is disabled by default until explicitly enabled
    - Protection floor / actual profit use 0% while disabled
@@ -23372,7 +23372,7 @@ getOnlineStoreUiSettingsV12=function(){
   return ui;
 };
 
-// Canonical V5.4 calculation: Affiliate only becomes a cost when the master switch is enabled.
+// Canonical V5.2 calculation: Affiliate only becomes a cost when the master switch is enabled.
 calculateOnlineProtectionFloorV21=function(product,item=null){
   const avg=v43Money(product?.averageCost),pot=v43OnlineVndPotCost(product),ship=v43AutomaticShipping(product,item),ui=getOnlineStoreUiSettingsV12();
   const packaging=v43Money(ui.shipping?.packagingCost),affiliateConfiguredRate=v52ConfiguredAffiliateRate(ui),affiliateEnabled=v52AffiliateEnabled(ui),affiliateRate=affiliateEnabled?affiliateConfiguredRate:0,gatewayRate=v43Pct(ui.finance?.paymentGatewayFee),targetMargin=v43MarginRateForCost(avg);
@@ -23407,7 +23407,7 @@ function v52SaveAffiliateEnabled(enabled){
   // Keep configured 10% (or user's edited value) even while disabled.
   ui.pricing={...(ui.pricing||{}),affiliateRate:v43Pct(ui.affiliate.defaultRate)};
   saveOnlineStoreUiSettingsV12(ui);
-  try{addOnlineStoreHistoryV14('settings','','',`V5.4 Affiliate ${enabled?'开启':'关闭'} · 设定 ${v43Pct(ui.affiliate.defaultRate).toFixed(2)}%`);}catch(_){}
+  try{addOnlineStoreHistoryV14('settings','','',`V5.2 Affiliate ${enabled?'开启':'关闭'} · 设定 ${v43Pct(ui.affiliate.defaultRate).toFixed(2)}%`);}catch(_){}
   v52RenderAffiliateSwitch();
   try{v51UpdatePricingUi();updateOnlineStoreProfitDisplaysV13();}catch(_){}
 }
@@ -23447,141 +23447,3 @@ function v52AffiliateSetup(){
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v52AffiliateSetup,220));
 window.addEventListener('load',()=>setTimeout(v52AffiliateSetup,620));
-
-
-/* ================================================================
-   Online Store V5.4 - Parent Master / Room Allocation cleanup
-   Base: V5.4
-   - Homepage has no Parent Master overview and no duplicate Import inventory summary
-   - Product Management overview is the only Parent Master summary
-   - VIP / Premium / Starter render Child / Random allocations only
-   - One Parent Product -> many Child / Random room allocations
-   ================================================================ */
-window.ONLINE_STORE_V54_ACTIVE = true;
-
-function v54RoomTier(room){return room==='vip'?'collector':room==='premium'?'premium':'entry';}
-function v54RoomLabel(room){return room==='vip'?'VIP Room':room==='premium'?'Premium':'Starter';}
-function v54ProductMap(){
-  const map=new Map();
-  for(const p of (getOnlineStoreImportProductsV30()||[])){
-    const id=String(getProductId(p)||'').trim().toUpperCase();if(id)map.set(id,p);
-  }
-  return map;
-}
-function v54ParentRows(){
-  const products=getOnlineStoreImportProductsV30()||[];
-  return products.filter(p=>detectProductCategoryV32(p)==='bonsai').map(p=>{
-    const id=String(getProductId(p)||'').trim().toUpperCase();
-    const cfg=getOnlineStoreConfigV10(id),items=Array.isArray(cfg.uniqueItems)?cfg.uniqueItems:[];
-    const starter=items.filter(x=>String(x.tier||'')==='entry'&&String(x.status||'available')!=='sold').length;
-    const premium=items.filter(x=>String(x.tier||'')==='premium'&&String(x.status||'available')!=='sold').length;
-    const vip=items.filter(x=>String(x.tier||'')==='collector'&&String(x.status||'available')!=='sold').length;
-    const random=Math.max(0,Math.floor(Number(cfg.randomQty)||0));
-    return {p,id,cfg,items,starter,premium,vip,random};
-  }).filter(x=>x.id).sort((a,b)=>a.id.localeCompare(b.id,undefined,{numeric:true}));
-}
-function v54RenderParentOverview(){
-  const host=document.getElementById('onlineStoreProductListV10');if(!host)return;
-  const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;
-  host.hidden=false;
-  const search=document.getElementById('onlineStoreSearchV10');if(search)search.placeholder='搜索母产品编号、中文名或英文名';
-  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.hidden=true;cat.disabled=true;}
-  const filter=document.getElementById('onlineStoreFilterV10');if(filter)filter.hidden=false;
-  const q=normalizeOnlineSearchV33(search?.value||'');
-  const status=String(filter?.value||'all');
-  let rows=v54ParentRows();
-  if(q){const tokens=q.split(' ').filter(Boolean);rows=rows.filter(r=>{const txt=normalizeOnlineSearchV33([r.id,r.p?.name,productEnglishNameV262(r.p),r.cfg?.publicName].join(' '));return tokens.every(t=>txt.includes(t));});}
-  if(status==='configured')rows=rows.filter(r=>onlineStoreIsConfiguredV10(r.cfg));
-  if(status==='published')rows=rows.filter(r=>r.items.some(x=>x.published&&x.status!=='sold')||(r.cfg.randomPublished&&r.random>0));
-  if(status==='unpublished')rows=rows.filter(r=>!r.items.some(x=>x.published&&x.status!=='sold')&&!(r.cfg.randomPublished&&r.random>0));
-  host.innerHTML=`<div class="v54-parent-summary-head"><div><strong>母产品总览</strong><small>每个母产品只出现一次。共享资料只在这里管理；房间只显示 Child / Random 分配。</small></div><span>${rows.length} 项</span></div>`+(rows.map(r=>{
-    const avg=Math.max(0,Number(r.p?.averageCost)||0),stock=Math.max(0,Number(r.p?.stock)||0),min=getImportCurrentMinimumPriceV26(r.p),mother=Math.max(0,Number(r.cfg.motherRegularPrice)||0),floor=calculateOnlineProtectionFloorV21(r.p).floor;
-    const publicName=String(r.cfg.publicName||r.p?.name||'').trim();
-    return `<article class="v54-parent-card" data-v54-parent="${escapeHTML(r.id)}"><div class="v54-parent-top"><div><button type="button" class="copy-text-btn-v12 v54-parent-id" data-online-copy-v12="${escapeHTML(r.id)}">${escapeHTML(r.id)}</button><strong>${escapeHTML(publicName||'未命名')}</strong>${productEnglishNameV262(r.p)?`<small>${escapeHTML(productEnglishNameV262(r.p))}</small>`:''}</div><button type="button" class="primary-btn" data-online-manage-v10="${escapeHTML(r.id)}">管理 / 编辑</button></div><div class="v54-parent-metrics"><span><i>Import 库存</i><b>${formatNumber(stock)}</b></span><span><i>平均成本</i><b>${formatMoney(avg,'RM ')}</b></span><span><i>Import 最低售价</i><b>${min>0?formatMoney(min,'RM '):'—'}</b></span><span><i>母产品售价</i><b>${mother>0?formatMoney(mother,'RM '):'—'}</b></span><span><i>Online 保护底线</i><b>${floor>0?formatMoney(floor,'RM '):'—'}</b></span><span><i>已建立 Child</i><b>${formatNumber(r.items.length)}</b></span><span><i>Starter</i><b>${formatNumber(r.starter)}</b></span><span><i>Premium</i><b>${formatNumber(r.premium)}</b></span><span><i>VIP</i><b>${formatNumber(r.vip)}</b></span><span><i>Random</i><b>${formatNumber(r.random)}</b></span></div></article>`;
-  }).join('')||'<div class="empty-state">没有找到符合条件的母产品。</div>');
-}
-function v54RoomAllocationRows(room){
-  const map=v54ProductMap(),state=getOnlineStoreStateV10(),rows=[],tier=v54RoomTier(room);
-  for(const [rawId,rawCfg] of Object.entries(state.products||{})){
-    const parentId=String(rawId||'').trim().toUpperCase();if(!parentId)continue;
-    const cfg=normalizeOnlineStoreConfigV10(parentId,rawCfg),p=map.get(parentId)||null,name=String(cfg.publicName||p?.name||'').trim();
-    for(const item of (cfg.uniqueItems||[]))if(String(item.tier||'')===tier)rows.push({type:'child',parentId,cfg,p,name,item});
-    if(room==='entry'&&Math.max(0,Number(cfg.randomQty)||0)>0)rows.push({type:'random',parentId,cfg,p,name,item:null});
-  }
-  return rows.sort((a,b)=>{const p=a.parentId.localeCompare(b.parentId,undefined,{numeric:true});if(p)return p;if(a.type!==b.type)return a.type==='random'?1:-1;return String(a.item?.id||'').localeCompare(String(b.item?.id||''),undefined,{numeric:true});});
-}
-function v54RenderRoom(room){
-  const host=document.getElementById('onlineStoreProductListV10');if(!host)return;
-  const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;host.hidden=false;
-  const search=document.getElementById('onlineStoreSearchV10');if(search)search.placeholder='搜索 Child ID、母产品编号或商品名称';
-  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.hidden=true;cat.disabled=true;}
-  const filter=document.getElementById('onlineStoreFilterV10');if(filter)filter.hidden=false;
-  const q=normalizeOnlineSearchV33(search?.value||''),status=String(filter?.value||'all');let rows=v54RoomAllocationRows(room);
-  if(q){const tokens=q.split(' ').filter(Boolean);rows=rows.filter(r=>{const txt=normalizeOnlineSearchV33([r.item?.id,r.parentId,r.name,r.type==='random'?'random':''].join(' '));return tokens.every(t=>txt.includes(t));});}
-  if(status==='published')rows=rows.filter(r=>r.type==='random'?r.cfg.randomPublished===true:(r.item?.published===true&&String(r.item?.status||'available')!=='sold'));
-  if(status==='unpublished')rows=rows.filter(r=>r.type==='random'?r.cfg.randomPublished!==true:(r.item?.published!==true&&String(r.item?.status||'available')!=='sold'));
-  host.innerHTML=`<div class="v54-room-head"><div><strong>${v54RoomLabel(room)}</strong><small>这里只显示属于本房的 Child / Random；母产品共享资料不会在房间重复建立。</small></div><span>${rows.length} 项</span></div>`+(rows.map(r=>{
-    if(r.type==='random'){
-      const price=Math.max(0,Number(r.cfg.regularPrice)||0),qty=Math.max(0,Math.floor(Number(r.cfg.randomQty)||0));
-      return `<article class="v54-room-row random"><div class="v54-room-main"><div><strong>Random</strong><span>来自 <button type="button" class="copy-text-btn-v12" data-online-copy-v12="${escapeHTML(r.parentId)}">${escapeHTML(r.parentId)}</button> · ${escapeHTML(r.name||'')}</span></div><div class="v54-room-meta"><span>数量 <b>${formatNumber(qty)}</b></span><span>售价 <b>${price>0?formatMoney(price,'RM '):'未设'}</b></span><em class="${r.cfg.randomPublished?'active':'draft'}">${r.cfg.randomPublished?'已上架':'未上架'}</em></div></div><button type="button" class="secondary-btn" data-v54-edit-parent="${escapeHTML(r.parentId)}" data-v54-room="entry">编辑</button></article>`;
-    }
-    const item=r.item||{},sold=String(item.status||'available')==='sold',mode=String(item.priceMode||'follow'),price=Math.max(0,Number(item.regularPrice)||0)||(mode==='follow'?Math.max(0,Number(r.cfg.motherRegularPrice)||0):0);
-    return `<article class="v54-room-row"><div class="v54-room-main"><div><button type="button" class="copy-text-btn-v12 v54-child-id" data-online-copy-v12="${escapeHTML(item.id||'')}">${escapeHTML(item.id||'—')}</button><span>来自 <button type="button" class="copy-text-btn-v12" data-online-copy-v12="${escapeHTML(r.parentId)}">${escapeHTML(r.parentId)}</button> · ${escapeHTML(r.name||'')}</span></div><div class="v54-room-meta"><span>售价 <b>${price>0?formatMoney(price,'RM '):'未设'}</b></span><span><b>${mode==='follow'?'跟随母价':'独立售价'}</b></span><em class="${sold?'sold':item.published?'active':'draft'}">${sold?'Sold':item.published?'已上架':'未上架'}</em></div></div><button type="button" class="secondary-btn" data-v38-edit-child="${escapeHTML(item.id||'')}" data-v38-parent="${escapeHTML(r.parentId)}">编辑</button></article>`;
-  }).join('')||`<div class="empty-state">${v54RoomLabel(room)} 目前没有 Child / Random 分配。</div>`);
-}
-
-const v54RenderListBase=renderOnlineStoreProductListV10;
-renderOnlineStoreProductListV10=function(){
-  if(onlineStoreAllTreesModeV38){v38RenderAllTrees();return;}
-  if(onlineStoreSelectedRoomV27){v54RenderRoom(onlineStoreSelectedRoomV27);return;}
-  if((onlineStoreSelectedCategoryV32||'bonsai')==='bonsai'){v54RenderParentOverview();return;}
-  return v54RenderListBase();
-};
-
-// Product Management overview = the single Parent Master overview. No dashboard copy.
-v47ShowOverviewNow=function(){
-  v47HideProductSubviews();onlineStoreAllTreesModeV38=false;onlineStoreSelectedRoomV27='';onlineStoreSelectedCategoryV32='bonsai';
-  const hub=document.getElementById('roomFirstHubV27'),cats=document.getElementById('productCategoryHubV32');if(hub)hub.hidden=true;if(cats)cats.hidden=true;
-  const entered=document.getElementById('productEnteredHeaderV32');if(entered){entered.hidden=false;document.getElementById('productEnteredTitleV32').textContent='母产品总览';document.getElementById('productEnteredHintV32').textContent='每个母产品只保留一份正式主档；房间只管理 Child / Random 分配。';}
-  const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;
-  const list=document.getElementById('onlineStoreProductListV10');if(list)list.hidden=false;
-  const search=document.getElementById('onlineStoreSearchV10');if(search){search.value='';search.placeholder='搜索母产品编号、中文名或英文名';}
-  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.hidden=true;cat.disabled=true;}
-  v38RestoreProductStatusOptions();
-  document.querySelectorAll('#onlineStorePage nav.module-tabs-v30 button').forEach(b=>b.classList.toggle('active',b.hasAttribute('data-product-room-tab-v30')&&!String(b.dataset.productRoomTabV30||'')));
-  renderOnlineStoreProductListV10();return true;
-};
-
-// Rooms are allocation views only; do not show parent product search cards.
-const v54EnterRoomBase=enterProductRoomV32;
-enterProductRoomV32=function(room){
-  onlineStoreAllTreesModeV38=false;onlineStoreSelectedRoomV27=String(room||'');onlineStoreSelectedCategoryV32='bonsai';
-  v47HideProductSubviews();
-  const entered=document.getElementById('productEnteredHeaderV32');if(entered){entered.hidden=false;document.getElementById('productEnteredTitleV32').textContent=v54RoomLabel(room);document.getElementById('productEnteredHintV32').textContent='只显示本房 Child / Random 分配；母产品共享资料统一在母产品总览管理。';}
-  const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;
-  const list=document.getElementById('onlineStoreProductListV10');if(list)list.hidden=false;
-  const search=document.getElementById('onlineStoreSearchV10');if(search){search.value='';search.placeholder='搜索 Child ID、母产品编号或商品名称';}
-  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.hidden=true;cat.disabled=true;}
-  v38RestoreProductStatusOptions();setProductRoomActiveStateV31(room);renderOnlineStoreProductListV10();return true;
-};
-
-// Random room edit opens the same single Parent Master editor, preserving room context.
-document.addEventListener('click',function(e){
-  const btn=e.target?.closest?.('[data-v54-edit-parent]');if(!btn)return;
-  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  const parent=String(btn.dataset.v54EditParent||'').trim().toUpperCase(),room=String(btn.dataset.v54Room||'entry');
-  onlineStoreSelectedRoomV27=room;setOnlineStoreEditorValuesV10(parent,true);
-},true);
-
-function v54RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V5.4');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V5.4';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V5.4 · One Parent Master → Child / Random Room Allocations · Import Read-Only';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V5.4';
-  document.querySelectorAll('.admin-brand-copy-v29 small').forEach(el=>{if(/Online Store V/.test(el.textContent||''))el.textContent='Online Store V5.4 · Import Base V41.8 · Import Data Read-Only';});
-  document.querySelectorAll('.admin-assist-v27 section').forEach(sec=>{const s=sec.querySelector('p');if(s&&/Online Store V/.test(s.textContent||''))s.textContent='Online Store V5.4';});
-  const tab=document.querySelector('[data-product-room-tab-v30=""]');if(tab)tab.textContent='母产品总览';
-  const back=document.getElementById('productRoomExitV32');if(back)back.textContent='← 返回母产品总览';
-}
-window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{v54RefreshStatic();try{v47ShowOverviewNow();}catch(_){}},700));
-window.addEventListener('load',()=>setTimeout(v54RefreshStatic,900));
