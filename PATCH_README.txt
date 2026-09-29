@@ -1,16 +1,11 @@
-Lover Legend Online Store V5.2 PATCH from V5.1
-Build 5200
+Lover Legend Online Store V5.3 PATCH from V5.2
 
-Key updates
-- Affiliate master switch added. Default: OFF. Configured commission remains 10.00% unless changed.
-- When Affiliate is OFF, Affiliate cost is 0% in Online protection floor and actual-profit calculations.
-- When Affiliate is ON, the configured Affiliate rate participates immediately in protection-floor and profit calculations.
-- Reference profit / reference margin standalone cards removed; target margin remains as a small badge inside Online sales protection floor.
-- Buyer-paid reference shipping remains excluded from seller cost/profit by default.
-- Product Details / Care Guide inheritance retained for mother / child / Random levels.
-- V5.0 save/dirty/safe-navigation and child-ID integrity protections retained.
+重点：
+- 母产品改为唯一主档：Dashboard 首页集中显示 Online 母产品总览。
+- VIP / Premium / Starter 房间只显示 Child / Random 分配，不再重复母产品卡。
+- 从哪个房间进入商品，新增单棵默认就选择该房间；各房间 5 棵上限独立计算。
+- 自动最低售价 Working Settings 保存后立即重算当前商品保护底线与目标净利率，无需刷新。
+- 全部子编号、房间列表、Individual Trees 正式 child ID 支持点击复制。
+- 保留 V5.2 Affiliate 总开关、Buyer Pays Shipping、单一 Save/Dirty/Safe Navigation 等稳定逻辑。
 
-Deployment
-- Replace the files in the Frontend folder in GitHub Pages with this patch.
-- Apps Script / Code.gs: no change; no redeploy required.
-- Version: V5.2 / Build 5200.
+部署：仅替换此 PATCH 内 Frontend 文件。不需要重新部署 Apps Script / Code.gs。
