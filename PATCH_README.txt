@@ -1,24 +1,23 @@
-Lover Legend Online Store V5.8 PATCH from V5.6
-Build 5700
+Lover Legend Online Store V5.9 PATCH from V5.8
+Build 5900
 
-Verified V5.8 fixes
-- Line Clear Postage Calculator is now embedded directly inside Logistics Management > Online packaging size/weight A-E Working Settings.
-- Placement: A-E tiers -> Online default packaging material cost -> Line Clear calculator -> Save Working Settings.
-- The old Freight Estimate tab is hidden to avoid a duplicate / misleading second entry.
-- Line Clear remains local-only arithmetic: no Import sync, full render, polling, MutationObserver, or automatic network request.
-- Child ID copy feedback is now inline: JL0023-1 -> 已复制 -> JL0023-1. The bottom-right copy toast was removed.
-- Applies to All Individual Trees and Individual Trees child-ID display positions; existing navigation/edit controls retain their own action.
-- Mobile child photo crop focus is moved upward with a direct !important selector (center 20%) while keeping frame/card dimensions unchanged.
-- V5.5/V5.6 room-source and independent 5-child-per-room rules are retained.
+V5.9 verified changes
+- Reworked Online A-E package size tiers from real Line Clear shipment dimensions supplied by the user.
+- A Small: 50 x 30 x 30 cm, 5 kg.
+- B Medium-Small: 65 x 45 x 45 cm, 15 kg.
+- C Medium-Large: 80 x 60 x 60 cm, 35 kg.
+- D Large: 100 x 75 x 60 cm, 55 kg.
+- E Oversize: 120 x 100 x 90 cm, 75 kg.
+- Existing RM reference freight values are preserved (A 20 / B 50 / C 80 / D 120 / E 180) because the supplied waybills show dimensions and service class, not final billed postage.
+- Freight matching now normalizes the three package dimensions from longest to shortest before tier comparison, so rotating L/W/H does not change the matched tier.
+- Existing V5.8 saved tier dimensions are upgraded in-memory to the V5.9 tier shape while preserving each saved RM cost. Custom non-legacy tier dimensions remain untouched.
+- Line Clear Weight / L / W / H inputs are now text + numeric keyboard inputs, fully removing browser spinner arrows on Chrome/Edge/Firefox/mobile.
+- Sender postcode remains default 43300 and editable.
+- Express remains default service; Premium remains selectable with its independent algorithm.
+- Line Clear estimator stays local arithmetic only: no Import sync, full render, polling, MutationObserver, or automatic network request.
+- Child inline copy feedback and mobile child photo focus from V5.8 are retained.
 - Apps Script / Code.gs unchanged; no redeploy required.
 
 Deployment
-- Replace the files in the Frontend folder in GitHub Pages with this patch.
-- Version: V5.8 / Build 5700.
-
-V5.8 additions:
-- Sender Postcode defaults to 43300 and remains editable/savable.
-- Removed numeric spinner arrows in Line Clear inputs.
-- Removed Recipient Postcode helper line for cleaner alignment.
-- Service defaults to Express 1-3 days and can switch to Premium Next Day Guaranteed.
-- Premium uses independent Peninsular rate: RM15 first 1kg + RM3 per additional 1kg/part; eligibility checks <70cm each side and <30kg actual weight; NDA/ODA remains official-quote dependent.
+- Replace the Frontend files in GitHub Pages with this patch.
+- Version: V5.9 / Build 5900.

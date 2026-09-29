@@ -7196,7 +7196,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   #onlineStoreEditorV10 .v48-care-species{justify-self:start!important}
 }
 
-/* Online Store V5.8 - Pricing Clarity + Content Inheritance ---------------- */
+/* Online Store V5.9 - Pricing Clarity + Content Inheritance ---------------- */
 #onlineStoreEditorV10 #onlineStoreEditorV10 .v47-reference-margin{display:none!important}
 #onlineStoreEditorV10 .v51-protection-value-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;min-height:48px}
 #onlineStoreEditorV10 .v51-protection-value-row #onlineStorePriceFloorV21{width:100%;margin:0!important}
@@ -7223,11 +7223,11 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   #onlineStoreEditorV10 .v51-protection-value-row{grid-template-columns:minmax(0,1fr) auto}
 }
 
-/* V5.8 pricing cleanup */
+/* V5.9 pricing cleanup */
 #onlineStoreEditorV10 .v51-protection-margin-badge{font-size:12px!important;font-weight:800;opacity:.92;align-self:center}
 #onlineStoreEditorV10 .v51-protection-value-row{grid-template-columns:minmax(0,1fr) auto!important}
 
-/* V5.8 Affiliate master switch */
+/* V5.9 Affiliate master switch */
 .v52-affiliate-switch-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:14px 16px;margin:12px 0;border:1px solid #d9e8dd;border-radius:14px;background:#f8fbf8}
 .v52-affiliate-switch-row>div{display:flex;flex-direction:column;gap:4px;min-width:0}
 .v52-affiliate-switch-row strong{font-size:16px;color:#104f31}
@@ -7242,14 +7242,14 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 .v52-switch b.enabled{color:#176b45}
 @media(max-width:700px){.v52-affiliate-switch-row{align-items:flex-start;flex-direction:column}.v52-switch{align-self:flex-end}}
 
-/* Online Store V5.8 - lightweight child copy / room source affordances */
+/* Online Store V5.9 - lightweight child copy / room source affordances */
 .v55-copy-child-id,.v34-child-id[data-v55-copy-child]{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
 .v55-room-link{cursor:pointer}
 .v55-room-link:hover{text-decoration:underline}
 
 
 /* ================================================================
-   Online Store V5.8 - Mobile child photo focus + Line Clear estimator
+   Online Store V5.9 - Mobile child photo focus + Line Clear estimator
    Pure CSS layout; no sync/runtime observers.
    ================================================================ */
 @media(max-width:760px){
@@ -7291,7 +7291,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 
 .v56-field-hint{font-size:10px!important;font-weight:600!important;color:#819087;line-height:1.35}
 
-/* V5.8 - Line Clear lives inside visible logistics Working Settings */
+/* V5.9 - Line Clear lives inside visible logistics Working Settings */
 #v43FreightRules .v57-lineclear-inline{margin:18px 0 4px;padding:16px;border:1px solid #d8e7dc;border-radius:15px;background:#fbfdfb;box-shadow:none}
 #v43FreightRules .v57-lineclear-inline .dashboard-block-head-v30{margin-bottom:8px}
 #shippingTabsV31 [data-module-tab-v31="freight-estimate"][hidden]{display:none!important}
@@ -7300,6 +7300,18 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   #v43FreightRules .v57-lineclear-inline{padding:12px;margin-top:14px}
 }
 
-/* V5.8 - Line Clear clean numeric inputs: no browser spinner arrows */
+/* V5.9 - Line Clear clean numeric inputs: no browser spinner arrows */
 .v56-lineclear-form input[type=number]::-webkit-outer-spin-button,.v56-lineclear-form input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 .v56-lineclear-form input[type=number]{-moz-appearance:textfield;appearance:textfield}
+
+
+/* Online Store V5.9 - real-shipment freight tiers + spinner-free Line Clear */
+.v59-tier-key{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:52px}
+.v59-tier-key strong{font-size:18px;line-height:1;color:#087246}.v59-tier-key span{font-size:10px;color:#687970;font-weight:700;white-space:nowrap}
+.v59-freight-note{margin:10px 0 2px;padding:9px 11px;border-radius:10px;background:#f5f9f6;color:#5d7064;font-size:11px;line-height:1.5}
+.v56-lineclear-form input{appearance:none!important;-webkit-appearance:none!important;-moz-appearance:textfield!important}
+.v56-lineclear-form input::-webkit-outer-spin-button,.v56-lineclear-form input::-webkit-inner-spin-button{-webkit-appearance:none!important;appearance:none!important;margin:0!important;display:none!important}
+@media(max-width:600px){.v59-tier-key{min-width:46px}.v59-tier-key strong{font-size:17px}.v59-freight-note{font-size:10.5px}}
+.v43-freight-row>.v59-tier-key{align-self:stretch;border-radius:10px;background:#edf7f0}
+@media(max-width:900px){.v43-freight-row>.v59-tier-key{grid-row:span 3}}
+@media(max-width:600px){.v43-freight-row>.v59-tier-key{grid-row:span 3}}
