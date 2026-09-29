@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-V4.7-layout-route-r1";
+const CACHE = "lover-legend-online-store-V4.8-product-flow-r1";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=46-safe-nav-r1",
-  "./css/style.css?v=46-safe-nav-r1",
-  "./js/common.js?v=46-safe-nav-r1",
-  "./js/sync.js?v=46-safe-nav-r1",
-  "./js/app.js?v=46-safe-nav-r1",
-  "./manifest.json?v=46-safe-nav-r1",
+  "./index.html?v=48-product-flow-r1",
+  "./css/style.css?v=48-product-flow-r1",
+  "./js/common.js?v=48-product-flow-r1",
+  "./js/sync.js?v=48-product-flow-r1",
+  "./js/app.js?v=48-product-flow-r1",
+  "./manifest.json?v=48-product-flow-r1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -49,16 +49,16 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=46-safe-nav-r1", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=48-product-flow-r1", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=46-safe-nav-r1")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=48-product-flow-r1")) || (await caches.match("./index.html")))
     );
     return;
   }
 
-  // V4.7-layout-route-r1"no-store" })
+  // V4.8-layout-route-r1"no-store" })
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();

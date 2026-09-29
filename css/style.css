@@ -7096,3 +7096,34 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 #productCategoryHubV32 .product-category-grid-v32{grid-template-columns:repeat(5,minmax(0,1fr))}
 @media(max-width:900px){.v47-top-grid{grid-template-columns:1fr 1fr!important}.v47-top-grid .v46-public-name-field{grid-column:1/-1}#onlineStoreEditorV10 .online-store-price-foundation-v11{grid-template-columns:1fr 1fr!important}#productCategoryHubV32 .product-category-grid-v32{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.v47-top-grid,#onlineStoreEditorV10 .online-store-price-foundation-v11{grid-template-columns:1fr!important}.v47-top-grid .v46-public-name-field{grid-column:auto}.v47-editor-actions{width:100%;justify-content:flex-end}.v47-editor-actions .secondary-btn{flex:0 1 auto;padding:9px 12px;font-size:14px}#productCategoryHubV32 .product-category-grid-v32{grid-template-columns:1fr}}
+
+
+/* Online Store V4.8 -------------------------------------------------------- */
+.v48-top-grid{display:grid!important;grid-template-columns:minmax(300px,1.4fr) minmax(190px,.8fr) minmax(190px,.8fr)!important;gap:12px!important;align-items:stretch}
+.v48-top-grid>label{display:grid!important;grid-template-rows:auto 48px auto;gap:6px;align-content:start}
+.v48-top-grid input,#onlineStoreEditorV10 .v48-price-grid input{height:48px!important;min-height:48px!important;padding:10px 14px!important;border-radius:12px!important;font-size:16px!important;box-sizing:border-box!important;font-variant-numeric:tabular-nums}
+.v48-obsolete-initial{display:none!important}
+#onlineStoreEditorV10 .v48-price-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px 14px!important;margin-top:14px!important;align-items:stretch}
+#onlineStoreEditorV10 .v48-price-grid>label{display:grid!important;grid-template-rows:auto 48px auto;gap:6px;align-content:start;min-width:0}
+#onlineStoreEditorV10 .v48-price-grid>label small{min-height:0!important;margin:0!important;line-height:1.45}
+#onlineStoreEditorV10 .v40-shared-block{margin:14px 0 0!important}
+#onlineStoreEditorV10 .v40-shared-block + .v48-price-grid{margin-top:14px!important}
+.v48-editor-actions{margin-left:auto;display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.v48-editor-actions>.secondary-btn,.v48-editor-actions>.v48-action-btn{height:44px!important;min-height:44px!important;padding:0 16px!important;border-radius:12px!important;font-size:15px!important;font-weight:700!important;line-height:1!important;white-space:nowrap;display:inline-flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;margin:0!important}
+.v48-remove-room{border:1px solid #dfcccc!important;background:#fff8f8!important;color:#744848!important}
+.v48-remove-room:hover{background:#fff1f1!important}
+.v48-care-compact{padding:12px 14px!important;margin:10px 0!important}
+.v48-care-compact .v42-care-guide-title{display:grid!important;grid-template-columns:auto 1fr auto;align-items:center!important;gap:10px!important;margin:0 0 6px!important}
+.v48-care-compact .v42-care-guide-title small{margin:0!important;justify-self:end}
+.v48-care-species{font-weight:800;color:#1d382b;justify-self:end}
+.v48-care-compact .v41-auto-content{border:0!important;background:transparent!important;padding:0!important;margin:0!important}
+.v48-care-compact .v41-auto-content>div:first-child{display:none!important}
+.v48-care-compact .v41-auto-content p{margin:0!important;padding:0!important}
+.v48-care-compact .v41-care-preview{margin:0!important;padding:0!important;max-height:165px!important;min-height:0!important;line-height:1.55;overflow:auto}
+.v48-care-compact .v41-auto-content-actions{margin-top:8px!important}
+.v48-pending-protection{opacity:.72}
+.v48-pending-protection span:nth-child(3) b{font-weight:800}
+@media(max-width:900px){.v48-top-grid{grid-template-columns:1fr 1fr!important}.v48-top-grid .v46-public-name-field{grid-column:1/-1}#onlineStoreEditorV10 .v48-price-grid{grid-template-columns:1fr 1fr!important}}
+@media(max-width:600px){.v48-top-grid,#onlineStoreEditorV10 .v48-price-grid{grid-template-columns:1fr!important}.v48-top-grid .v46-public-name-field{grid-column:auto}.v48-editor-actions{width:100%;gap:8px}.v48-editor-actions>.secondary-btn,.v48-editor-actions>.v48-action-btn{height:42px!important;min-height:42px!important;padding:0 12px!important;font-size:14px!important}.v48-care-compact .v42-care-guide-title{grid-template-columns:1fr!important;gap:3px!important}.v48-care-compact .v42-care-guide-title small,.v48-care-species{justify-self:start}}
+.v48-obsolete-initial,.v48-obsolete-initial[hidden]{display:none!important}
+#onlineStoreEditorV10 .v48-price-grid>.v48-obsolete-initial,#onlineStoreEditorV10 .v48-price-grid>.v48-obsolete-initial[hidden]{display:none!important}
