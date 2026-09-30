@@ -11,3 +11,5 @@ Key fixes:
 - Mother price remains unchanged by promotion reference calculations.
 - Version surfaces updated to V7.5 / build 7500 / Import Base V41.8 read-only.
 - sync.js intentionally unchanged.
+
+V7.6: Product Management accuracy/UI patch: explicit shipping-mode save, Package Reserve freight basis, natural % display, 2-decimal net margin display, restored below-floor warning, 3-column pricing grid, promotion reference deferred, lightweight settings recalc. sync.js unchanged.
