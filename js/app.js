@@ -26671,13 +26671,150 @@ const renderOnlineRoomChooserV16BaseV77=renderOnlineRoomChooserV16;
 renderOnlineRoomChooserV16=function(){const out=renderOnlineRoomChooserV16BaseV77();v77EnsureCurrentRoomBadge();return out;};
 
 function v77RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.7');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.7';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.7';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.7 · Product Management Safety + State Machine Fix · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.7 · Import Base V41.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.7';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.8');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.8';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.8';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.8 · Live Settings Recalc + Editable Pot Cost · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.8 · Import Base V41.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.8';
 }
 function v77Setup(){v77RefreshStatic();try{v43BuildAutoMinPanel();v77EnsureMarginFactoryReset();v77NormalizePercentInputs();}catch(_){}try{v76BuildShippingResponsibilitySetting();}catch(_){}try{v76ArrangePriceGrid();v77SettingsChanged('setup');v77EnsureCurrentRoomBadge();renderOnlineStorePhotoListV14();v77ValidatePriceCeiling(false);}catch(_){}}
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v77Setup,3900);setTimeout(v77RefreshStatic,6200);});
 window.addEventListener('load',()=>{setTimeout(v77Setup,4100);setTimeout(v77RefreshStatic,6600);});
 try{v76RefreshStatic=v77RefreshStatic;}catch(_){}try{v75RefreshStatic=v77RefreshStatic;}catch(_){}try{v74RefreshStatic=v77RefreshStatic;}catch(_){}try{v73RefreshStatic=v77RefreshStatic;}catch(_){}try{v72RefreshStatic=v77RefreshStatic;}catch(_){}try{v71RefreshStatic=v77RefreshStatic;}catch(_){}try{v70RefreshStatic=v77RefreshStatic;}catch(_){}try{v67RefreshStatic=v77RefreshStatic;}catch(_){}try{v66RefreshStatic=v77RefreshStatic;}catch(_){}
+
+/* ================================================================
+   Online Store V7.8 - Working Settings Live Recalc + Editable Pot Cost
+   - robust target-margin Reset to Factory control inside the margin card
+   - all settings saves broadcast a lightweight local recalculation
+   - cross-tab settings changes refresh current product without polling
+   - Online Pot Cost is editable Online-only data and updates pricing live
+   - preserves V7.7 Product Overview/remove-room state machine
+   ================================================================ */
+window.ONLINE_STORE_V78_ACTIVE=true;
+
+const V78_SETTINGS_REVISION_KEY='llaOnlineStoreV22::settingsRevisionV78';
+const V78_MARGIN_FACTORY=Object.freeze({m0_300:30,m300_500:35,m500_800:40,m800_5000:45,m5000_8000:50,m8000_plus:60});
+
+function v78ApplyFreshSettings(reason='settings'){
+  try{v77NormalizePercentInputs();}catch(_){}
+  try{v76NormalizeAllPercentInputs();}catch(_){}
+  try{v77EnsureCurrentRoomBadge();}catch(_){}
+  try{v76EnsureShippingOverrideUi();}catch(_){}
+  try{if(String(onlineStoreSelectedProductIdV10||'').trim())v76RefreshPricing();}catch(err){console.warn('V7.8 fresh-settings recalc skipped',reason,err);}
+  try{v77ValidatePriceCeiling(false);}catch(_){}
+}
+function v78BroadcastSettingsChanged(reason='settings-save'){
+  try{localStorage.setItem(V78_SETTINGS_REVISION_KEY,String(Date.now()));}catch(_){}
+  try{window.dispatchEvent(new CustomEvent('online-store-v78-settings-changed',{detail:{reason}}));}catch(_){}
+  v78ApplyFreshSettings(reason);
+}
+const saveOnlineStoreUiSettingsV12BaseV78=saveOnlineStoreUiSettingsV12;
+saveOnlineStoreUiSettingsV12=function(v){
+  const out=saveOnlineStoreUiSettingsV12BaseV78(v);
+  v78BroadcastSettingsChanged('ui-settings-save');
+  return out;
+};
+window.addEventListener('online-store-v78-settings-changed',e=>{try{v78ApplyFreshSettings(e.detail?.reason||'custom-event');}catch(_){}});
+window.addEventListener('storage',e=>{
+  if(e.key===ONLINE_STORE_UI_STORAGE_KEY_V18||e.key===V78_SETTINGS_REVISION_KEY)setTimeout(()=>v78ApplyFreshSettings('storage-event'),0);
+});
+window.addEventListener('focus',()=>setTimeout(()=>v78ApplyFreshSettings('window-focus'),0));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(()=>v78ApplyFreshSettings('visibility-return'),0);});
+
+// --- Target-margin Reset to Factory: inject directly into the actual first card. ---
+function v78EnsureMarginFactoryReset(){
+  document.getElementById('v77ResetMarginFactory')?.remove();
+  const card=document.querySelector('#autoMinimumPanelV43 > section.v43-rule-card:first-of-type')||document.querySelector('#autoMinimumPanelV43 section.v43-rule-card');
+  const head=card?.querySelector('.v43-card-head');if(!head)return false;
+  let btn=document.getElementById('v78ResetMarginFactory');
+  if(!btn){btn=document.createElement('button');btn.type='button';btn.id='v78ResetMarginFactory';btn.className='secondary-btn v78-margin-reset-btn';btn.textContent='恢复原厂 / Reset to Factory';head.appendChild(btn);}
+  return true;
+}
+document.addEventListener('click',e=>{
+  const btn=e.target.closest?.('#v78ResetMarginFactory');if(!btn)return;
+  e.preventDefault();e.stopPropagation();
+  if(!window.confirm('确认把「目标净利率」整个区块恢复原厂？\n\nRM 0–300 = 30%\nRM 300.01–500 = 35%\nRM 500.01–799.99 = 40%\nRM 800–4,999.99 = 45%\nRM 5,000–7,999.99 = 50%\nRM 8,000以上 = 60%\n\n只恢复目标净利率，不影响 VND 花盆、Packaging、Payment Fee、Affiliate 或运费设置。'))return;
+  const vals=[30,35,40,45,50,60];
+  ['v43Margin0','v43Margin1','v43Margin2','v43Margin3','v43Margin4','v43Margin5'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.value=String(vals[i]);});
+  try{v43SaveUi(ui=>{ui.pricing={...(ui.pricing||{}),marginTiers:{...V78_MARGIN_FACTORY}};},'V7.8 目标净利率恢复原厂 30/35/40/45/50/60');}
+  catch(err){console.error('V7.8 margin reset failed',err);window.alert('恢复原厂失败，请重新尝试。');return;}
+  window.__v43RulesDirty=false;
+  const st=document.getElementById('v43AutoMinimumStatus');if(st)st.textContent='目标净利率已恢复原厂 · 30 / 35 / 40 / 45 / 50 / 60';
+  btn.textContent='已恢复原厂';setTimeout(()=>{if(btn.isConnected)btn.textContent='恢复原厂 / Reset to Factory';},1400);
+  v78BroadcastSettingsChanged('margin-factory-reset');
+},true);
+const v43ShowAutoMinBaseV78=v43ShowAutoMin;
+v43ShowAutoMin=function(){const out=v43ShowAutoMinBaseV78();setTimeout(()=>{v78EnsureMarginFactoryReset();v77NormalizePercentInputs();},0);return out;};
+document.addEventListener('click',e=>{if(e.target.closest?.('[data-v43-auto-min],#v43GoAutoMin'))setTimeout(v78EnsureMarginFactoryReset,20);},true);
+
+// --- Online Pot Cost: editable Online-only override with live pricing recalc. ---
+const v43OnlineVndPotCostAutomaticV78=v43OnlineVndPotCost;
+function v78PotOverrideFromConfig(product){
+  const id=String(product?.id||'').trim().toUpperCase();if(!id)return null;
+  const cfg=getOnlineStoreConfigV10(id);return cfg?.potCostOverride==null?null:Math.max(0,Number(cfg.potCostOverride)||0);
+}
+function v78AutomaticPotCost(product){return Math.max(0,Number(v43OnlineVndPotCostAutomaticV78(product))||0);}
+v43OnlineVndPotCost=function(product){
+  const id=String(product?.id||'').trim().toUpperCase(),editing=id&&id===String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase()&&document.getElementById('onlineStoreEditorV10')?.hidden===false;
+  const input=document.getElementById('onlineStorePotCostV14');
+  if(editing&&input&&String(input.value||'').trim()!=='')return Math.max(0,parseOnlineNumberV12(input.value));
+  const override=v78PotOverrideFromConfig(product);return override==null?v78AutomaticPotCost(product):override;
+};
+getOnlineStoreAutomaticPotCostV14=function(product){return v43OnlineVndPotCost(product);};
+const collectOnlineStoreConfigFromEditorV10BaseV78=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){
+  const cfg=collectOnlineStoreConfigFromEditorV10BaseV78();const pot=document.getElementById('onlineStorePotCostV14');
+  if(pot)cfg.potCostOverride=Math.max(0,parseOnlineNumberV12(pot.value));
+  return cfg;
+};
+function v78EnablePotCostEdit(productId=onlineStoreSelectedProductIdV10){
+  const product=getOnlineStoreProductV10(productId),pot=document.getElementById('onlineStorePotCostV14');if(!product||!pot)return;
+  pot.readOnly=false;pot.removeAttribute('readonly');pot.removeAttribute('aria-readonly');pot.inputMode='decimal';
+  const override=v78PotOverrideFromConfig(product),value=override==null?v78AutomaticPotCost(product):override;
+  if(pot!==document.activeElement)pot.value=formatOnlineMoneyInputV12(value);
+  const label=pot.closest('label'),hint=label?.querySelector(':scope > small');if(hint)hint.textContent='Online Store 独立花盆成本，可修改；修改后总成本、保护底线、净利与净利率即时重算，不回写 Import。';
+}
+document.addEventListener('input',e=>{
+  if(e.target?.id!=='onlineStorePotCostV14')return;
+  try{v42MarkEditorDirty();}catch(_){}
+  requestAnimationFrame(()=>{try{v76RefreshPricing();v76RefreshWarning(parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value),calculateOnlineProtectionFloorV21(getOnlineStoreProductV10(onlineStoreSelectedProductIdV10)));}catch(_){}});
+},true);
+document.addEventListener('blur',e=>{
+  if(e.target?.id!=='onlineStorePotCostV14')return;
+  const raw=String(e.target.value||'').trim();e.target.value=formatOnlineMoneyInputV12(raw===''?0:parseOnlineNumberV12(raw));
+  try{v76RefreshPricing();}catch(_){}
+},true);
+
+const setOnlineStoreEditorValuesV10BaseV78=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  const out=setOnlineStoreEditorValuesV10BaseV78(productId,preserveRoomV16);
+  requestAnimationFrame(()=>{try{v78EnablePotCostEdit(productId);v78ApplyFreshSettings('editor-open-v78');}catch(_){}});
+  return out;
+};
+
+// Extra explicit hooks for settings buttons. saveOnlineStoreUiSettingsV12 is canonical,
+// these hooks only guarantee the UI has finished writing before the recalc runs.
+document.addEventListener('click',e=>{
+  if(e.target.closest?.('#v43SaveAutoMinimum,#v43SaveAffiliateRules,#v43SaveFinanceRules,#v43SaveShippingRules,#v76SaveShippingResponsibility,#savePackageReserveV40,#resetPackageReserveV40')){
+    setTimeout(()=>v78BroadcastSettingsChanged('settings-button'),0);
+  }
+},true);
+document.addEventListener('change',e=>{if(e.target?.id==='v52AffiliateEnabled')setTimeout(()=>v78BroadcastSettingsChanged('affiliate-toggle'),0);},true);
+
+function v78RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.8');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.8';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.8';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.8 · Live Settings Recalc + Editable Pot Cost · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.8 · Import Base V41.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.8';
+}
+function v78Setup(){
+  v78RefreshStatic();
+  try{v43BuildAutoMinPanel();v78EnsureMarginFactoryReset();v77NormalizePercentInputs();}catch(_){}
+  try{v76BuildShippingResponsibilitySetting();}catch(_){}
+  try{v76ArrangePriceGrid();v78EnablePotCostEdit();v78ApplyFreshSettings('setup-v78');v77EnsureCurrentRoomBadge();renderOnlineStorePhotoListV14();v77ValidatePriceCeiling(false);}catch(_){}
+}
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(v78Setup,4550);setTimeout(v78RefreshStatic,7000);});
+window.addEventListener('load',()=>{setTimeout(v78Setup,4750);setTimeout(v78RefreshStatic,7350);});
+try{v77RefreshStatic=v78RefreshStatic;}catch(_){}try{v76RefreshStatic=v78RefreshStatic;}catch(_){}try{v75RefreshStatic=v78RefreshStatic;}catch(_){}try{v74RefreshStatic=v78RefreshStatic;}catch(_){}try{v73RefreshStatic=v78RefreshStatic;}catch(_){}try{v72RefreshStatic=v78RefreshStatic;}catch(_){}try{v71RefreshStatic=v78RefreshStatic;}catch(_){}try{v70RefreshStatic=v78RefreshStatic;}catch(_){}try{v67RefreshStatic=v78RefreshStatic;}catch(_){}try{v66RefreshStatic=v78RefreshStatic;}catch(_){}

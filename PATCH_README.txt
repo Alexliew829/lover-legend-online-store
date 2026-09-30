@@ -15,3 +15,4 @@ Key fixes:
 V7.7: Product Management accuracy/UI patch: explicit shipping-mode save, Package Reserve freight basis, natural % display, 2-decimal net margin display, restored below-floor warning, 3-column pricing grid, promotion reference deferred, lightweight settings recalc. sync.js unchanged.
 
 V7.7: Product Management safety/state-machine patch: target-margin factory reset, fresh-settings recalc, current room badge, 0/5 photo counter, child/random price ceiling at mother price, canonical remove-room to Product Overview. sync.js unchanged.
+V7.8: Working Settings live-recalc patch: robust target-margin Reset to Factory button, event-driven same-tab/cross-tab settings refresh, editable Online Pot Cost with immediate cost/protection/profit recalculation. Preserves V7.7 remove-room Product Overview state machine. sync.js unchanged.
