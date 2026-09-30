@@ -1,16 +1,19 @@
-Lover Legend Online Store V9.1 PATCH from V8.2
+Lover Legend Online Store V9.2 - V8.3 UI + Fast Core
 
-Key fixes / changes:
-- Critical Product Management click path audited: first-click fast handling for room cards, Manage Template, Remove from Room, per-unit Save/Publish
-- Remove from Room now hard-returns to Product Management overview (VIP / Premium / Starter / other categories), never a blank subview
-- Manage Template button replaced with a fresh DOM node to strip stacked legacy click handlers; hard navigation renders Bonsai Content Templates directly
-- Clearing Template Name immediately clears keyword, Bonsai Description and Care Guide
-- Child / Individual / Random price validation is live while typing:
-  * above mother default price => immediate warning + invalid for save/publish
-  * below Online protection floor => immediate warning
-- Individual Tree active limit raised to 10 per room tier
-- Random allocation accepts 1..10, subject to real remaining Import stock
-- Save and Publish/Unpublish remain independent per Child and per Random
-- Interaction CSS uses touch-action: manipulation and immediate pressed feedback
-- No new polling, MutationObserver, Full Sync or Import fetch
-- Version 8.3 / Build 8300
+Base: V9.1
+Import source: V42.8 Read-Only
+
+Deployment:
+- Replace the complete Frontend folder / repository root with this package.
+- No Import Apps Script / Code.gs change is required.
+- After GitHub Pages deploy, hard refresh once so the V9.2 service worker/cache becomes active.
+
+V9.2 performance changes:
+- Keeps V8.3/V9.1 UI, layout, formulas and existing Online Store feature functions.
+- Removes the old 0-7.7 second staggered startup setup chain.
+- Uses one consolidated boot: priority interactions first, non-critical polish in idle slices.
+- Local-First mirror paints before cloud work.
+- Online Import revision polling reduced from ~1.5 seconds to ~30 seconds.
+- Service worker navigation is cache-first with background refresh.
+- Regular stylesheet load restored for deterministic first interaction.
+- Import V42.8 remains read-only; no Online -> Import write path added.

@@ -1,12 +1,12 @@
-const CACHE = "lover-legend-online-store-V9.1-interaction-r1";
+const CACHE = "lover-legend-online-store-V9.2-fast-core-r1";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=91-ui-parity-r1",
-  "./css/style.css?v=91-ui-parity-r1",
-  "./js/sync.js?v=91-ui-parity-r1",
-  "./js/app.js?v=91-ui-parity-r1",
-  "./manifest.json?v=91-ui-parity-r1",
+  "./index.html?v=92-fast-core-r1",
+  "./css/style.css?v=92-fast-core-r1",
+  "./js/sync.js?v=92-fast-core-r1",
+  "./js/app.js?v=92-fast-core-r1",
+  "./manifest.json?v=92-fast-core-r1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -43,17 +43,18 @@ self.addEventListener("fetch", event => {
   if (url.origin !== self.location.origin || !url.pathname.startsWith(SCOPE_PATH)) return;
 
   if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request, { cache: "no-store" })
-        .then(response => {
-          if (response && response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=91-ui-parity-r1", copy));
-          }
-          return response;
-        })
-        .catch(async () => (await caches.match("./index.html?v=91-ui-parity-r1")) || (await caches.match("./index.html")))
-    );
+    event.respondWith((async () => {
+      const cached = (await caches.match("./index.html?v=92-fast-core-r1")) || (await caches.match("./index.html")) || (await caches.match("./"));
+      const refresh = fetch(event.request, { cache: "no-store" }).then(response => {
+        if (response && response.ok) {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put("./index.html?v=92-fast-core-r1", copy));
+        }
+        return response;
+      }).catch(() => null);
+      if (cached) { event.waitUntil(refresh); return cached; }
+      return (await refresh) || Response.error();
+    })());
     return;
   }
 

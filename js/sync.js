@@ -31,8 +31,8 @@ let promotionLightSyncBusyV372 = false;
 let cloudLastErrorMessage = "";
 window.ONLINE_STORE_IMPORT_READ_ONLY_V20 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
 const ONLINE_STORE_IMPORT_READ_ONLY_V20 = window.ONLINE_STORE_IMPORT_READ_ONLY_V20;
-const CLOUD_FOREGROUND_CHECK_GAP = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 350 : 1500;
-const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 1500 : 8000;
+const CLOUD_FOREGROUND_CHECK_GAP = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 5000 : 1500;
+const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 30000 : 8000;
 const PROMOTION_LIGHT_SYNC_MS_V372 = 3000;
 let onlineStoreLegacyCloudStateClearedV45 = false;
 function hasOnlineImportMirrorV45() {
@@ -212,7 +212,7 @@ function setupCloudSync() {
     requestOnlineRevisionCheckV45(event.persisted ? 10 : 40);
   });
 
-  // V4.6: while visible, Online Store performs one coalesced lightweight revision check every ~1.5 seconds.
+  // V9.2: while visible, Online Store performs a coalesced lightweight revision check every ~30 seconds.
   // An unchanged revision returns only metadata, so another device's single-product
   // minimum-price/manual-protection edit is picked up automatically without a manual refresh.
   window.clearInterval(cloudBackgroundRevisionTimerV367);
@@ -235,9 +235,9 @@ function setupCloudSync() {
   // read-only revision check is deferred slightly so it cannot block initial UI.
   if (ONLINE_STORE_IMPORT_READ_ONLY_V20 && hasCachedCoreV338 && Number(startupConfigV338.revision) > 0) {
     cloudInitialSyncComplete = true;
-    window.setTimeout(() => runCloudSync(), 120);
+    window.setTimeout(() => runCloudSync(), 900);
   } else {
-    window.setTimeout(() => runCloudSync(), 0);
+    window.setTimeout(() => runCloudSync(), ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 250 : 0);
   }
 }
 

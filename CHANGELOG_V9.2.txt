@@ -1,0 +1,11 @@
+Lover Legend Online Store V9.2
+
+- Keep V8.3 UI/layout and existing pricing/content/logistics functions.
+- Replace 0-7.7 second staggered legacy setup storm with one consolidated boot.
+- Priority controls initialize after first paint; non-critical decoration uses idle slices.
+- Online Import mirror background revision check changed from ~1.5s to ~30s.
+- Foreground revision checks are coalesced to reduce focus/click contention.
+- Cached Import mirror remains Local-First; initial cloud check is deferred after paint.
+- Service Worker navigation changed to cached app-shell first with background refresh.
+- Import remains V42.8 read-only.
+- Version/build unified to V9.2 / 9200.
