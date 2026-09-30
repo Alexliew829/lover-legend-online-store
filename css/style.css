@@ -7400,3 +7400,8 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   .v72-variation-row{grid-template-columns:1fr 1fr!important;gap:8px!important;padding:10px!important}
   .v72-var-delete{width:100%!important;min-width:0!important}
 }
+
+/* ===== Online Store V7.4 ===== */
+/* Product Overview stays visually clean: Local Product creation lives in category pages. */
+#v70AddProductBtn{display:none!important}
+#onlineStorePage .online-store-title-row-v10.v74-no-global-add-product{grid-template-columns:minmax(0,1fr) auto}

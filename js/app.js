@@ -26047,3 +26047,105 @@ v51UpdatePricingUi=function(){
 };
 v46UpdateCurrentMinimumProfit=v51UpdatePricingUi;
 v48UpdateProfitDisplays=v51UpdatePricingUi;
+
+/* ================================================================
+   Online Store V7.4 - Input Stability + Version/UI Cleanup
+   - Mother price keeps raw typing; no layout reflow on each keystroke
+   - Reference Shipping remains manually editable; suggestion never overwrites active typing
+   - Product Overview no longer shows the global + Add Product button
+   - All visible version labels are forced to V7.4
+   - No sync/network/polling/observer changes
+   ================================================================ */
+window.ONLINE_STORE_V74_ACTIVE=true;
+
+function v74ShippingSellerPaid(){
+  return String(getOnlineStoreUiSettingsV12()?.shipping?.responsibility||'buyer')==='seller';
+}
+
+// IMPORTANT: this function deliberately does NOT call v73ArrangePriceGrid().
+// Reparenting the active field on every input event caused focus/caret loss
+// (e.g. typing 680 stopped after the first 6) and also interrupted manual
+// reference-shipping edits.
+v73UpdatePricingSummary=function(){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;
+  const mother=parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value);
+  const info=calculateOnlineProtectionFloorV21(product);
+  const actual=v43Profit(mother,product,null);
+  const total=document.getElementById('onlineStoreTotalCostV73');if(total)total.value=formatOnlineMoneyInputV12(actual.totalCost||0);
+  const sellerPaid=v74ShippingSellerPaid();
+  const totalHint=document.getElementById('onlineStoreTotalCostHintV73');
+  if(totalHint)totalHint.textContent=sellerPaid
+    ?'平均成本 + Online Pot Cost + Packaging + Payment Fee + Affiliate（如启用）+ 参考运费（卖家承担）。'
+    :'平均成本 + Online Pot Cost + Packaging + Payment Fee + Affiliate（如启用）；参考运费由买家另付。';
+  const shipHint=document.getElementById('onlineStoreShippingHintV43');if(shipHint)shipHint.textContent=sellerPaid?'参考运费已计入商品总成本（卖家承担）。':'参考运费不计入商品总成本（买家另付）。';
+  const floorHint=document.getElementById('onlineStorePriceFloorHintV43');if(floorHint)floorHint.textContent=sellerPaid?'保护底线包含参考运费（卖家包邮）及其他卖家承担成本。':'保护底线按卖家承担成本计算；买家另付的参考运费不计入。';
+  const profit=document.getElementById('onlineStoreActualNetProfitV47');if(profit)profit.value=mother>0?formatOnlineMoneyInputV12(actual.profit):'';
+  const margin=document.getElementById('onlineStoreActualNetMarginV47');if(margin)margin.value=mother>0?actual.margin.toFixed(2):'';
+  const floor=document.getElementById('onlineStorePriceFloorV21');if(floor)floor.value=info.floor>0?formatOnlineMoneyInputV12(info.floor):'';
+};
+
+function v74EnsureEditablePriceInputs(){
+  try{v68BindMotherPrice?.();}catch(_){}
+  const mother=document.getElementById('onlineStoreMotherRegularPriceV33');
+  if(mother){mother.readOnly=false;mother.disabled=false;mother.removeAttribute('readonly');mother.removeAttribute('aria-readonly');mother.inputMode='decimal';mother.autocomplete='off';}
+  let ship=null;
+  try{ship=v65EnsureShippingInput?.();}catch(_){}
+  if(ship){ship.readOnly=false;ship.disabled=false;ship.removeAttribute('readonly');ship.removeAttribute('aria-readonly');ship.inputMode='decimal';ship.autocomplete='off';}
+}
+
+// Visible shipping proxy is the actual user editor from V6.5 onward.
+// Refresh derived figures only; never write back into the field while typing.
+document.addEventListener('input',e=>{
+  if(e.target?.id==='onlineStoreShippingCostV65')requestAnimationFrame(()=>{try{v73UpdatePricingSummary();}catch(_){}});
+},true);
+
+const v74SetEditorBase=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  const out=v74SetEditorBase(productId,preserveRoomV16);
+  requestAnimationFrame(()=>{
+    try{v73ArrangePriceGrid();}catch(_){}
+    try{v74EnsureEditablePriceInputs();}catch(_){}
+    try{v73UpdatePricingSummary();}catch(_){}
+  });
+  return out;
+};
+
+function v74RemoveGlobalAddProduct(){
+  const b=document.getElementById('v70AddProductBtn');if(b)b.remove();
+  const row=document.querySelector('#onlineStorePage .online-store-title-row-v10');if(row)row.classList.add('v74-no-global-add-product');
+}
+
+// Keep Local Product creation inside Other Product Categories only.
+const v74EnsureLocalProductUiBase=v70EnsureLocalProductUi;
+v70EnsureLocalProductUi=function(){
+  const out=v74EnsureLocalProductUiBase.apply(this,arguments);
+  v74RemoveGlobalAddProduct();
+  return out;
+};
+
+function v74RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.4');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.4';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.4';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.4 · Input Stability + Pricing Grid + Room Stability · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.4 · Import Base V41.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
+  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.4';
+  v74RemoveGlobalAddProduct();
+}
+
+function v74Setup(){
+  v74RefreshStatic();
+  v74RemoveGlobalAddProduct();
+  try{v73ArrangePriceGrid();}catch(_){}
+  try{v74EnsureEditablePriceInputs();}catch(_){}
+  try{v73UpdatePricingSummary();}catch(_){}
+}
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(v74Setup,3150);setTimeout(v74RefreshStatic,5200);});
+window.addEventListener('load',()=>{setTimeout(v74Setup,3350);setTimeout(v74RefreshStatic,5600);});
+document.addEventListener('click',e=>{
+  if(e.target.closest?.('.nav-btn[data-page="onlineStorePage"],.module-tabs-v30 button,[data-room-first-v27],#v46RemoveFromRoom,[data-product-category-v32]'))setTimeout(v74RefreshStatic,80);
+},true);
+
+// Every older delayed refresh path must resolve to V7.4.
+try{v73RefreshStatic=v74RefreshStatic;}catch(_){}try{v72RefreshStatic=v74RefreshStatic;}catch(_){}try{v71RefreshStatic=v74RefreshStatic;}catch(_){}try{v70RefreshStatic=v74RefreshStatic;}catch(_){}try{v67RefreshStatic=v74RefreshStatic;}catch(_){}try{v66RefreshStatic=v74RefreshStatic;}catch(_){}
