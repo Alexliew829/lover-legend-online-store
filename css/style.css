@@ -7324,8 +7324,16 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 #onlineStoreShippingCostV14{color:#0a5f36;font-weight:700}
 @media(max-width:700px){.v60-shipping-suggestion-row{align-items:flex-start}.v60-shipping-suggestion-row #v60ShippingSuggestionText{flex:1 1 100%}}
 
-/* Online Store V6.6 - room allocation clarity */
+/* Online Store V6.7 - room allocation clarity */
 .v66-allocation-hint{margin-top:8px;padding:7px 10px;border-radius:9px;background:#f3f8f4;color:#496659;font-size:12px;font-weight:700;line-height:1.45}
 .v66-allocation-hint.blocked{background:#fff5df;color:#8a5a00}
 .v66-room-search-card .online-store-manage-btn-v12:disabled{opacity:.62;cursor:not-allowed;background:#e8efea;color:#62766b;border-color:#d7e2da}
 @media(max-width:700px){.v66-allocation-hint{font-size:11px;margin-top:6px;padding:6px 8px}}
+
+/* Online Store V6.7 - Variations + performance */
+.v67-variations-panel{display:flex;align-items:center;gap:18px;justify-content:space-between;padding:14px 16px;margin:14px 0;border:1px solid #dbe8df;border-radius:14px;background:#f8fbf9;flex-wrap:wrap}
+.v67-variations-copy{display:flex;flex-direction:column;gap:4px;min-width:260px;flex:1}.v67-variations-copy strong{font-size:15px;color:#174d30}.v67-variations-copy small{color:#66756c;line-height:1.45}
+.v67-variations-switch{white-space:nowrap}.v67-direct-listing-status{width:100%;padding:9px 12px;border-radius:10px;background:#eef8f1;color:#20613e;font-weight:700;font-size:13px}
+.v67-allocation-inline{display:inline-flex;align-items:center;margin-left:8px;padding:3px 8px;border-radius:999px;background:#fff3d8;color:#8b5a00;font-size:12px;font-weight:700;vertical-align:middle}.v67-allocation-inline.current{background:#e9f6ed;color:#17633a}.v67-allocation-inline.direct{background:#e8f0ff;color:#1f5f9f}
+.v67-room-search-card .online-store-product-title-v12{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.v67-room-search-card .product-title-actions-v33{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+@media (max-width:760px){.v67-variations-panel{align-items:flex-start;gap:10px}.v67-variations-switch{width:100%;justify-content:space-between}.v67-allocation-inline{margin-left:2px;margin-top:3px}}
