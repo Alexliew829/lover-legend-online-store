@@ -32,7 +32,7 @@ let cloudLastErrorMessage = "";
 window.ONLINE_STORE_IMPORT_READ_ONLY_V20 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
 const ONLINE_STORE_IMPORT_READ_ONLY_V20 = window.ONLINE_STORE_IMPORT_READ_ONLY_V20;
 const CLOUD_FOREGROUND_CHECK_GAP = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 350 : 1500;
-const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 5000 : 8000;
+const CLOUD_BACKGROUND_REVISION_MS_V367 = ONLINE_STORE_IMPORT_READ_ONLY_V20 ? 1500 : 8000;
 const PROMOTION_LIGHT_SYNC_MS_V372 = 3000;
 let onlineStoreLegacyCloudStateClearedV45 = false;
 function hasOnlineImportMirrorV45() {
@@ -212,7 +212,7 @@ function setupCloudSync() {
     requestOnlineRevisionCheckV45(event.persisted ? 10 : 40);
   });
 
-  // V4.6: while visible, Online Store performs one coalesced lightweight revision check every ~5 seconds while visible.
+  // V4.6: while visible, Online Store performs one coalesced lightweight revision check every ~1.5 seconds.
   // An unchanged revision returns only metadata, so another device's single-product
   // minimum-price/manual-protection edit is picked up automatically without a manual refresh.
   window.clearInterval(cloudBackgroundRevisionTimerV367);
@@ -790,7 +790,7 @@ async function pullOnlineImportReadOnlyV20(forceFull = false) {
   if (data?.unchanged) {
     onlineReadOnlyUnchangedChecksV24 += 1;
     // V4.6: an unchanged revision means no data was synchronized. Avoid a
-    // localStorage write + System Information repaint every ~5 seconds while visible.
+    // localStorage write + System Information repaint every ~1.5 seconds.
     return false;
   }
   onlineReadOnlyUnchangedChecksV24 = 0;
