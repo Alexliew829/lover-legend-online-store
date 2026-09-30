@@ -1,4 +1,4 @@
-const CACHE = "lover-legend-online-store-V7.9-vnd-pot-reset-r1";
+const CACHE = "lover-legend-online-store-V8.0-central-content-r1";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",

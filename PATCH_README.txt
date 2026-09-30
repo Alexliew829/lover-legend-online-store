@@ -1,11 +1,14 @@
-Lover Legend Online Store V7.9 PATCH from V7.8
+Lover Legend Online Store V8.0 PATCH from V7.9
 
-V7.9 changes:
-- VND 产品搭配花盆成本新增独立「恢复原厂 / Reset to Factory」按钮。
-- 仅恢复 VND 花盆成本：35 / 55 / 105 / 180。
-- 不影响目标净利率、Packaging、Payment Fee、Affiliate、运费或其他 Working Settings。
-- Reset 后触发现有 V7.8 轻量 settings refresh + local recalc。
-- 保留 V7.8 目标净利率 Reset、跨页面实时联动、Editable Online Pot Cost 等修正。
+V8.0 changes:
+- Centralize Product Details and Care Guide in Bonsai Content Templates.
+- Hide duplicate Product Details / Care Guide editors inside room product editing.
+- Add compact matched/missing template status with direct template-management action.
+- New template matching normalizes product names and includes current public-name/config text.
+- Newly saved templates are immediately detectable without reload or Full Sync.
+- Successful template save clears name, keyword, description and care-guide fields for the next species.
+- Runtime config derives front-end Product Details from the matched template without persisting duplicate room copies.
 
-Import Base: V41.8 Read-Only
-Build: 7900
+Import integration remains read-only. sync.js unchanged.
+Version: 8.0
+Build: 8000

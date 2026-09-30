@@ -7441,3 +7441,13 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 /* Online Store V7.9 - VND pot-cost factory reset */
 #v79ResetVndPotFactory.v79-vnd-pot-reset-btn{white-space:nowrap;flex:0 0 auto}
 @media(max-width:600px){#autoMinimumPanelV43 .v43-card-head #v79ResetVndPotFactory{width:100%}}
+
+
+/* Online Store V8.0 - centralized bonsai content template status */
+#onlineProductDetailsV33 .online-product-description-v33[hidden],
+#onlineStoreTemplateStatusV41[hidden],
+#v42CareGuideWrap[hidden]{display:none!important;}
+.v80-template-notice{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;margin:8px 0 14px;border:1px solid var(--border,#d7e4dc);border-radius:14px;background:#f7fbf8;}
+.v80-template-notice.missing{border-color:#e8b6a9;background:#fff7f4;}
+.v80-template-copy{display:grid;gap:4px;min-width:0}.v80-template-copy strong{font-size:16px}.v80-template-copy small{line-height:1.45;color:#5f6f66}.v80-template-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:760px){.v80-template-notice{align-items:stretch;flex-direction:column}.v80-template-actions{justify-content:flex-start}.v80-template-actions button{flex:1 1 auto}}

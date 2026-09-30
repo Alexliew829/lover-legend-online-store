@@ -21554,7 +21554,7 @@ function v41Setup(){
     const edit=e.target.closest('[data-v41-edit-template]');if(edit){const all=v41LoadTemplates(),key=edit.dataset.v41EditTemplate,t=all[key];if(!t)return;document.getElementById('contentTemplateNameV41').value=t.name||'';document.getElementById('contentTemplateKeywordV41').value=t.keyword||'';document.getElementById('contentTemplateDescriptionV41').value=t.description||'';document.getElementById('contentTemplateCareV41').value=t.careGuide||'';window.__v41EditingTemplateKey=key;return;}
     const del=e.target.closest('[data-v41-delete-template]');if(del){const key=del.dataset.v41DeleteTemplate,all=v41LoadTemplates();if(!confirm(`删除模板“${all[key]?.name||key}”？\n\n不会删除商品，只会取消自动套用。`))return;delete all[key];v41SaveTemplates(all);v41RenderTemplateList();return;}
   },true);
-  document.getElementById('saveContentTemplateV41')?.addEventListener('click',()=>{const name=String(document.getElementById('contentTemplateNameV41')?.value||'').trim(),keyword=String(document.getElementById('contentTemplateKeywordV41')?.value||name).trim(),description=String(document.getElementById('contentTemplateDescriptionV41')?.value||'').trim(),careGuide=String(document.getElementById('contentTemplateCareV41')?.value||'').trim();if(!name||!keyword){alert('请填写模板名称和匹配关键词。');return;}const all=v41LoadTemplates(),old=window.__v41EditingTemplateKey,key=v41TemplateKey(name);if(old&&old!==key)delete all[old];all[key]={name,keyword,description,careGuide,updatedAt:new Date().toISOString()};v41SaveTemplates(all);window.__v41EditingTemplateKey=key;v41RenderTemplateList();const st=document.getElementById('contentTemplateStatusV41');if(st)st.textContent='已保存 · 同树种商品会自动套用';v41RefreshProductTemplateStatus(false);});
+  document.getElementById('saveContentTemplateV41')?.addEventListener('click',()=>{const name=String(document.getElementById('contentTemplateNameV41')?.value||'').trim(),keyword=String(document.getElementById('contentTemplateKeywordV41')?.value||name).trim(),description=String(document.getElementById('contentTemplateDescriptionV41')?.value||'').trim(),careGuide=String(document.getElementById('contentTemplateCareV41')?.value||'').trim();if(!name||!keyword){alert('请填写模板名称和匹配关键词。');return;}const all=v41LoadTemplates(),old=window.__v41EditingTemplateKey,key=v41TemplateKey(name);if(old&&old!==key)delete all[old];all[key]={name,keyword,description,careGuide,updatedAt:new Date().toISOString()};v41SaveTemplates(all);window.__v41EditingTemplateKey='';v41RenderTemplateList();try{v80ClearTemplateFormAfterSave();}catch(_){}const st=document.getElementById('contentTemplateStatusV41');if(st)st.textContent='已保存 · 同树种商品会自动套用';v41RefreshProductTemplateStatus(false);});
   document.getElementById('clearContentTemplateV41')?.addEventListener('click',()=>{['contentTemplateNameV41','contentTemplateKeywordV41','contentTemplateDescriptionV41','contentTemplateCareV41'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});window.__v41EditingTemplateKey='';});
   ['onlineStoreMasterCrownV40','onlineStoreMasterWidthV40','onlineStoreMasterHeightV40'].forEach(id=>document.getElementById(id)?.addEventListener('input',()=>requestAnimationFrame(v41RefreshInheritedDimensions)));
   window.setTimeout(()=>{v41ReorderWorkbench();v41RefreshInheritedDimensions();v41UpdateCostUi();},50);
@@ -24683,7 +24683,7 @@ window.addEventListener('click',function(e){
     const name=String(document.getElementById('contentTemplateNameV41')?.value||'').trim(),keyword=String(document.getElementById('contentTemplateKeywordV41')?.value||name).trim(),description=String(document.getElementById('contentTemplateDescriptionV41')?.value||'').trim(),careGuide=String(document.getElementById('contentTemplateCareV41')?.value||'').trim();
     if(!name||!keyword){btn.textContent='请填写名称/关键词';setTimeout(()=>{btn.disabled=false;btn.textContent=original;},1300);return;}
     const all=v41LoadTemplates(),old=window.__v41EditingTemplateKey,key=v41TemplateKey(name);if(old&&old!==key)delete all[old];
-    all[key]={name,keyword,description,careGuide,updatedAt:new Date().toISOString()};v41SaveTemplates(all);window.__v41EditingTemplateKey=key;v41RenderTemplateList();
+    all[key]={name,keyword,description,careGuide,updatedAt:new Date().toISOString()};v41SaveTemplates(all);window.__v41EditingTemplateKey='';v41RenderTemplateList();try{v80ClearTemplateFormAfterSave();}catch(_){}
     const st=document.getElementById('contentTemplateStatusV41');if(st)st.textContent='已保存 · 同树种商品会自动套用';
     window.__v42TemplateDirty=false;try{v41RefreshProductTemplateStatus(false);}catch(_){}
     btn.textContent='已保存';setTimeout(()=>{btn.disabled=false;if(btn.textContent==='已保存')btn.textContent=original;},1200);
@@ -26900,3 +26900,173 @@ function v79Setup(){
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v79Setup,4700);setTimeout(v79RefreshStatic,7100);});
 window.addEventListener('load',()=>{setTimeout(v79Setup,4900);setTimeout(v79RefreshStatic,7450);});
 try{v78RefreshStatic=v79RefreshStatic;}catch(_){}try{v77RefreshStatic=v79RefreshStatic;}catch(_){}try{v76RefreshStatic=v79RefreshStatic;}catch(_){}try{v75RefreshStatic=v79RefreshStatic;}catch(_){}try{v74RefreshStatic=v79RefreshStatic;}catch(_){}try{v73RefreshStatic=v79RefreshStatic;}catch(_){}try{v72RefreshStatic=v79RefreshStatic;}catch(_){}try{v71RefreshStatic=v79RefreshStatic;}catch(_){}try{v70RefreshStatic=v79RefreshStatic;}catch(_){}
+
+
+/* ================================================================
+   Online Store V8.0 - Centralized Bonsai Content Templates
+   - Product Details / Care Guide are maintained only in Bonsai Content Templates
+   - room editor shows only compact template status / missing-template warning
+   - template save clears the new-template form automatically
+   - template matching normalizes names and reads the latest saved templates
+   - newly saved templates are immediately detectable without reload/full sync
+   ================================================================ */
+window.ONLINE_STORE_V80_ACTIVE=true;
+
+function v80NormText(v){
+  return String(v==null?'':v).normalize('NFKC').toLowerCase().replace(/[\s\-_.,，。;；:：/\\|()（）\[\]【】]+/g,'').trim();
+}
+function v80KeywordParts(t){
+  const raw=[String(t?.keyword||''),String(t?.name||'')].filter(Boolean).join('|');
+  const parts=raw.split(/[|,，;；\n\/]+/).map(x=>v80NormText(x)).filter(Boolean);
+  return [...new Set(parts)].sort((a,b)=>b.length-a.length);
+}
+function v80RawProductConfig(id){
+  try{return getOnlineStoreStateV10()?.products?.[String(id||'').trim().toUpperCase()]||{};}catch(_){return {}}
+}
+function v80ProductMatchTexts(product){
+  const id=String(product?.id||'').trim().toUpperCase(),raw=v80RawProductConfig(id),dom=id===String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase()?document.getElementById('onlineStorePublicNameV33')?.value:'';
+  const values=[product?.name,product?.englishName,raw?.publicName,raw?.displayName,dom];
+  return [...new Set(values.map(v80NormText).filter(Boolean))];
+}
+function v80TemplateMatchesProduct(t,product){
+  const texts=v80ProductMatchTexts(product),keys=v80KeywordParts(t);
+  return keys.some(k=>texts.some(x=>x.includes(k)));
+}
+v41AutoTemplateForProduct=function(product,preferred=''){
+  const all=v41LoadTemplates(),pref=v41TemplateKey(preferred),rows=Object.entries(all).map(([key,t])=>({key,...t}));
+  const preferredRow=pref&&all[pref]?{key:pref,...all[pref]}:null;
+  if(preferredRow&&v80TemplateMatchesProduct(preferredRow,product))return preferredRow;
+  rows.sort((a,b)=>Math.max(...v80KeywordParts(b).map(x=>x.length),0)-Math.max(...v80KeywordParts(a).map(x=>x.length),0));
+  return rows.find(t=>v80TemplateMatchesProduct(t,product))||null;
+};
+
+function v80ClearTemplateFormAfterSave(){
+  ['contentTemplateNameV41','contentTemplateKeywordV41','contentTemplateDescriptionV41','contentTemplateCareV41'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  window.__v41EditingTemplateKey='';window.__v42TemplateDirty=false;
+}
+
+function v80TemplateState(product){
+  if(!product)return {template:null,complete:false};
+  const raw=v80RawProductConfig(product.id),t=v41AutoTemplateForProduct(product,raw?.contentTemplateKey||'');
+  return {template:t,complete:Boolean(t&&String(t.description||'').trim()&&String(t.careGuide||'').trim())};
+}
+function v80EnsureTemplateNotice(){
+  const section=document.getElementById('onlineProductDetailsV33');if(!section)return null;
+  let panel=document.getElementById('v80TemplateNotice');
+  if(!panel){
+    panel=document.createElement('div');panel.id='v80TemplateNotice';panel.className='v80-template-notice';
+    panel.innerHTML='<div class="v80-template-copy"><strong id="v80TemplateNoticeTitle">\u5185\u5bb9\u6a21\u677f</strong><small id="v80TemplateNoticeText"></small></div><div class="v80-template-actions"><button type="button" class="secondary-btn" id="v80GoTemplates">\u524d\u5f80\u76c6\u666f\u5185\u5bb9\u6a21\u677f</button><button type="button" class="ghost-btn" id="v80RematchTemplate">\u91cd\u65b0\u68c0\u6d4b</button></div>';
+    const grid=section.querySelector('.online-store-form-grid-v10');if(grid)grid.after(panel);else section.prepend(panel);
+  }
+  return panel;
+}
+function v80ApplyTemplateEditorPolicy(force=false){
+  const oldDetails=document.getElementById('onlineStoreProductDetailsV40')?.closest('label');if(oldDetails)oldDetails.hidden=true;
+  const oldWrap=document.getElementById('v42CareGuideWrap');if(oldWrap)oldWrap.hidden=true;
+  const oldAuto=document.getElementById('onlineStoreTemplateStatusV41');if(oldAuto)oldAuto.hidden=true;
+  const oldSharedLabel=[...document.querySelectorAll('#onlineProductDetailsV33 .v40-section-label')].find(x=>/\u81ea\u52a8\u5957\u7528\u5185\u5bb9/.test(x.textContent||''));if(oldSharedLabel)oldSharedLabel.hidden=true;
+  const panel=v80EnsureTemplateNotice(),product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!panel||!product)return;
+  const state=v80TemplateState(product),t=state.template,title=panel.querySelector('#v80TemplateNoticeTitle'),text=panel.querySelector('#v80TemplateNoticeText');
+  panel.classList.toggle('missing',!state.complete);
+  if(t&&state.complete){
+    if(title)title.textContent='\u5df2\u5339\u914d\u5185\u5bb9\u6a21\u677f\uff1a'+String(t.name||t.key||'');
+    if(text)text.textContent='Product Details \u4e0e Care Guide \u7531\u76c6\u666f\u5185\u5bb9\u6a21\u677f\u7edf\u4e00\u7ba1\u7406\uff0c\u4e0a\u67b6\u540e\u524d\u53f0\u81ea\u52a8\u5f15\u7528\u3002';
+  }else if(t){
+    if(title)title.textContent='\u26a0 \u5185\u5bb9\u6a21\u677f\u672a\u5b8c\u6574\uff1a'+String(t.name||t.key||'');
+    if(text)text.textContent='\u8bf7\u5230\u76c6\u666f\u5185\u5bb9\u6a21\u677f\u8865\u9f50 Product Details \u548c Care Guide\u3002\u8349\u7a3f\u53ef\u7ee7\u7eed\u4fdd\u5b58\uff0c\u4e0a\u67b6\u524d\u4f1a\u518d\u63d0\u9192\u3002';
+  }else{
+    if(title)title.textContent='\u26a0 \u6b64\u6811\u79cd\u5c1a\u672a\u5efa\u7acb\u5185\u5bb9\u6a21\u677f';
+    if(text)text.textContent='\u8bf7\u524d\u5f80\u76c6\u666f\u5185\u5bb9\u6a21\u677f\u5efa\u7acb Product Details \u4e0e Care Guide\u3002\u65b0\u6a21\u677f\u4fdd\u5b58\u540e\u4f1a\u7acb\u5373\u53ef\u88ab\u68c0\u6d4b\u3002';
+  }
+  window.__v41CurrentTemplateKey=t?.key||'';
+  if(force){try{v41RefreshProductTemplateStatus(true);}catch(_){}}
+}
+
+const v41RefreshProductTemplateStatusBaseV80=v41RefreshProductTemplateStatus;
+v41RefreshProductTemplateStatus=function(forceAuto=false){
+  try{v41RefreshProductTemplateStatusBaseV80(forceAuto);}catch(_){}
+  requestAnimationFrame(()=>v80ApplyTemplateEditorPolicy(false));
+};
+
+const setOnlineStoreEditorValuesV10BaseV80=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  const out=setOnlineStoreEditorValuesV10BaseV80(productId,preserveRoomV16);
+  requestAnimationFrame(()=>{try{v41RefreshProductTemplateStatus(true);v80ApplyTemplateEditorPolicy(false);}catch(_){}});
+  return out;
+};
+
+const normalizeOnlineStoreConfigV10BaseV80=normalizeOnlineStoreConfigV10;
+normalizeOnlineStoreConfigV10=function(productId,raw){
+  const cfg=normalizeOnlineStoreConfigV10BaseV80(productId,raw),product=getOnlineStoreProductV10(productId),t=product?v41AutoTemplateForProduct(product,cfg.contentTemplateKey||''):null;
+  if(t){cfg.contentTemplateKey=t.key;cfg.productDetails=String(t.description||'');cfg.publicDescription=String(t.description||'');cfg.careGuideText=String(t.careGuide||'');}
+  return cfg;
+};
+const collectOnlineStoreConfigFromEditorV10BaseV80=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){
+  const cfg=collectOnlineStoreConfigFromEditorV10BaseV80();cfg.contentTemplateKey=window.__v41CurrentTemplateKey||cfg.contentTemplateKey||'';
+  delete cfg.productDetails;delete cfg.publicDescription;delete cfg.careGuide;delete cfg.careGuideText;delete cfg.productDetailsAuto;
+  return cfg;
+};
+
+function v80OpenTemplatesForCurrentProduct(){
+  try{v42OpenTemplates(true);}catch(_){try{v41ShowTemplates();}catch(__){}}
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;
+  const state=v80TemplateState(product);if(state.template)return;
+  const name=document.getElementById('contentTemplateNameV41'),keyword=document.getElementById('contentTemplateKeywordV41');
+  const rawName=String(product.name||'').trim();
+  if(name&&!name.value)name.value=rawName;
+  const likely=(rawName.match(/[\u4e00-\u9fff]{2,6}/)||[])[0]||rawName;
+  if(keyword&&!keyword.value)keyword.value=likely;
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest?.('#v80GoTemplates')){e.preventDefault();e.stopPropagation();v80OpenTemplatesForCurrentProduct();return;}
+  if(e.target.closest?.('#v80RematchTemplate')){e.preventDefault();e.stopPropagation();try{v41RefreshProductTemplateStatus(true);v80ApplyTemplateEditorPolicy(false);}catch(_){}return;}
+},true);
+
+// Keep the save button as the feedback surface, but always leave a clean form for the next species.
+document.addEventListener('click',e=>{
+  if(!e.target.closest?.('#saveContentTemplateV41'))return;
+  setTimeout(()=>{
+    const btn=document.getElementById('saveContentTemplateV41');
+    if(btn&&btn.textContent==='\u5df2\u4fdd\u5b58')v80ClearTemplateFormAfterSave();
+    try{v41RenderTemplateList();v41RefreshProductTemplateStatus(true);v80ApplyTemplateEditorPolicy(false);}catch(_){}
+  },80);
+},false);
+
+
+
+// V8.0: allow drafts without a template, but warn once immediately before publishing.
+const v69SetPublishedBaseV80=v69SetPublished;
+v69SetPublished=function(next){
+  const id=String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase(),room=v69CurrentRoom();
+  if(id&&room){
+    try{
+      const cfg=getOnlineStoreConfigV10(id),current=v69PublishState(cfg,room),willPublish=typeof next==='boolean'?next:!current.published;
+      if(willPublish){
+        const product=getOnlineStoreProductV10(id),state=v80TemplateState(product);
+        if(!state.complete){
+          const label=state.template?String(state.template.name||state.template.key||''):'\u5c1a\u672a\u5339\u914d';
+          const ok=window.confirm('\u26a0 \u6b64\u5546\u54c1\u7684\u76c6\u666f\u5185\u5bb9\u6a21\u677f\u5c1a\u672a\u5b8c\u6574\u3002\n\n\u5f53\u524d\u6a21\u677f\uff1a'+label+'\n\nProduct Details / Care Guide \u5efa\u8bae\u5728\u4e0a\u67b6\u524d\u5148\u5b8c\u6210\u3002\n\n\u6309\u201c\u786e\u5b9a\u201d\u7ee7\u7eed\u4e0a\u67b6\uff0c\u6309\u201c\u53d6\u6d88\u201d\u8fd4\u56de\u5148\u5efa\u7acb\u6a21\u677f\u3002');
+          if(!ok)return false;
+        }
+      }
+    }catch(_){}
+  }
+  return v69SetPublishedBaseV80(next);
+};
+
+function v80RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V8.0');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V8.0';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V8.0';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V8.0 \u00b7 Centralized Bonsai Content Templates \u00b7 Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V8.0 \u00b7 Import Base V41.8 \u00b7 Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V8.0';
+}
+function v80Setup(){
+  v80RefreshStatic();
+  try{v80ApplyTemplateEditorPolicy(false);}catch(_){}
+}
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(v80Setup,5000);setTimeout(v80RefreshStatic,7300);});
+window.addEventListener('load',()=>{setTimeout(v80Setup,5200);setTimeout(v80RefreshStatic,7700);});
+try{v79RefreshStatic=v80RefreshStatic;}catch(_){}try{v78RefreshStatic=v80RefreshStatic;}catch(_){}try{v77RefreshStatic=v80RefreshStatic;}catch(_){}try{v76RefreshStatic=v80RefreshStatic;}catch(_){}
