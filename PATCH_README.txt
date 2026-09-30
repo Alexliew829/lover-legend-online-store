@@ -1,18 +1,11 @@
-Lover Legend Online Store V7.5 PATCH from V7.4
+Lover Legend Online Store V7.9 PATCH from V7.8
 
-Key fixes:
-- Affiliate enable/disable/rate changes recalculate Online total cost, protection floor, profit and margin immediately.
-- Remove From Room now hard-returns to Product Overview and covers Parent Direct / Child / Random allocations.
-- Percentage fields display natural values (10, 0.5, -1) instead of money-style 10.00.
-- Logistics keeps a global default shipping responsibility; each product can inverse-override it with one switch.
-- Seller-paid shipping includes the Package Reserve-derived reference freight in Online total cost and all profit/protection calculations.
-- Marketing Management adds Global Promotion ON/OFF + discount percentage.
-- Product editor shows promotion reference price, promotion net profit and margin, linked to Affiliate, Payment Fee, packaging and effective shipping mode.
-- Mother price remains unchanged by promotion reference calculations.
-- Version surfaces updated to V7.5 / build 7500 / Import Base V41.8 read-only.
-- sync.js intentionally unchanged.
+V7.9 changes:
+- VND 产品搭配花盆成本新增独立「恢复原厂 / Reset to Factory」按钮。
+- 仅恢复 VND 花盆成本：35 / 55 / 105 / 180。
+- 不影响目标净利率、Packaging、Payment Fee、Affiliate、运费或其他 Working Settings。
+- Reset 后触发现有 V7.8 轻量 settings refresh + local recalc。
+- 保留 V7.8 目标净利率 Reset、跨页面实时联动、Editable Online Pot Cost 等修正。
 
-V7.7: Product Management accuracy/UI patch: explicit shipping-mode save, Package Reserve freight basis, natural % display, 2-decimal net margin display, restored below-floor warning, 3-column pricing grid, promotion reference deferred, lightweight settings recalc. sync.js unchanged.
-
-V7.7: Product Management safety/state-machine patch: target-margin factory reset, fresh-settings recalc, current room badge, 0/5 photo counter, child/random price ceiling at mother price, canonical remove-room to Product Overview. sync.js unchanged.
-V7.8: Working Settings live-recalc patch: robust target-margin Reset to Factory button, event-driven same-tab/cross-tab settings refresh, editable Online Pot Cost with immediate cost/protection/profit recalculation. Preserves V7.7 remove-room Product Overview state machine. sync.js unchanged.
+Import Base: V41.8 Read-Only
+Build: 7900

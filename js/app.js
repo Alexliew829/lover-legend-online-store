@@ -26818,3 +26818,85 @@ function v78Setup(){
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v78Setup,4550);setTimeout(v78RefreshStatic,7000);});
 window.addEventListener('load',()=>{setTimeout(v78Setup,4750);setTimeout(v78RefreshStatic,7350);});
 try{v77RefreshStatic=v78RefreshStatic;}catch(_){}try{v76RefreshStatic=v78RefreshStatic;}catch(_){}try{v75RefreshStatic=v78RefreshStatic;}catch(_){}try{v74RefreshStatic=v78RefreshStatic;}catch(_){}try{v73RefreshStatic=v78RefreshStatic;}catch(_){}try{v72RefreshStatic=v78RefreshStatic;}catch(_){}try{v71RefreshStatic=v78RefreshStatic;}catch(_){}try{v70RefreshStatic=v78RefreshStatic;}catch(_){}try{v67RefreshStatic=v78RefreshStatic;}catch(_){}try{v66RefreshStatic=v78RefreshStatic;}catch(_){}
+
+/* ================================================================
+   Online Store V7.9 - VND Pot Cost Independent Factory Reset
+   - independent Reset to Factory inside the VND pot-cost card
+   - restores only VND pot tiers: 35 / 55 / 105 / 180
+   - preserves target margins and every other Working Setting
+   - refreshes current product pricing through the existing V7.8 local recalc
+   ================================================================ */
+window.ONLINE_STORE_V79_ACTIVE=true;
+const V79_VND_POT_FACTORY=Object.freeze({under1m:35,m1_4:55,m4_10:105,m10_plus:180});
+
+function v79EnsureVndPotFactoryReset(){
+  const cards=document.querySelectorAll('#autoMinimumPanelV43 > section.v43-rule-card');
+  const card=cards?.[1];
+  const head=card?.querySelector('.v43-card-head');
+  if(!head)return false;
+  let btn=document.getElementById('v79ResetVndPotFactory');
+  if(!btn){
+    btn=document.createElement('button');
+    btn.type='button';
+    btn.id='v79ResetVndPotFactory';
+    btn.className='secondary-btn v79-vnd-pot-reset-btn';
+    btn.textContent='恢复原厂 / Reset to Factory';
+    head.appendChild(btn);
+  }
+  return true;
+}
+
+document.addEventListener('click',e=>{
+  const btn=e.target.closest?.('#v79ResetVndPotFactory');
+  if(!btn)return;
+  e.preventDefault();e.stopPropagation();
+  if(!window.confirm('确认把「VND 产品搭配花盆成本」恢复原厂？\n\nVND < 1,000,000 = RM35\nVND 1,000,000–3,999,999 = RM55\nVND 4,000,000–9,999,999 = RM105\nVND 10,000,000+ = RM180\n\n只恢复 VND 花盆成本，不影响目标净利率、Packaging、Payment Fee、Affiliate、运费或其他 Working Settings。'))return;
+  const vals=[35,55,105,180];
+  ['v43Pot0','v43Pot1','v43Pot2','v43Pot3'].forEach((id,i)=>{
+    const el=document.getElementById(id);if(el)el.value=String(vals[i]);
+  });
+  try{
+    v43SaveUi(ui=>{
+      ui.pricing={...(ui.pricing||{}),vndPotTiers:{...V79_VND_POT_FACTORY}};
+    },'V7.9 VND 花盆成本恢复原厂 35/55/105/180');
+  }catch(err){
+    console.error('V7.9 VND pot reset failed',err);
+    window.alert('恢复原厂失败，请重新尝试。');
+    return;
+  }
+  window.__v43RulesDirty=false;
+  const st=document.getElementById('v43AutoMinimumStatus');
+  if(st)st.textContent='VND 花盆成本已恢复原厂 · 35 / 55 / 105 / 180';
+  btn.textContent='已恢复原厂';
+  setTimeout(()=>{if(btn.isConnected)btn.textContent='恢复原厂 / Reset to Factory';},1400);
+  try{v78BroadcastSettingsChanged('vnd-pot-factory-reset');}catch(_){try{v78ApplyFreshSettings('vnd-pot-factory-reset');}catch(__){}}
+},true);
+
+const v43ShowAutoMinBaseV79=v43ShowAutoMin;
+v43ShowAutoMin=function(){
+  const out=v43ShowAutoMinBaseV79();
+  setTimeout(()=>{v78EnsureMarginFactoryReset();v79EnsureVndPotFactoryReset();v77NormalizePercentInputs();},0);
+  return out;
+};
+document.addEventListener('click',e=>{
+  if(e.target.closest?.('[data-v43-auto-min],#v43GoAutoMin'))setTimeout(v79EnsureVndPotFactoryReset,25);
+},true);
+
+function v79RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.9');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.9';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.9';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.9 · Working Settings Factory Reset + Live Recalc · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.9 · Import Base V41.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
+  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.9';
+}
+function v79Setup(){
+  v79RefreshStatic();
+  try{v43BuildAutoMinPanel();v78EnsureMarginFactoryReset();v79EnsureVndPotFactoryReset();v77NormalizePercentInputs();}catch(_){}
+  try{v76BuildShippingResponsibilitySetting();}catch(_){}
+  try{v76ArrangePriceGrid();v78EnablePotCostEdit();v78ApplyFreshSettings('setup-v79');v77EnsureCurrentRoomBadge();renderOnlineStorePhotoListV14();v77ValidatePriceCeiling(false);}catch(_){}
+}
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(v79Setup,4700);setTimeout(v79RefreshStatic,7100);});
+window.addEventListener('load',()=>{setTimeout(v79Setup,4900);setTimeout(v79RefreshStatic,7450);});
+try{v78RefreshStatic=v79RefreshStatic;}catch(_){}try{v77RefreshStatic=v79RefreshStatic;}catch(_){}try{v76RefreshStatic=v79RefreshStatic;}catch(_){}try{v75RefreshStatic=v79RefreshStatic;}catch(_){}try{v74RefreshStatic=v79RefreshStatic;}catch(_){}try{v73RefreshStatic=v79RefreshStatic;}catch(_){}try{v72RefreshStatic=v79RefreshStatic;}catch(_){}try{v71RefreshStatic=v79RefreshStatic;}catch(_){}try{v70RefreshStatic=v79RefreshStatic;}catch(_){}

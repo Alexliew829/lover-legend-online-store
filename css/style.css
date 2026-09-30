@@ -7437,3 +7437,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 #v78ResetMarginFactory.v78-margin-reset-btn{white-space:nowrap;flex:0 0 auto}
 #onlineStorePotCostV14:not([readonly]){background:#fff;border-color:#bfd6c8;box-shadow:inset 0 0 0 1px rgba(20,99,63,.04)}
 @media(max-width:600px){#autoMinimumPanelV43 .v43-card-head #v78ResetMarginFactory{width:100%}}
+
+/* Online Store V7.9 - VND pot-cost factory reset */
+#v79ResetVndPotFactory.v79-vnd-pot-reset-btn{white-space:nowrap;flex:0 0 auto}
+@media(max-width:600px){#autoMinimumPanelV43 .v43-card-head #v79ResetVndPotFactory{width:100%}}
