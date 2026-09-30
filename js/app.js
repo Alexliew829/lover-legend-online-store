@@ -27282,3 +27282,175 @@ function v81Setup(){
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',v81Setup,{once:true});else v81Setup();
 window.addEventListener('load',v81RefreshStatic,{once:true});
 try{v80RefreshStatic=v81RefreshStatic;}catch(_){}try{v79RefreshStatic=v81RefreshStatic;}catch(_){}try{v78RefreshStatic=v81RefreshStatic;}catch(_){}try{v77RefreshStatic=v81RefreshStatic;}catch(_){}try{v76RefreshStatic=v81RefreshStatic;}catch(_){}try{v75RefreshStatic=v81RefreshStatic;}catch(_){}try{v74RefreshStatic=v81RefreshStatic;}catch(_){}try{v73RefreshStatic=v81RefreshStatic;}catch(_){}try{v72RefreshStatic=v81RefreshStatic;}catch(_){}try{v71RefreshStatic=v81RefreshStatic;}catch(_){}try{v70RefreshStatic=v81RefreshStatic;}catch(_){}try{v69RefreshStatic=v81RefreshStatic;}catch(_){}try{v68RefreshStatic=v81RefreshStatic;}catch(_){}try{v67RefreshStatic=v81RefreshStatic;}catch(_){}try{v66RefreshStatic=v81RefreshStatic;}catch(_){}
+
+
+// ============================================================================
+// Online Store V8.2 - Interaction + Per-unit Publish + Template Navigation Fix
+// ============================================================================
+// Goals:
+// 1) Clearing template name clears the whole current draft form only.
+// 2) "管理模板" uses a new, isolated button id and one direct navigation path.
+// 3) Child / Individual / Random each save + publish independently.
+// 4) Child/Random prices show inline protection-floor warnings.
+// 5) Room cards get an immediate, single fast-path click response.
+
+function v82ClearTemplateDraftIfNameEmpty(){
+  const name=document.getElementById('contentTemplateNameV41');
+  if(!name||String(name.value||'').trim())return;
+  ['contentTemplateKeywordV41','contentTemplateDescriptionV41','contentTemplateCareV41'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  window.__v41EditingTemplateKey='';window.__v42TemplateDirty=false;
+  const st=document.getElementById('contentTemplateStatusV41');if(st)st.textContent='';
+}
+
+function v82OpenTemplatesFromProduct(){
+  const page=document.getElementById('onlineStorePage');const panel=document.getElementById('contentTemplatesPanelV41');
+  if(!page||!panel)return false;
+  // Do not invoke legacy template navigation. Own the complete visible state here.
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p===page));
+  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',String(b.dataset.page||'')==='onlineStorePage'));
+  ['roomFirstHubV27','productCategoryHubV32','productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10','onlineStoreEditorV10','autoMinimumPanelV43','v70LocalProductPanel'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  panel.hidden=false;panel.style.removeProperty('display');
+  document.querySelectorAll('#onlineStorePage .module-tabs-v30 button').forEach(b=>b.classList.toggle('active',b.hasAttribute('data-v41-content-templates')));
+  try{v41RenderTemplateList(true);}catch(_){try{v41RenderTemplateList();}catch(__){}}
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);
+  if(product){
+    const matched=v41AutoTemplateForProduct(product,'');
+    if(matched){
+      const all=v41LoadTemplates(),key=matched.key||v41TemplateKey(matched.name||'');const t=all[key]||matched;
+      const put=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+      put('contentTemplateNameV41',t.name||'');put('contentTemplateKeywordV41',t.keyword||'');put('contentTemplateDescriptionV41',t.description||'');put('contentTemplateCareV41',t.careGuide||'');window.__v41EditingTemplateKey=key;
+    }
+  }
+  try{updateAdminTopbarTitleV28('onlineStorePage');}catch(_){}
+  requestAnimationFrame(()=>panel.scrollIntoView({behavior:'auto',block:'start'}));
+  return true;
+}
+
+function v82ProtectionFloor(product,item=null){
+  try{return Math.max(0,Number(calculateOnlineProtectionFloorV21(product,item)?.floor)||0);}catch(_){return 0;}
+}
+function v82RefreshUnitPriceWarnings(){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;
+  document.querySelectorAll('#v34TreeList [data-v34-child-card]').forEach(card=>{
+    const input=card.querySelector('[data-online-field-v10="regularPrice"]');if(!input)return;
+    let item=null;try{item=typeof v43ChildItemFromCard==='function'?v43ChildItemFromCard(card):null;}catch(_){}
+    const floor=v82ProtectionFloor(product,item),price=parseOnlineNumberV12(input.value);
+    let warn=card.querySelector('.v82-unit-floor-warning');
+    if(!warn){warn=document.createElement('small');warn.className='v82-unit-floor-warning';input.closest('label')?.appendChild(warn);}
+    const bad=price>0&&floor>0&&price<floor;warn.hidden=!bad;warn.textContent=bad?`⚠ 当前售价低于 Online 销售保护底线 RM ${formatOnlineMoneyInputV12(floor)}`:'';
+  });
+  const rp=document.getElementById('onlineStoreRegularPriceV10');if(rp){
+    const floor=v82ProtectionFloor(product,null),price=parseOnlineNumberV12(rp.value);let warn=document.getElementById('v82RandomFloorWarning');
+    if(!warn){warn=document.createElement('small');warn.id='v82RandomFloorWarning';warn.className='v82-unit-floor-warning';rp.closest('label')?.appendChild(warn);}
+    const bad=price>0&&floor>0&&price<floor;warn.hidden=!bad;warn.textContent=bad?`⚠ 当前售价低于 Online 销售保护底线 RM ${formatOnlineMoneyInputV12(floor)}`:'';
+  }
+}
+
+function v82UnitPublished(kind,id=''){
+  if(kind==='random')return Boolean(document.getElementById('onlineStoreRandomPublishedV10')?.checked);
+  const card=[...document.querySelectorAll('#v34TreeList [data-v34-child-card]')].find(x=>x.dataset.itemIdV10===id);
+  return Boolean(card?.querySelector('[data-online-field-v10="published"]')?.checked);
+}
+function v82PersistUnitPublish(kind,id,publish){
+  const pid=String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase();if(!pid)return false;
+  if(v50HasUnsaved()){window.alert('当前资料有尚未保存的修改。\n\n请先按“保存”，确认无误后再上架。');return false;}
+  const state=getOnlineStoreStateV10(),raw=state.products?.[pid];if(!raw)return false;
+  const cfg=normalizeOnlineStoreConfigV10(pid,JSON.parse(JSON.stringify(raw)));
+  if(kind==='random'){
+    if(publish&&(Math.max(0,Math.floor(Number(cfg.randomQty)||0))<=0||Math.max(0,Number(cfg.regularPrice)||0)<=0)){window.alert('请先保存随机发货数量与售价，再上架。');return false;}
+    cfg.randomPublished=Boolean(publish);
+  }else{
+    let found=false;
+    cfg.uniqueItems=(cfg.uniqueItems||[]).map(x=>{
+      if(String(x?.id||'')!==String(id))return x;found=true;
+      const price=Math.max(0,Number(x.regularPrice)||0)||(String(x.priceMode||'follow')==='follow'?Math.max(0,Number(cfg.motherRegularPrice)||0):0);
+      if(publish&&price<=0)throw new Error('请先保存子编号售价，再上架。');
+      if(String(x.status||'available')==='sold'&&publish)throw new Error('Sold 子编号不能重新上架。');
+      return {...x,published:Boolean(publish)};
+    });
+    if(!found)return false;
+  }
+  cfg.updatedAt=new Date().toISOString();state.products[pid]=cfg;saveOnlineStoreStateV10(state);
+  try{addOnlineStoreHistoryV14('product',pid,getOnlineStoreProductV10(pid)?.name||'',`${publish?'上架':'下架'} ${kind==='random'?'Random':id}`);}catch(_){}
+  setOnlineStoreEditorValuesV10(pid,true);v82DecorateUnitActions();return true;
+}
+function v82ToggleUnitPublish(kind,id,btn){
+  try{
+    const next=!v82UnitPublished(kind,id);btn.disabled=true;btn.textContent=next?'上架中…':'下架中…';
+    const ok=v82PersistUnitPublish(kind,id,next);if(!ok){btn.disabled=false;v82DecorateUnitActions();return;}
+    btn.textContent=next?'已上架':'已下架';setTimeout(()=>{if(btn.isConnected){btn.disabled=false;v82DecorateUnitActions();}},800);
+  }catch(err){window.alert(err?.message||String(err));btn.disabled=false;v82DecorateUnitActions();}
+}
+function v82SaveUnit(btn){
+  btn.disabled=true;btn.textContent='保存中…';const ok=v50SaveProduct(false);btn.textContent=ok?'已保存':'保存失败';setTimeout(()=>{if(btn.isConnected){btn.disabled=false;btn.textContent='保存';v82DecorateUnitActions();}},850);
+}
+function v82DecorateUnitActions(){
+  // Random: save + publish together beneath its editor, not in the top-right.
+  const random=document.getElementById('onlineRoomRandomBlockV16');
+  if(random){
+    let row=random.querySelector('.v82-unit-actions');if(!row){row=document.createElement('div');row.className='v82-unit-actions';row.innerHTML='<button type="button" class="primary-btn" data-v82-save-unit="random">保存</button><button type="button" class="secondary-btn" data-v82-publish-unit="random">上架</button>';random.appendChild(row);}
+    const p=row.querySelector('[data-v82-publish-unit]');if(p)p.textContent=v82UnitPublished('random')?'下架':'上架';
+  }
+  document.querySelectorAll('#v34TreeList [data-v34-child-card]').forEach(card=>{
+    const id=String(card.dataset.itemIdV10||'');const actions=card.querySelector('.v34-tree-actions');if(!actions)return;
+    let row=actions.querySelector('.v82-unit-actions');if(!row){row=document.createElement('span');row.className='v82-unit-actions';row.innerHTML=`<button type="button" class="primary-btn" data-v82-save-unit="child" data-v82-unit-id="${v34Esc(id)}">保存</button><button type="button" class="secondary-btn" data-v82-publish-unit="child" data-v82-unit-id="${v34Esc(id)}">上架</button>`;actions.prepend(row);}
+    const p=row.querySelector('[data-v82-publish-unit]');if(p)p.textContent=v82UnitPublished('child',id)?'下架':'上架';
+  });
+  const global=document.getElementById('onlineStorePublishV69');if(global)global.hidden=Boolean(document.getElementById('onlineStoreVariationsEnabledV67')?.checked);
+  v82RefreshUnitPriceWarnings();
+}
+
+// Faster room navigation: immediate visible-state switch, no smooth scroll/focus delay.
+function v82EnterRoomFast(room){
+  const target=String(room||'');if(!['vip','premium','entry'].includes(target))return;
+  if(onlineStoreRoomDirtyV16&&!confirmRoomLeaveV16())return;
+  onlineStoreSelectedRoomV27=target;onlineStoreSelectedCategoryV32='bonsai';
+  const editor=document.getElementById('onlineStoreEditorV10');if(editor)editor.hidden=true;
+  const hub=document.getElementById('roomFirstHubV27');if(hub)hub.hidden=true;
+  const cats=document.getElementById('productCategoryHubV32');if(cats)cats.hidden=true;
+  const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;
+  const search=document.getElementById('onlineStoreSearchV10');if(search)search.value='';
+  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.value='bonsai';cat.disabled=true;cat.hidden=false;}
+  setProductRoomActiveStateV32(target);setProductCategoryActiveStateV32('bonsai');
+  setEnteredProductHeaderV32(onlineStoreRoomLabelV27(target),target==='entry'?'Starter：先搜索产品，再选择 One-of-a-Kind 或 Random。':'输入关键词搜索可分配盆景，再进入房间管理。');
+  requestAnimationFrame(()=>renderOnlineStoreProductListV10());
+}
+
+if(!window.__v82Bound){
+  window.__v82Bound=true;
+  document.addEventListener('input',e=>{
+    if(e.target?.id==='contentTemplateNameV41')v82ClearTemplateDraftIfNameEmpty();
+    if(e.target?.closest?.('#onlineStoreEditorV10')&&(e.target.matches('[data-online-field-v10="regularPrice"]')||e.target.id==='onlineStoreRegularPriceV10'))requestAnimationFrame(v82RefreshUnitPriceWarnings);
+  },true);
+  document.addEventListener('click',e=>{
+    const manage=e.target.closest?.('#v82ManageTemplate');if(manage){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v82OpenTemplatesFromProduct();return;}
+    const room=e.target.closest?.('[data-room-first-v27]');if(room){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v82EnterRoomFast(room.dataset.roomFirstV27);return;}
+    const save=e.target.closest?.('[data-v82-save-unit]');if(save){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v82SaveUnit(save);return;}
+    const pub=e.target.closest?.('[data-v82-publish-unit]');if(pub){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v82ToggleUnitPublish(pub.dataset.v82PublishUnit,String(pub.dataset.v82UnitId||''),pub);return;}
+  },true);
+  document.addEventListener('change',e=>{if(e.target?.id==='onlineStoreVariationsEnabledV67')requestAnimationFrame(v82DecorateUnitActions);},true);
+}
+
+const setOnlineStoreEditorValuesV10BaseV82=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){const out=setOnlineStoreEditorValuesV10BaseV82(productId,preserveRoomV16);requestAnimationFrame(v82DecorateUnitActions);return out;};
+const renderOnlineStoreUniqueItemsV10BaseV82=renderOnlineStoreUniqueItemsV10;
+renderOnlineStoreUniqueItemsV10=function(items){const out=renderOnlineStoreUniqueItemsV10BaseV82(items);requestAnimationFrame(v82DecorateUnitActions);return out;};
+const updateOnlineProtectionFloorV21BaseV82=updateOnlineProtectionFloorV21;
+updateOnlineProtectionFloorV21=function(){const out=updateOnlineProtectionFloorV21BaseV82();requestAnimationFrame(v82RefreshUnitPriceWarnings);return out;};
+
+function v82Setup(){
+  // Rename the legacy manage-template button so earlier legacy delegated handlers cannot intercept it.
+  const old=document.getElementById('openContentTemplatesFromProductV41');if(old){old.id='v82ManageTemplate';old.textContent='管理模板';}
+  v82DecorateUnitActions();
+  v82RefreshStatic();
+}
+function v82RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V8.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V8.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V8.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V8.2 · Responsive Actions + Independent Publish · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V8.2 · Import Base V41.8 · Import Data Read-Only';
+}
+if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',v82Setup,{once:true});else v82Setup();
+window.addEventListener('load',v82RefreshStatic,{once:true});
+try{v81RefreshStatic=v82RefreshStatic;}catch(_){}try{v80RefreshStatic=v82RefreshStatic;}catch(_){}try{v79RefreshStatic=v82RefreshStatic;}catch(_){}try{v78RefreshStatic=v82RefreshStatic;}catch(_){}try{v77RefreshStatic=v82RefreshStatic;}catch(_){}try{v76RefreshStatic=v82RefreshStatic;}catch(_){}

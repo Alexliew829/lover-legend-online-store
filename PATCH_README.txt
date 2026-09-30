@@ -1,13 +1,10 @@
-Lover Legend Online Store V8.1 PATCH from V8.0
+Lover Legend Online Store V8.2 PATCH from V8.1
 
-V8.1 focus:
-- Keep Product Details + Care Guide visible in room editor and auto-fill from Bonsai Content Templates.
-- Multi-keyword OR matching supports Chinese/English and separators including spaces, commas and slashes.
-- Variations ON/OFF no longer clears inherited Care Guide.
-- Fix blank page when opening Bonsai Content Templates from a product.
-- Performance Clean Up: cache template JSON/index, skip unchanged template DOM rebuilds, coalesce duplicate settings recalcs, V8.1 delegated listeners bind once.
-- No polling, MutationObserver, Full Sync, or extra Import fetch added.
-
-Version: 8.1
-Build: 8100
-Import Base: V41.8 Read-Only
+Key fixes:
+- Template name clear -> clear entire draft form
+- Manage Template navigation isolated from legacy blank-screen handlers
+- Child/Individual/Random independent Save + Publish/Unpublish controls
+- Random top-right publish switch removed from UI
+- Child/Random inline protection-floor warnings
+- Faster room-card click path and reduced click-chain latency
+- Version 8.2 / Build 8200

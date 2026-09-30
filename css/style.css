@@ -7459,3 +7459,11 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 #onlineStoreTemplateStatusV41:not([hidden]){display:block}
 #contentTemplatesPanelV41:not([hidden]){display:block;min-height:360px}
 #v80TemplateNotice[hidden]{display:none!important}
+
+
+/* Online Store V8.2 */
+.v82-unit-actions{display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap}
+#onlineRoomRandomBlockV16>.v82-unit-actions{display:flex;justify-content:flex-end;margin-top:16px;padding-top:14px;border-top:1px solid rgba(28,104,68,.12)}
+.v82-unit-floor-warning{display:block;margin-top:6px;font-weight:700;color:#c62828;line-height:1.35}
+.v34-tree-actions{display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap}
+@media (max-width:700px){.v82-unit-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.v82-unit-actions button{width:100%}#onlineRoomRandomBlockV16>.v82-unit-actions{display:grid;grid-template-columns:1fr 1fr}}

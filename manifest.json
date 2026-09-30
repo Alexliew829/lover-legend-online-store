@@ -1,8 +1,8 @@
 {
   "name": "线上商店管理系统",
   "short_name": "Online Store",
-  "description": "Lover Legend Gardening · Online Store Management Admin V8.1 · Import V41.8 Live Read-Only Stock/Cost · Professional Admin · Streamlined Single-Tree Workbench · Pricing Clarity + Content Inheritance · Import Numeric Data Read-Only",
-  "start_url": "/lover-legend-online-store/?v=8.1-template-performance-r1",
+  "description": "Lover Legend Gardening · Online Store Management Admin V8.2 · Import V41.8 Live Read-Only Stock/Cost · Professional Admin · Streamlined Single-Tree Workbench · Pricing Clarity + Content Inheritance · Import Numeric Data Read-Only",
+  "start_url": "/lover-legend-online-store/?v=8.2",
   "scope": "/lover-legend-online-store/",
   "display": "standalone",
   "background_color": "#fff7ed",
