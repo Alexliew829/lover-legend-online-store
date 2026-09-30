@@ -27070,3 +27070,215 @@ function v80Setup(){
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v80Setup,5000);setTimeout(v80RefreshStatic,7300);});
 window.addEventListener('load',()=>{setTimeout(v80Setup,5200);setTimeout(v80RefreshStatic,7700);});
 try{v79RefreshStatic=v80RefreshStatic;}catch(_){}try{v78RefreshStatic=v80RefreshStatic;}catch(_){}try{v77RefreshStatic=v80RefreshStatic;}catch(_){}try{v76RefreshStatic=v80RefreshStatic;}catch(_){}
+
+
+/* ================================================================
+   Online Store V8.1 - Template Matching + Navigation + Performance Clean Up
+   - Keep Product Details + Care Guide visible in room editor
+   - Multi-keyword OR matching (Chinese/English, comma/slash/space separated)
+   - Variations never clear inherited Product Details / Care Guide
+   - "Go to Bonsai Content Templates" uses one explicit subview state transition
+   - Cache template JSON/index and coalesce repeated settings recalculation
+   - No polling / MutationObserver / Full Sync / extra Import fetch
+   ================================================================ */
+window.ONLINE_STORE_V81_ACTIVE=true;
+
+// ---------- Lightweight template cache / normalized keyword index ----------
+let v81TemplateCache=null;
+let v81TemplateIndex=null;
+let v81TemplateSignature='';
+function v81NormText(v){
+  return String(v==null?'':v).normalize('NFKC').toLowerCase().replace(/[\s\-_.,，。;；:：/\\|()（）\[\]【】]+/g,'').trim();
+}
+function v81KeywordParts(t){
+  // Treat spaces, comma, slash, semicolon and pipes as OR separators.
+  // Example: "凌珊 Bluebell" => ["凌珊", "bluebell"].
+  const src=[String(t?.keyword||''),String(t?.name||'')].filter(Boolean).join('|');
+  const parts=src.split(/[\s|,，;；\n\/\\]+/).map(v81NormText).filter(Boolean);
+  return [...new Set(parts)].sort((a,b)=>b.length-a.length);
+}
+function v81InvalidateTemplateIndex(){v81TemplateCache=null;v81TemplateIndex=null;v81TemplateSignature='';}
+function v81LoadTemplatesCached(){
+  if(v81TemplateCache)return v81TemplateCache;
+  try{
+    const parsed=JSON.parse(localStorage.getItem(V41_CONTENT_TEMPLATE_KEY)||'{}');
+    v81TemplateCache=parsed&&typeof parsed==='object'&&!Array.isArray(parsed)?parsed:{};
+  }catch(_){v81TemplateCache={};}
+  return v81TemplateCache;
+}
+function v81BuildTemplateIndex(){
+  if(v81TemplateIndex)return v81TemplateIndex;
+  const all=v81LoadTemplatesCached();
+  v81TemplateIndex=Object.entries(all).map(([key,t])=>({key,...t,__keys:v81KeywordParts(t)}));
+  v81TemplateIndex.sort((a,b)=>Math.max(...(b.__keys||[]).map(x=>x.length),0)-Math.max(...(a.__keys||[]).map(x=>x.length),0));
+  return v81TemplateIndex;
+}
+v41LoadTemplates=function(){return v81LoadTemplatesCached();};
+const v41SaveTemplatesBaseV81=v41SaveTemplates;
+v41SaveTemplates=function(v){
+  // Write once, then keep the exact saved object cached for all room/template matching.
+  const safe=v&&typeof v==='object'&&!Array.isArray(v)?v:{};
+  v41SaveTemplatesBaseV81(safe);
+  v81TemplateCache=safe;v81TemplateIndex=null;v81TemplateSignature='';
+  try{window.dispatchEvent(new CustomEvent('online-store-v81-template-index-changed'));}catch(_){ }
+};
+function v81ProductMatchTexts(product){
+  const id=String(product?.id||'').trim().toUpperCase();
+  let raw={};try{raw=getOnlineStoreStateV10()?.products?.[id]||{};}catch(_){ }
+  const dom=id===String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase()?document.getElementById('onlineStorePublicNameV33')?.value:'';
+  return [...new Set([product?.name,product?.englishName,raw?.publicName,raw?.displayName,dom].map(v81NormText).filter(Boolean))];
+}
+function v81TemplateMatchesProduct(row,product){
+  const texts=v81ProductMatchTexts(product),keys=row?.__keys||v81KeywordParts(row);
+  return keys.some(k=>texts.some(x=>x.includes(k)));
+}
+v41AutoTemplateForProduct=function(product,preferred=''){
+  const all=v81LoadTemplatesCached(),pref=v41TemplateKey(preferred),rows=v81BuildTemplateIndex();
+  if(pref&&all[pref]){
+    const pr={key:pref,...all[pref],__keys:v81KeywordParts(all[pref])};
+    if(v81TemplateMatchesProduct(pr,product))return pr;
+  }
+  return rows.find(row=>v81TemplateMatchesProduct(row,product))||null;
+};
+
+// Avoid rebuilding the entire template-card DOM when nothing changed.
+const v41RenderTemplateListBaseV81=v41RenderTemplateList;
+v41RenderTemplateList=function(force=false){
+  const host=document.getElementById('contentTemplateListV41');if(!host)return;
+  const all=v81LoadTemplatesCached();
+  const signature=JSON.stringify(Object.entries(all).map(([k,t])=>[k,t?.name||'',t?.keyword||'',t?.description||'',t?.careGuide||'']));
+  if(!force&&signature===v81TemplateSignature&&host.childNodes.length)return;
+  v81TemplateSignature=signature;
+  return v41RenderTemplateListBaseV81();
+};
+
+// ---------- Room editor: keep both shared content fields visible ----------
+function v81ApplyRoomTemplateContent(forceAuto=false){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;
+  const cfg=getOnlineStoreConfigV10(onlineStoreSelectedProductIdV10);
+  const t=v41AutoTemplateForProduct(product,forceAuto?'':cfg.contentTemplateKey);
+  const details=document.getElementById('onlineStoreProductDetailsV40');
+  const detailsLabel=details?.closest('label');if(detailsLabel)detailsLabel.hidden=false;
+  const auto=document.getElementById('onlineStoreTemplateStatusV41');if(auto)auto.hidden=false;
+  const wrap=document.getElementById('v42CareGuideWrap');if(wrap)wrap.hidden=false;
+  const name=document.getElementById('onlineStoreTemplateNameV41');
+  const desc=document.getElementById('onlineStoreTemplateDescriptionPreviewV41');if(desc)desc.hidden=true;
+  const care=document.getElementById('onlineStoreTemplateCarePreviewV41');
+  if(name)name.textContent=t?.name||'尚未匹配';
+  if(details){
+    const savedManual=cfg.productDetailsAuto===false&&String(cfg.productDetails||'').trim();
+    const allowAuto=forceAuto||details.dataset.v42Auto==='1'||cfg.productDetailsAuto===true||!String(details.value||'').trim()||!savedManual;
+    if(t?.description&&allowAuto){details.value=String(t.description||'');details.dataset.v42Auto='1';}
+    else if(savedManual){details.value=String(cfg.productDetails||'');details.dataset.v42Auto='0';}
+  }
+  if(care){care.hidden=false;care.textContent=t?.careGuide||'尚未建立匹配的养护教程。';}
+  window.__v41CurrentTemplateKey=t?.key||'';
+
+  // V8.0 compact notice is redundant now that Details + Care Guide are visible.
+  const notice=document.getElementById('v80TemplateNotice');if(notice)notice.hidden=true;
+}
+// Neutralize the V8.0 policy that hid Product Details / Care Guide.
+v80ApplyTemplateEditorPolicy=function(force=false){v81ApplyRoomTemplateContent(Boolean(force));};
+v41RefreshProductTemplateStatus=function(forceAuto=false){v81ApplyRoomTemplateContent(Boolean(forceAuto));};
+
+// Preserve a manual Product Details override, while Care Guide remains template inherited.
+const normalizeOnlineStoreConfigV10BaseV81=normalizeOnlineStoreConfigV10;
+normalizeOnlineStoreConfigV10=function(productId,raw){
+  const cfg=normalizeOnlineStoreConfigV10BaseV81(productId,raw);
+  const product=getOnlineStoreProductV10(productId),t=product?v41AutoTemplateForProduct(product,cfg.contentTemplateKey||''):null;
+  const manual=raw?.productDetailsAuto===false&&String(raw?.productDetails||'').trim();
+  if(t){cfg.contentTemplateKey=t.key;if(!manual){cfg.productDetails=String(t.description||'');cfg.publicDescription=cfg.productDetails;cfg.productDetailsAuto=true;}cfg.careGuideText=String(t.careGuide||'');}
+  return cfg;
+};
+const collectOnlineStoreConfigFromEditorV10BaseV81=collectOnlineStoreConfigFromEditorV10;
+collectOnlineStoreConfigFromEditorV10=function(){
+  const cfg=collectOnlineStoreConfigFromEditorV10BaseV81();
+  const details=document.getElementById('onlineStoreProductDetailsV40');
+  if(details){cfg.productDetails=String(details.value||'').trim();cfg.publicDescription=cfg.productDetails;cfg.productDetailsAuto=details.dataset.v42Auto==='1';}
+  cfg.contentTemplateKey=window.__v41CurrentTemplateKey||cfg.contentTemplateKey||'';
+  return cfg;
+};
+
+// Re-apply inherited content after opening an editor or toggling Variations.
+const setOnlineStoreEditorValuesV10BaseV81=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  const out=setOnlineStoreEditorValuesV10BaseV81(productId,preserveRoomV16);
+  requestAnimationFrame(()=>v81ApplyRoomTemplateContent(false));
+  return out;
+};
+
+// ---------- One explicit, non-blank navigation path to Bonsai Content Templates ----------
+function v81ShowBonsaiContentTemplates(prefillCurrent=false){
+  const page=document.getElementById('onlineStorePage');if(!page)return false;
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p===page));
+  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',String(b.dataset.page||'')==='onlineStorePage'));
+  ['roomFirstHubV27','productCategoryHubV32','productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10','onlineStoreEditorV10','autoMinimumPanelV43','v70LocalProductPanel'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  const panel=document.getElementById('contentTemplatesPanelV41');if(!panel)return false;
+  panel.hidden=false;
+  document.querySelectorAll('#onlineStorePage .module-tabs-v30 button').forEach(b=>b.classList.toggle('active',b.hasAttribute('data-v41-content-templates')));
+  window.__v42TemplateRestore={fromProduct:Boolean(prefillCurrent),states:{onlineStoreEditorV10:false},active:-1};
+  v41RenderTemplateList(true);
+  if(prefillCurrent){
+    const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);
+    if(product&&!v41AutoTemplateForProduct(product,'')){
+      const name=document.getElementById('contentTemplateNameV41'),keyword=document.getElementById('contentTemplateKeywordV41');
+      const rawName=String(product.name||'').trim();
+      if(name&&!String(name.value||'').trim())name.value=rawName;
+      const chinese=(rawName.match(/[\u4e00-\u9fff]{2,8}/)||[])[0]||rawName;
+      if(keyword&&!String(keyword.value||'').trim())keyword.value=chinese;
+    }
+  }
+  try{updateAdminTopbarTitleV28('onlineStorePage');}catch(_){ }
+  window.scrollTo({top:0,behavior:'auto'});
+  return true;
+}
+// Override both legacy entry points so every caller shares the same state machine.
+v42OpenTemplates=function(fromProduct=false){return v81ShowBonsaiContentTemplates(Boolean(fromProduct));};
+v41ShowTemplates=function(){return v81ShowBonsaiContentTemplates(!document.getElementById('onlineStoreEditorV10')?.hidden);};
+v80OpenTemplatesForCurrentProduct=function(){return v81ShowBonsaiContentTemplates(true);};
+
+// ---------- Coalesce duplicate settings recalcs ----------
+const v78ApplyFreshSettingsBaseV81=v78ApplyFreshSettings;
+let v81FreshSettingsRaf=0,v81FreshSettingsReason='settings';
+v78ApplyFreshSettings=function(reason='settings'){
+  v81FreshSettingsReason=reason||v81FreshSettingsReason;
+  if(v81FreshSettingsRaf)return;
+  v81FreshSettingsRaf=requestAnimationFrame(()=>{
+    v81FreshSettingsRaf=0;
+    try{v78ApplyFreshSettingsBaseV81(v81FreshSettingsReason);}catch(err){console.warn('V8.1 coalesced settings recalc skipped',err);}
+  });
+};
+
+// One capture listener for V8.1-specific room/template actions; guards prevent old handlers running twice.
+if(!window.__v81DelegatedBound){
+  window.__v81DelegatedBound=true;
+  document.addEventListener('click',e=>{
+    const go=e.target.closest?.('#v80GoTemplates,#openContentTemplatesFromProductV41');
+    if(go){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v81ShowBonsaiContentTemplates(true);return;}
+    const rematch=e.target.closest?.('#v80RematchTemplate,#refreshProductTemplateV41');
+    if(rematch){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const details=document.getElementById('onlineStoreProductDetailsV40');if(details)details.dataset.v42Auto='1';v81InvalidateTemplateIndex();v81ApplyRoomTemplateContent(true);return;}
+  },true);
+  document.addEventListener('change',e=>{
+    if(e.target?.id==='onlineStoreVariationsEnabledV67')requestAnimationFrame(()=>v81ApplyRoomTemplateContent(false));
+  },true);
+  window.addEventListener('online-store-v81-template-index-changed',()=>{v81TemplateIndex=null;v81TemplateSignature='';requestAnimationFrame(()=>{if(String(onlineStoreSelectedProductIdV10||'').trim())v81ApplyRoomTemplateContent(true);});});
+  window.addEventListener('storage',e=>{if(e.key===V41_CONTENT_TEMPLATE_KEY){v81InvalidateTemplateIndex();requestAnimationFrame(()=>{if(String(onlineStoreSelectedProductIdV10||'').trim())v81ApplyRoomTemplateContent(true);});}});
+}
+
+function v81RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V8.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V8.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V8.1';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V8.1 · Template Match + Performance Clean Up · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V8.1 · Import Base V41.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V8.1';
+}
+let v81SetupDone=false;
+function v81Setup(){
+  v81RefreshStatic();
+  if(v81SetupDone)return;v81SetupDone=true;
+  try{v81ApplyRoomTemplateContent(false);}catch(_){ }
+}
+if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',v81Setup,{once:true});else v81Setup();
+window.addEventListener('load',v81RefreshStatic,{once:true});
+try{v80RefreshStatic=v81RefreshStatic;}catch(_){}try{v79RefreshStatic=v81RefreshStatic;}catch(_){}try{v78RefreshStatic=v81RefreshStatic;}catch(_){}try{v77RefreshStatic=v81RefreshStatic;}catch(_){}try{v76RefreshStatic=v81RefreshStatic;}catch(_){}try{v75RefreshStatic=v81RefreshStatic;}catch(_){}try{v74RefreshStatic=v81RefreshStatic;}catch(_){}try{v73RefreshStatic=v81RefreshStatic;}catch(_){}try{v72RefreshStatic=v81RefreshStatic;}catch(_){}try{v71RefreshStatic=v81RefreshStatic;}catch(_){}try{v70RefreshStatic=v81RefreshStatic;}catch(_){}try{v69RefreshStatic=v81RefreshStatic;}catch(_){}try{v68RefreshStatic=v81RefreshStatic;}catch(_){}try{v67RefreshStatic=v81RefreshStatic;}catch(_){}try{v66RefreshStatic=v81RefreshStatic;}catch(_){}
