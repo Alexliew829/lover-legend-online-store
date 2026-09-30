@@ -25866,3 +25866,184 @@ document.addEventListener('click',e=>{if(e.target.closest?.('.nav-btn[data-page=
 // Keep every legacy refresh path on the current visible version and wording.
 try{v71RefreshStatic=v72RefreshStatic;}catch(_){}try{v70RefreshStatic=v72RefreshStatic;}catch(_){}try{v67RefreshStatic=v72RefreshStatic;}catch(_){}try{v66RefreshStatic=v72RefreshStatic;}catch(_){}
 const v72Hint=document.getElementById('v67VariationsHint');if(v72Hint)v72Hint.textContent='关闭：直接使用母产品编号上架；开启：同时开放单棵盆景 / Individual Trees 与随机发货 / Random。';
+
+/* ================================================================
+   Online Store V7.3 - Pricing Grid + Room Stability + UI Cleanup
+   - 3-column price summary (desktop), responsive 2/1 columns
+   - explicit Online Total Cost read-only field
+   - seller-paid shipping is included dynamically in total cost/floor/profit
+   - room summary = stock / free / total cost / real price / sold / allocated
+   - remove-room returns Product Overview (never blank)
+   - room-to-room navigation preserves scroll position (no page jump)
+   - compact Local Variation columns keep Delete fully visible
+   - no sync/network/polling/observer changes
+   ================================================================ */
+window.ONLINE_STORE_V73_ACTIVE=true;
+
+function v73ShippingSellerPaid(){
+  return String(getOnlineStoreUiSettingsV12()?.shipping?.responsibility||'buyer')==='seller';
+}
+
+function v73EnsureTotalCostField(){
+  const grid=document.querySelector('#onlineStoreEditorV10 .online-store-price-foundation-v11');
+  if(!grid)return null;
+  let input=document.getElementById('onlineStoreTotalCostV73');
+  if(!input){
+    const label=document.createElement('label');
+    label.className='v73-total-cost';
+    label.innerHTML='Online 总成本（RM）<input id="onlineStoreTotalCostV73" readonly type="text" placeholder="自动计算"/><small class="field-hint-v12" id="onlineStoreTotalCostHintV73">按卖家实际承担成本自动计算。</small>';
+    grid.appendChild(label);
+    input=label.querySelector('input');
+  }
+  return input;
+}
+
+function v73PriceLabels(){
+  const byId=id=>document.getElementById(id)?.closest('label')||null;
+  return {
+    floor:byId('onlineStorePriceFloorV21'),
+    current:byId('onlineStoreCurrentMinimumPriceV37'),
+    average:byId('onlineStoreAverageCostV11'),
+    mother:byId('onlineStoreMotherRegularPriceV33'),
+    total:byId('onlineStoreTotalCostV73'),
+    profit:byId('onlineStoreActualNetProfitV47'),
+    margin:byId('onlineStoreActualNetMarginV47'),
+    shipping:byId('onlineStoreShippingCostV14'),
+    pot:byId('onlineStorePotCostV14')
+  };
+}
+
+function v73ArrangePriceGrid(){
+  const grid=document.querySelector('#onlineStoreEditorV10 .online-store-price-foundation-v11');
+  if(!grid)return;
+  try{v47EnsureProfitFields();}catch(_){}
+  v73EnsureTotalCostField();
+  const f=v73PriceLabels();
+  // Hide obsolete Initial Minimum reference from the current Online decision view.
+  const initial=document.getElementById('onlineStoreMinimumPriceV11')?.closest('label');
+  if(initial)initial.hidden=true;
+  const order=[f.floor,f.current,f.average,f.mother,f.total,f.profit,f.margin,f.shipping,f.pot].filter(Boolean);
+  order.forEach(el=>grid.appendChild(el));
+  grid.classList.add('v73-price-grid');
+  const avgLabel=document.getElementById('onlineStoreAverageCostLabelV19');if(avgLabel)avgLabel.textContent='平均成本（Import）（RM）';
+  const currentLabel=f.current?.querySelector(':scope > span');if(currentLabel)currentLabel.textContent='Import 当前最低售价（只读）（RM）';
+  const motherText=[...((f.mother?.childNodes)||[])].find(n=>n.nodeType===Node.TEXT_NODE&&String(n.textContent||'').trim());if(motherText)motherText.textContent='母产品默认售价 (RM) ';
+}
+
+function v73UpdatePricingSummary(){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;
+  v73ArrangePriceGrid();
+  const mother=parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value);
+  const info=calculateOnlineProtectionFloorV21(product);
+  const actual=v43Profit(mother,product,null);
+  const total=document.getElementById('onlineStoreTotalCostV73');if(total)total.value=formatOnlineMoneyInputV12(actual.totalCost||0);
+  const sellerPaid=v73ShippingSellerPaid();
+  const totalHint=document.getElementById('onlineStoreTotalCostHintV73');
+  if(totalHint)totalHint.textContent=sellerPaid
+    ?'平均成本 + Online Pot Cost + Packaging + Payment Fee + Affiliate（如启用）+ 参考运费（卖家承担）。'
+    :'平均成本 + Online Pot Cost + Packaging + Payment Fee + Affiliate（如启用）；参考运费由买家另付。';
+  const shipHint=document.getElementById('onlineStoreShippingHintV43');if(shipHint)shipHint.textContent=sellerPaid?'参考运费已计入商品总成本（卖家承担）。':'参考运费不计入商品总成本（买家另付）。';
+  const floorHint=document.getElementById('onlineStorePriceFloorHintV43');if(floorHint)floorHint.textContent=sellerPaid?'保护底线包含参考运费（卖家包邮）及其他卖家承担成本。':'保护底线按卖家承担成本计算；买家另付的参考运费不计入。';
+  const profit=document.getElementById('onlineStoreActualNetProfitV47');if(profit&&mother>0)profit.value=formatOnlineMoneyInputV12(actual.profit);
+  const margin=document.getElementById('onlineStoreActualNetMarginV47');if(margin&&mother>0)margin.value=actual.margin.toFixed(2);
+  const floor=document.getElementById('onlineStorePriceFloorV21');if(floor&&info.floor>0)floor.value=formatOnlineMoneyInputV12(info.floor);
+}
+
+// Keep the canonical V6.x/V7.x pricing algorithm; only add the V7.3 summary/layout pass.
+const v73UpdateProtectionBase=updateOnlineProtectionFloorV21;
+updateOnlineProtectionFloorV21=function(){
+  const out=v73UpdateProtectionBase.apply(this,arguments);
+  try{v73UpdatePricingSummary();}catch(_){}
+  return out;
+};
+
+const v73SetEditorBase=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  const out=v73SetEditorBase(productId,preserveRoomV16);
+  requestAnimationFrame(()=>{try{v73ArrangePriceGrid();v73UpdatePricingSummary();}catch(_){}});
+  return out;
+};
+
+document.addEventListener('input',e=>{
+  if(['onlineStoreMotherRegularPriceV33','onlineStoreShippingCostV14'].includes(e.target?.id))requestAnimationFrame(()=>{try{v73UpdatePricingSummary();}catch(_){}});
+},true);
+
+// Room cards: show business-useful figures in one compact 6-cell desktop row.
+v72RoomCardHtml=function(p,room){
+  const id=String(p?.id||'').trim().toUpperCase(),cfg=getOnlineStoreConfigV10(id),counts=getOnlineStoreCountsV10(p,cfg),currentAllocated=onlineStoreRoomAllocatedV27(cfg,room),free=Math.max(0,Number(counts.unallocated)||0);
+  const englishName=productEnglishNameV262(p),soldCount=(cfg.uniqueItems||[]).filter(x=>String(x?.status||'available')==='sold').length;
+  const realPrice=Math.max(0,Number(cfg.motherRegularPrice)||0),cost=v43Profit(realPrice,p,null),totalCost=Math.max(0,Number(cost.totalCost)||0);
+  const inline=v67AllocationInline(cfg,room),published=v72PublishedInRoom(cfg,room),stateChip=published?'<span class="v72-room-state published">已上架</span>':'<span class="v72-room-state saved">已保存</span>';
+  return `<article class="online-store-product-card-v10 room-product-card-v27 v72-room-default-card" data-online-product-v10="${escapeHTML(id)}"><div class="online-store-product-main-v10"><div class="online-store-product-title-v12"><button type="button" class="copy-text-btn-v12 online-store-product-id-v10" data-online-copy-v12="${escapeHTML(id)}">${escapeHTML(id)}</button><button type="button" class="copy-text-btn-v12 online-store-product-name-v10" data-online-copy-v12="${escapeHTML(p?.name||'')}">${escapeHTML(p?.name||'')}</button>${inline}${stateChip}</div>${englishName?`<button type="button" class="copy-text-btn-v12 online-store-product-english-v12" data-online-copy-v12="${escapeHTML(englishName)}">${escapeHTML(englishName)}</button>`:''}<div class="room-product-meta-v27 room-product-meta-v28 v73-room-summary"><span><i>真实库存</i><strong>${formatNumber(counts.stock)}</strong></span><span><i>可分配</i><strong>${formatNumber(free)}</strong></span><span><i>总成本</i><strong>${formatMoney(totalCost,'RM ')}</strong></span><span><i>真实售价</i><strong>${formatMoney(realPrice,'RM ')}</strong></span><span><i>已售出</i><strong>${formatNumber(soldCount)}</strong></span><span><i>本房已分配</i><strong>${formatNumber(currentAllocated)}</strong></span></div></div><button type="button" class="primary-btn online-store-manage-btn-v12" data-online-manage-v10="${escapeHTML(id)}">管理 / 编辑</button></article>`;
+};
+
+// Remove-room success always returns Product Overview. Existing V7.2 delayed calls resolve this function at run time.
+v72RestoreRoomView=function(){
+  try{v50ClearDirty();}catch(_){}
+  onlineStoreSelectedProductIdV10='';onlineStoreRoomV16='';onlineStoreRoomDirtyV16=false;onlineStoreSelectedRoomV27='';onlineStoreSelectedCategoryV32='bonsai';
+  try{if(typeof v47ActivateProductPage==='function')v47ActivateProductPage();}catch(_){}
+  try{showProductOverviewV32();}catch(_){
+    const hub=document.getElementById('roomFirstHubV27'),cats=document.getElementById('productCategoryHubV32');if(hub)hub.hidden=false;if(cats)cats.hidden=false;
+    ['onlineStoreEditorV10','productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  }
+  try{v73RefreshStatic();}catch(_){}
+};
+
+// Product-page self-heal: an active Product Management page must never remain blank.
+function v73HealProductOverview(){
+  const page=document.getElementById('onlineStorePage');if(!page?.classList.contains('active'))return;
+  const ids=['roomFirstHubV27','productCategoryHubV32','productEnteredHeaderV32','onlineStoreProductListV10','onlineStoreEditorV10','contentTemplatesPanelV41','autoMinimumPanelV43','v70LocalProductPanel'];
+  const any=ids.some(id=>{const el=document.getElementById(id);return el&&!el.hidden;});
+  if(!any){try{showProductOverviewV32();}catch(_){}}
+}
+
+// Preserve vertical position for room-to-room tab switches. Overview -> room remains normal.
+const v73NavigateBase=navigateToProductManagementV50;
+function navigateToProductManagementV73(target='overview',context={}){
+  const prevRoom=v67ValidRoom(onlineStoreSelectedRoomV27),nextRoom=v67ValidRoom(target),keep=Boolean(prevRoom&&nextRoom),y=window.scrollY;
+  const ok=v73NavigateBase(target,context);if(ok===false)return false;
+  if(keep){
+    const restore=()=>{window.scrollTo({top:y,behavior:'auto'});const s=document.getElementById('onlineStoreSearchV10');if(s&&document.activeElement===s)s.blur();};
+    restore();requestAnimationFrame(restore);setTimeout(restore,20);setTimeout(restore,90);
+  }
+  requestAnimationFrame(v73HealProductOverview);
+  return true;
+}
+window.navigateToProductManagementV73=navigateToProductManagementV73;
+window.navigateToProductManagement=navigateToProductManagementV73;
+navigateToProductManagementV50=navigateToProductManagementV73;
+navigateToProductManagementV48=navigateToProductManagementV73;
+navigateToProductManagementV47=navigateToProductManagementV73;
+navigateToProductManagementV46=navigateToProductManagementV73;
+
+function v73RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.3 · Pricing Grid + Room Stability + Compact Variations · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.3 · Import Base V41.8 · Import Data Read-Only';
+}
+
+function v73Setup(){
+  v73RefreshStatic();
+  try{v73ArrangePriceGrid();v73UpdatePricingSummary();}catch(_){}
+  try{v72EnhanceLocalPanel();}catch(_){}
+  try{renderOnlineStoreProductListV10();}catch(_){}
+  v73HealProductOverview();
+}
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(v73Setup,2850);setTimeout(v73RefreshStatic,4600);});
+window.addEventListener('load',()=>{setTimeout(v73Setup,3050);setTimeout(v73RefreshStatic,5000);});
+document.addEventListener('click',e=>{if(e.target.closest?.('.nav-btn[data-page="onlineStorePage"],.module-tabs-v30 button,[data-room-first-v27],#v46RemoveFromRoom'))setTimeout(()=>{v73RefreshStatic();v73HealProductOverview();},120);},true);
+
+// Older delayed callbacks must paint the current version.
+try{v72RefreshStatic=v73RefreshStatic;}catch(_){}try{v71RefreshStatic=v73RefreshStatic;}catch(_){}try{v70RefreshStatic=v73RefreshStatic;}catch(_){}try{v67RefreshStatic=v73RefreshStatic;}catch(_){}try{v66RefreshStatic=v73RefreshStatic;}catch(_){}
+
+// Shipping responsibility control in Logistics also refreshes the V7.3 total-cost/hint fields immediately.
+const v73PricingUiBase=v51UpdatePricingUi;
+v51UpdatePricingUi=function(){
+  const out=v73PricingUiBase.apply(this,arguments);
+  try{v73UpdatePricingSummary();}catch(_){}
+  return out;
+};
+v46UpdateCurrentMinimumProfit=v51UpdatePricingUi;
+v48UpdateProfitDisplays=v51UpdatePricingUi;

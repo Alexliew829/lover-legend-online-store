@@ -1,23 +1,14 @@
-Lover Legend Online Store V7.2 PATCH from V7.1
+Lover Legend Online Store V7.3 PATCH from V7.2
 
-Changes: room default allocation visibility; remove-room blank-page recovery; unified V7.2 labels; compact Online Local Product variation list; optional/auto Parent SKU; Option size prefill to package L/W/H; performance-safe local rendering.
+Key changes:
+1. Remove-room success returns Product Overview; blank Product Management self-heals to Overview.
+2. Room-to-room VIP/Premium/Starter switching preserves scroll position and avoids page jump.
+3. Room summary cards use 6 business fields: Real Stock / Available / Total Cost / Real Price / Sold / Allocated.
+4. Desktop room summaries use one row of 6; tablet 3+3; mobile 2 columns.
+5. Pricing area is reorganized into 3 columns desktop, 2 tablet, 1 mobile.
+6. Added read-only Online Total Cost field.
+7. Seller-paid/free-shipping mode includes reference shipping in total cost, floor, profit and margin; buyer-paid shipping excludes it.
+8. Local Product compact Variation columns tightened so Delete remains visible; Seller SKU stays optional and last.
+9. No sync.js, polling, observer, or network changes.
 
-Lover Legend Online Store Management Admin V7.1
-
-V7.1 changes
-- Import stock=1: Variations forced OFF + disabled; Individual Trees and Random hidden; Parent Direct only.
-- Online Local Product: 1-8 shared product photos, optional Add Variations, per-variation size/color/price/qty/package L/W/H/weight/Seller SKU.
-- Online Local Product copy-to-new-Draft flow.
-- Category pages can add/edit/copy Local Products directly.
-- Preserves V7.0 performance cleanup and Import read-only boundary.
-
-Lover Legend Online Store V6.9 PATCH from V6.8
-Frontend only. No Apps Script / Code.gs deployment required.
-Key changes: TikTok-style Variations switch, direct Parent allocation without Child ID when OFF, explicit Save vs Publish/Unpublish, new Child drafts default unpublished, Random remains independent.
-
-V7.0 changes
-- Parent Direct is mandatory when Import stock = 1; Variations defaults OFF and is disabled.
-- Variations ON (stock > 1 only) controls both Individual Trees and Random; OFF hides both.
-- Added lightweight + Add Product / Online Local Product for accessories with Online-managed qty, cost, price, media URL, dimensions, weight, save and publish/unpublish.
-- Room search input listener replaced with a lightweight debounced repaint; sync engine unchanged.
-- Integer-major Performance Cleanup completed; V6.0 remains Stable Rollback Baseline.
+Stable rollback baseline remains V6.0.
