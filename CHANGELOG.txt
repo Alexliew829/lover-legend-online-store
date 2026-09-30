@@ -1,0 +1,17 @@
+Lover Legend Online Store Management Admin
+Unified CHANGELOG
+
+V10.0 FULL DEPLOY
+- Rebased release packaging on V8.2 business logic.
+- Restored missing shared runtime dependency js/common.js from the earlier FULL DEPLOY lineage.
+- Restored complete assets/images and assets/icons required by index.html, manifest.json and sw.js.
+- Removed patch-only .bak files and PATCH_README accumulation from the deploy package.
+- Updated release identity to V10.0 / Build 10000.
+- Updated displayed Import/Inventory reference baseline to V42.8 Read-Only.
+- Online Store remains read-only toward Import/Inventory; no write-back was added.
+- Service-worker cache namespace and cache-busting tokens updated for V10.0.
+- This package is intended to contain every local file referenced at runtime, so it can be deployed to an empty GitHub repository without relying on old repository leftovers.
+
+Apps Script / Code.gs:
+- No Code.gs change is included in this package.
+- No Web App redeploy is required by this V10.0 packaging integration itself.
