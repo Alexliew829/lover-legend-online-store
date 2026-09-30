@@ -27454,3 +27454,310 @@ function v82RefreshStatic(){
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',v82Setup,{once:true});else v82Setup();
 window.addEventListener('load',v82RefreshStatic,{once:true});
 try{v81RefreshStatic=v82RefreshStatic;}catch(_){}try{v80RefreshStatic=v82RefreshStatic;}catch(_){}try{v79RefreshStatic=v82RefreshStatic;}catch(_){}try{v78RefreshStatic=v82RefreshStatic;}catch(_){}try{v77RefreshStatic=v82RefreshStatic;}catch(_){}try{v76RefreshStatic=v82RefreshStatic;}catch(_){}
+
+// ============================================================================
+// Online Store V8.3 - Interaction Audit + Hard Navigation + 10-unit Variations
+// ============================================================================
+// Focus:
+// - first-click response for critical Product Management actions
+// - hard, non-blank routes for Manage Template and Remove from Room
+// - immediate template-form clearing when template name becomes empty
+// - immediate child/random price ceiling + protection-floor warnings
+// - Individual Trees / Random allow 1..10 units (subject to real stock)
+
+const V83_UNIT_LIMIT = 10;
+
+function v83StopEvent(e){
+  if(!e)return;
+  e.preventDefault?.();
+  e.stopPropagation?.();
+  e.stopImmediatePropagation?.();
+}
+
+function v83ActivateProductPageShell(){
+  const page=document.getElementById('onlineStorePage');
+  if(!page)return null;
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p===page));
+  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',String(b.dataset.page||'')==='onlineStorePage'));
+  page.hidden=false;page.style.removeProperty('display');
+  page.querySelectorAll(':scope > .panel').forEach(p=>{p.hidden=false;p.style.removeProperty('display');});
+  try{updateAdminTopbarTitleV28('onlineStorePage');}catch(_){ }
+  return page;
+}
+
+function v83ShowProductOverviewHard(){
+  const page=v83ActivateProductPageShell();if(!page)return false;
+  try{v50ClearDirty?.();}catch(_){ }
+  onlineStoreSelectedProductIdV10='';
+  onlineStoreRoomV16='';
+  onlineStoreRoomDirtyV16=false;
+  onlineStoreSelectedRoomV27='';
+  onlineStoreSelectedCategoryV32='bonsai';
+  ['onlineStoreEditorV10','productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10','contentTemplatesPanelV41','autoMinimumPanelV43','v70LocalProductPanel'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.hidden=true;el.style.removeProperty('display');}
+  });
+  ['roomFirstHubV27','productCategoryHubV32'].forEach(id=>{
+    const el=document.getElementById(id);if(el){el.hidden=false;el.style.removeProperty('display');}
+  });
+  const list=document.getElementById('onlineStoreProductListV10');if(list)list.innerHTML='';
+  const search=document.getElementById('onlineStoreSearchV10');if(search)search.value='';
+  const filter=document.getElementById('onlineStoreCategoryFilterV32');if(filter){filter.value='all';filter.disabled=false;filter.hidden=false;}
+  try{setProductRoomActiveStateV32('');setProductCategoryActiveStateV32('bonsai');}catch(_){ }
+  document.querySelectorAll('#onlineStorePage nav.module-tabs-v30 button').forEach(b=>{
+    const isOverview=b.hasAttribute('data-product-room-tab-v30')&&!String(b.dataset.productRoomTabV30||'');
+    b.classList.toggle('active',isOverview);
+  });
+  window.scrollTo({top:0,behavior:'auto'});
+  return true;
+}
+window.v83ShowProductOverviewHard=v83ShowProductOverviewHard;
+showProductOverviewV32=v83ShowProductOverviewHard;
+v47ShowOverviewNow=v83ShowProductOverviewHard;
+v44ShowProductOverviewNow=v83ShowProductOverviewHard;
+v72RestoreRoomView=v83ShowProductOverviewHard;
+v75ShowProductOverviewHard=v83ShowProductOverviewHard;
+
+function v83RemoveCurrentProductFromRoom(){
+  const id=String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase();
+  const room=String((typeof v77CurrentRoom==='function'?v77CurrentRoom():v46CurrentRoom?.())||'').replace('random','entry');
+  if(!id||!room)return false;
+  if(v50HasUnsaved?.()&&!window.confirm('当前房间有尚未保存的资料。\n\n继续会丢弃这些未保存内容并移除此房，是否继续？'))return false;
+  if(!window.confirm(`确认把 ${id} 从「${v46RoomName(room)}」移除？\n\n只移除这个房间的 Online 分配；不会删除 Import 产品、真实库存、平均成本、最低售价、Sold history 或订单记录。`))return false;
+  try{
+    const state=getOnlineStoreStateV10();
+    const raw=state.products?.[id];
+    if(raw&&typeof raw==='object'){
+      const copy=JSON.parse(JSON.stringify(raw));
+      try{if(typeof v67ValidRoom==='function'&&v67ValidRoom(copy.parentListingRoom)===room){copy.parentListingRoom='';copy.parentPublished=false;}}catch(_){ }
+      const items=Array.isArray(copy.uniqueItems)?copy.uniqueItems:[];
+      copy.uniqueItems=items.filter(item=>{
+        const itemRoom=typeof v38TierRoom==='function'?v38TierRoom(item):String(item?.tier||'');
+        const sold=String(item?.status||'available')==='sold';
+        return itemRoom!==room||sold;
+      });
+      if(room==='entry'){
+        copy.randomQty=0;copy.randomPublished=false;copy.regularPrice=0;copy.promotionPrice=0;copy.randomPhotos=[];copy.randomVideo='';
+      }
+      copy.updatedAt=new Date().toISOString();
+      state.products[id]=copy;
+      saveOnlineStoreStateV10(state);
+    }
+    try{addOnlineStoreHistoryV14('allocation',id,getOnlineStoreProductV10(id)?.name||'',`移除 ${v46RoomName(room)} 的 Online 分配`);}catch(_){ }
+    return v83ShowProductOverviewHard();
+  }catch(err){
+    console.error('V8.3 remove-room failed',err);
+    window.alert('移除此房失败，请保留当前页面并重新尝试。');
+    return false;
+  }
+}
+v46RemoveCurrentProductFromRoom=v83RemoveCurrentProductFromRoom;
+
+function v83ClearTemplateDraftNow(){
+  const name=document.getElementById('contentTemplateNameV41');
+  if(!name||String(name.value||'').trim())return false;
+  ['contentTemplateKeywordV41','contentTemplateDescriptionV41','contentTemplateCareV41'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  window.__v41EditingTemplateKey='';
+  window.__v41CurrentTemplateKey='';
+  window.__v42TemplateDirty=false;
+  const st=document.getElementById('contentTemplateStatusV41');if(st)st.textContent='';
+  return true;
+}
+
+function v83BindTemplateNameClear(){
+  const name=document.getElementById('contentTemplateNameV41');if(!name||name.dataset.v83ClearBound==='1')return;
+  name.dataset.v83ClearBound='1';
+  const fn=()=>v83ClearTemplateDraftNow();
+  name.addEventListener('input',fn,{passive:true});
+  name.addEventListener('change',fn,{passive:true});
+  name.addEventListener('keyup',fn,{passive:true});
+}
+
+function v83ReplaceManageTemplateButton(){
+  const old=document.getElementById('v83ManageTemplate')||document.getElementById('v82ManageTemplate')||document.getElementById('openContentTemplatesFromProductV41');
+  if(!old)return null;
+  if(old.id==='v83ManageTemplate'&&old.dataset.v83Fresh==='1')return old;
+  const fresh=old.cloneNode(true);
+  fresh.id='v83ManageTemplate';fresh.dataset.v83Fresh='1';fresh.textContent='管理模板';
+  old.replaceWith(fresh);
+  return fresh;
+}
+
+function v83ShowTemplatesHard(prefillCurrent=true){
+  const page=v83ActivateProductPageShell();
+  const panel=document.getElementById('contentTemplatesPanelV41');
+  if(!page||!panel)return false;
+  ['roomFirstHubV27','productCategoryHubV32','productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10','onlineStoreEditorV10','autoMinimumPanelV43','v70LocalProductPanel'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.hidden=true;
+  });
+  panel.hidden=false;panel.style.display='block';panel.removeAttribute('aria-hidden');
+  let parent=panel.parentElement;
+  while(parent&&parent!==page){if(parent.hidden)parent.hidden=false;if(parent.style?.display==='none')parent.style.removeProperty('display');parent=parent.parentElement;}
+  document.querySelectorAll('#onlineStorePage .module-tabs-v30 button').forEach(b=>b.classList.toggle('active',b.hasAttribute('data-v41-content-templates')));
+  try{v41RenderTemplateList(true);}catch(err){try{v41RenderTemplateList();}catch(_){console.error('V8.3 template render failed',err);}}
+  if(prefillCurrent){
+    const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);
+    if(product){
+      let matched=null;try{matched=v41AutoTemplateForProduct(product,'');}catch(_){ }
+      if(matched){
+        const all=v41LoadTemplates?.()||{};const key=matched.key||v41TemplateKey?.(matched.name||'')||'';const t=all[key]||matched;
+        const put=(id,v)=>{const el=document.getElementById(id);if(el)el.value=String(v||'');};
+        put('contentTemplateNameV41',t.name);put('contentTemplateKeywordV41',t.keyword);put('contentTemplateDescriptionV41',t.description);put('contentTemplateCareV41',t.careGuide);
+        window.__v41EditingTemplateKey=key;
+      }
+    }
+  }
+  v83BindTemplateNameClear();
+  window.scrollTo({top:0,behavior:'auto'});
+  return panel.hidden===false;
+}
+window.v83ShowTemplatesHard=v83ShowTemplatesHard;
+v42OpenTemplates=function(fromProduct=false){return v83ShowTemplatesHard(Boolean(fromProduct));};
+v41ShowTemplates=function(){return v83ShowTemplatesHard(!document.getElementById('onlineStoreEditorV10')?.hidden);};
+v80OpenTemplatesForCurrentProduct=function(){return v83ShowTemplatesHard(true);};
+
+function v83MotherPrice(){return Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));}
+function v83InlinePriceWarning(input,floor,mother,label){
+  if(!input)return;
+  const price=Math.max(0,parseOnlineNumberV12(input.value));
+  let warn=input.parentElement?.querySelector(':scope > .v83-live-price-warning');
+  if(!warn){warn=document.createElement('small');warn.className='v83-live-price-warning';input.parentElement?.appendChild(warn);}
+  const parts=[];
+  const over=price>0&&mother>0&&price>mother;
+  const under=price>0&&floor>0&&price<floor;
+  if(over)parts.push(`⚠ ${label}售价高于母产品默认售价 RM ${formatOnlineMoneyInputV12(mother)}`);
+  if(under)parts.push(`⚠ ${label}售价低于 Online 销售保护底线 RM ${formatOnlineMoneyInputV12(floor)}`);
+  if(warn){warn.hidden=!parts.length;warn.textContent=parts.join(' · ');warn.classList.toggle('is-over',over);warn.classList.toggle('is-under',under);}
+  input.classList.toggle('v83-price-invalid',over||under);
+  input.setCustomValidity(over?`售价不得高于母产品默认售价 RM ${formatOnlineMoneyInputV12(mother)}`:'');
+}
+
+function v83RefreshLivePriceWarnings(){
+  const product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(!product)return;
+  const mother=v83MotherPrice();
+  document.querySelectorAll('#v34TreeList [data-v34-child-card]').forEach(card=>{
+    const input=card.querySelector('[data-online-field-v10="regularPrice"]');if(!input)return;
+    let item=null;try{item=typeof v43ChildItemFromCard==='function'?v43ChildItemFromCard(card):null;}catch(_){ }
+    const floor=v82ProtectionFloor?.(product,item)||0;
+    v83InlinePriceWarning(input,floor,mother,'当前');
+  });
+  const random=document.getElementById('onlineStoreRegularPriceV10');
+  if(random){const floor=v82ProtectionFloor?.(product,null)||0;v83InlinePriceWarning(random,floor,mother,'Random ');}
+}
+
+// V8.3 quantity policy: 1 is valid, 10 is the per-mode upper bound.
+v35TierLimit=function(tier){return ['premium','entry','collector'].includes(String(tier||''))?V83_UNIT_LIMIT:Infinity;};
+
+function v83RandomLimitStatus(){
+  const qty=document.getElementById('onlineStoreRandomQtyV10');if(!qty)return true;
+  qty.setAttribute('min','1');qty.setAttribute('max',String(V83_UNIT_LIMIT));
+  const val=Math.max(0,Math.floor(parseOnlineNumberV12(qty.value)));
+  const p=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);const stock=Math.max(0,Math.floor(Number(p?.stock)||0));
+  const active=typeof v49ActiveUniqueCount==='function'?v49ActiveUniqueCount():0;
+  const cap=Math.max(0,Math.min(V83_UNIT_LIMIT,stock-active));
+  let warn=document.getElementById('v83RandomQtyWarning');if(!warn){warn=document.createElement('small');warn.id='v83RandomQtyWarning';warn.className='v83-live-price-warning';qty.closest('label')?.appendChild(warn);}
+  const bad=val>cap||(val>V83_UNIT_LIMIT);
+  if(warn){warn.hidden=!bad;warn.textContent=bad?`⚠ Random 最多可分配 ${cap} 棵（系统上限 10，且不能超过当前真实可分配库存）`:'';}
+  qty.setCustomValidity(bad?`Random 最多可分配 ${cap} 棵`:'' );
+  return !bad;
+}
+
+const v50ValidateBeforeSaveBaseV83=v50ValidateBeforeSave;
+v50ValidateBeforeSave=function(){
+  // The legacy validator still contains the old 5-unit ceiling; V8.3 replaces
+  // only that rule while preserving draft completeness and duplicate-photo checks.
+  const draftCheck=v35ValidateDraftCards();
+  if(!draftCheck.ok){const body=draftCheck.card?.querySelector('.v34-tree-editor');if(body)body.hidden=false;draftCheck.card?.scrollIntoView({behavior:'auto',block:'center'});window.alert(`${draftCheck.id} 编辑器尚未完成：${draftCheck.missing.join('、')}。\n\n请完成填写，或删除这个编辑器后再保存。`);return false;}
+  if(typeof v77ValidatePriceCeiling==='function'&&!v77ValidatePriceCeiling(true))return false;
+  const items=collectOnlineStoreUniqueItemsV10();
+  for(const tier of ['premium','entry','collector']){const count=v35ActiveCount(items,tier);if(count>V83_UNIT_LIMIT){window.alert(`不能保存：${v34TierLabel(tier)}最多同时 10 棵，目前为 ${count} 棵。`);return false;}}
+  if(!v83RandomLimitStatus())return false;
+  const dup=v35ValidateUniquePhotoLinks(items);if(!dup.ok){window.alert(`不能保存：同一张照片不能用于两个一物一拍子编号。\n\n${dup.first} 与 ${dup.second} 使用了同一个照片链接。`);return false;}
+  return true;
+};
+
+function v83RefreshAddTreeState(){
+  const tier=String(document.getElementById('v34NewTreeTier')?.value||'premium');const btn=document.getElementById('v34AddTree');if(!btn)return;
+  const items=collectOnlineStoreUniqueItemsV10();const count=v35ActiveCount(items,tier);const capFull=count>=V83_UNIT_LIMIT;
+  const a=v49AllocationAvailability?.()||{stock:0,remaining:0};const noStock=a.remaining<=0;
+  const draft=document.querySelector('#v34TreeList [data-v34-child-card="1"][data-v35-draft="1"]');
+  btn.hidden=noStock&&!draft;
+  btn.disabled=Boolean(draft)||capFull||noStock;
+  if(draft){btn.textContent='请先保存当前一棵';btn.title=`${draft.dataset.itemIdV10||'当前子编号'} 尚未保存；保存或删除后才可新增下一棵。`;}
+  else if(capFull){btn.textContent='已达到 10 棵';btn.title=`${v34TierLabel(tier)}当前有效子产品已达到最多 10 棵。`;}
+  else {btn.textContent='＋ 新增一棵';btn.title=noStock?'Import 真实库存已全部分配。':'';}
+  const row=btn.closest('.v34-add-row');let note=document.getElementById('v49AddTreeAvailability');
+  if(row&&!note){note=document.createElement('small');note.id='v49AddTreeAvailability';note.className='v49-allocation-note';row.appendChild(note);}
+  if(note)note.textContent=draft?`${draft.dataset.itemIdV10||'当前子编号'} 尚未保存 · 先完成这一棵`:capFull?'已达到最多 10 棵':noStock?`真实库存 ${a.stock} · 已全部分配`:`可再建立 ${Math.min(V83_UNIT_LIMIT-count,a.remaining)} 棵（最多 10 棵）`;
+}
+v35UpdateAddState=v83RefreshAddTreeState;
+
+function v83FastEnterRoom(room){
+  const target=String(room||'');if(!['vip','premium','entry'].includes(target))return false;
+  if(onlineStoreRoomDirtyV16&&!confirmRoomLeaveV16())return false;
+  onlineStoreSelectedRoomV27=target;onlineStoreSelectedCategoryV32='bonsai';
+  const page=v83ActivateProductPageShell();if(!page)return false;
+  const editor=document.getElementById('onlineStoreEditorV10');if(editor)editor.hidden=true;
+  const hub=document.getElementById('roomFirstHubV27');if(hub)hub.hidden=true;
+  const cats=document.getElementById('productCategoryHubV32');if(cats)cats.hidden=true;
+  const header=document.getElementById('productEnteredHeaderV32');if(header)header.hidden=false;
+  const tools=document.getElementById('roomProductToolsV27');if(tools)tools.hidden=false;
+  const list=document.getElementById('onlineStoreProductListV10');if(list)list.hidden=false;
+  const search=document.getElementById('onlineStoreSearchV10');if(search)search.value='';
+  const cat=document.getElementById('onlineStoreCategoryFilterV32');if(cat){cat.value='bonsai';cat.disabled=true;cat.hidden=false;}
+  try{setProductRoomActiveStateV32(target);setProductCategoryActiveStateV32('bonsai');setEnteredProductHeaderV32(onlineStoreRoomLabelV27(target),target==='entry'?'Starter：本房已分配商品会先显示；可再搜索产品加入。':'本房已分配商品会先显示；可再搜索产品加入。');}catch(_){ }
+  requestAnimationFrame(()=>{try{renderOnlineStoreProductListV10();}catch(err){console.error('V8.3 room render failed',err);}});
+  return true;
+}
+
+// Critical interaction fast path. Window capture runs before older document/target
+// handlers, so one click maps to one action instead of traversing stacked legacy listeners.
+if(!window.__v83CriticalClickBound){
+  window.__v83CriticalClickBound=true;
+  window.addEventListener('click',e=>{
+    const t=e.target;
+    const manage=t?.closest?.('#v83ManageTemplate,#v82ManageTemplate,#openContentTemplatesFromProductV41');
+    if(manage){v83StopEvent(e);v83ShowTemplatesHard(true);return;}
+    const remove=t?.closest?.('#v46RemoveFromRoom');
+    if(remove){v83StopEvent(e);v83RemoveCurrentProductFromRoom();return;}
+    const room=t?.closest?.('[data-room-first-v27]');
+    if(room){v83StopEvent(e);v83FastEnterRoom(room.dataset.roomFirstV27);return;}
+    const save=t?.closest?.('[data-v82-save-unit]');
+    if(save){v83StopEvent(e);v82SaveUnit(save);return;}
+    const pub=t?.closest?.('[data-v82-publish-unit]');
+    if(pub){v83StopEvent(e);v82ToggleUnitPublish(pub.dataset.v82PublishUnit,String(pub.dataset.v82UnitId||''),pub);return;}
+  },true);
+  window.addEventListener('input',e=>{
+    const t=e.target;
+    if(t?.id==='contentTemplateNameV41'){v83ClearTemplateDraftNow();return;}
+    if(t?.id==='onlineStoreMotherRegularPriceV33'||t?.id==='onlineStoreRegularPriceV10'||t?.matches?.('[data-online-field-v10="regularPrice"]'))v83RefreshLivePriceWarnings();
+    if(t?.id==='onlineStoreRandomQtyV10')v83RandomLimitStatus();
+  },true);
+}
+
+function v83Setup(){
+  v83ReplaceManageTemplateButton();
+  v83BindTemplateNameClear();
+  try{v83RefreshLivePriceWarnings();v83RandomLimitStatus();v83RefreshAddTreeState();}catch(_){ }
+  v83RefreshStatic();
+}
+function v83RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V8.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V8.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V8.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V8.3 · Interaction Audit + 10-unit Variations · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V8.3 · Import Base V41.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V8.3';
+}
+if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',v83Setup,{once:true});else v83Setup();
+window.addEventListener('load',v83RefreshStatic,{once:true});
+try{v82RefreshStatic=v83RefreshStatic;}catch(_){}try{v81RefreshStatic=v83RefreshStatic;}catch(_){}try{v80RefreshStatic=v83RefreshStatic;}catch(_){}try{v79RefreshStatic=v83RefreshStatic;}catch(_){}try{v78RefreshStatic=v83RefreshStatic;}catch(_){}
+
+// V8.3 allocation policy: Random minimum is 1, maximum is enforced at 10 by V8.3 validation.
+const getOnlineStoreUiSettingsV12BaseV83=getOnlineStoreUiSettingsV12;
+getOnlineStoreUiSettingsV12=function(){
+  const ui=getOnlineStoreUiSettingsV12BaseV83();
+  ui.allocation={...(ui.allocation||{}),randomMinimumQty:1};
+  return ui;
+};

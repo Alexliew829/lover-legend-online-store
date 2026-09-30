@@ -7467,3 +7467,27 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 .v82-unit-floor-warning{display:block;margin-top:6px;font-weight:700;color:#c62828;line-height:1.35}
 .v34-tree-actions{display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap}
 @media (max-width:700px){.v82-unit-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.v82-unit-actions button{width:100%}#onlineRoomRandomBlockV16>.v82-unit-actions{display:grid;grid-template-columns:1fr 1fr}}
+
+/* V8.3 interaction responsiveness + live validation */
+#onlineStorePage button,
+#onlineStorePage [role="button"],
+#onlineStorePage .room-card-v27,
+#onlineStorePage [data-room-first-v27] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(32,105,67,.12);
+}
+#onlineStorePage button:active,
+#onlineStorePage [role="button"]:active,
+#onlineStorePage [data-room-first-v27]:active {
+  transform: translateY(1px);
+}
+.v83-live-price-warning {
+  display:block;
+  margin-top:6px;
+  font-size:12px;
+  line-height:1.35;
+  color:#b91c1c;
+  font-weight:700;
+}
+.v83-live-price-warning[hidden] { display:none !important; }
+.v83-price-invalid { border-color:#dc2626 !important; box-shadow:0 0 0 2px rgba(220,38,38,.08); }
