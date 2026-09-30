@@ -1,0 +1,26 @@
+Lover Legend Online Store V9.0 Clean Rebuild
+Date: 01-10-2026
+
+Rebuilt from business rules and V8.3 UI/data structure references.
+Reference source: LL Import Cost & Inventory V42.8.
+
+Major architectural changes
+- Removed inherited Import frontend application code from Online Store runtime.
+- Removed accumulated V7/V8 patch handlers and fallback navigation chains.
+- One page router, one product-subview router, one delegated click chain, one delegated input chain.
+- Import integration is pull-only and throttled; no polling interval and no Import write code.
+- Online working data remains independent from Import.
+
+Critical regressions addressed structurally
+- Remove Room always calls Product Overview state directly.
+- Manage Template directly activates template subview; no old hide/show handler chain.
+- Room cards respond on first click without capture-layer patch handlers.
+- Template Name empty clears keyword/description/care immediately.
+- Child / Random price validation runs on input, not only Save.
+- Individual Tree maximum 10; Random quantity maximum 10; 1 is valid.
+- Child / Random Save and Publish are independent.
+
+Compatibility
+- First launch migrates legacy Online Store state/UI/template keys into V9 namespace.
+- Legacy keys are preserved for rollback.
+- Import V42.8 Apps Script does not need changes.
