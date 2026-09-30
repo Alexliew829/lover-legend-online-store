@@ -12,4 +12,6 @@ Key fixes:
 - Version surfaces updated to V7.5 / build 7500 / Import Base V41.8 read-only.
 - sync.js intentionally unchanged.
 
-V7.6: Product Management accuracy/UI patch: explicit shipping-mode save, Package Reserve freight basis, natural % display, 2-decimal net margin display, restored below-floor warning, 3-column pricing grid, promotion reference deferred, lightweight settings recalc. sync.js unchanged.
+V7.7: Product Management accuracy/UI patch: explicit shipping-mode save, Package Reserve freight basis, natural % display, 2-decimal net margin display, restored below-floor warning, 3-column pricing grid, promotion reference deferred, lightweight settings recalc. sync.js unchanged.
+
+V7.7: Product Management safety/state-machine patch: target-margin factory reset, fresh-settings recalc, current room badge, 0/5 photo counter, child/random price ceiling at mother price, canonical remove-room to Product Overview. sync.js unchanged.

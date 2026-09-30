@@ -26532,3 +26532,152 @@ window.addEventListener('load',()=>{setTimeout(v76Setup,3850);setTimeout(v76Refr
 document.addEventListener('click',e=>{if(e.target.closest?.('.nav-btn[data-page="shippingPageV27"],.nav-btn[data-page="onlineStorePage"],#v46RemoveFromRoom'))setTimeout(v76Setup,45);},true);
 
 try{v75RefreshStatic=v76RefreshStatic;}catch(_){}try{v74RefreshStatic=v76RefreshStatic;}catch(_){}try{v73RefreshStatic=v76RefreshStatic;}catch(_){}try{v72RefreshStatic=v76RefreshStatic;}catch(_){}try{v71RefreshStatic=v76RefreshStatic;}catch(_){}try{v70RefreshStatic=v76RefreshStatic;}catch(_){}try{v67RefreshStatic=v76RefreshStatic;}catch(_){}try{v66RefreshStatic=v76RefreshStatic;}catch(_){}
+
+/* ================================================================
+   Online Store V7.7 - Product Management Safety + State Machine Fix
+   - target-margin factory reset (30/35/40/45/50/60)
+   - settings changes always recalc current product from fresh settings
+   - current room badge beside remove-room action
+   - representative photo counter 0/5..5/5
+   - Child / Individual / Random price ceiling = mother default price
+   - canonical remove-room -> Product Overview state transition
+   - no Full Sync / polling / observer changes
+   ================================================================ */
+window.ONLINE_STORE_V77_ACTIVE=true;
+
+const V77_MARGIN_FACTORY=Object.freeze({m0_300:30,m300_500:35,m500_800:40,m800_5000:45,m5000_8000:50,m8000_plus:60});
+function v77NaturalPercent(v){const n=Number(String(v??'').replace(/,/g,'').trim());return Number.isFinite(n)?String(Math.round(n*1000000)/1000000):String(v??'');}
+function v77NormalizePercentInputs(){
+  ['v43Margin0','v43Margin1','v43Margin2','v43Margin3','v43Margin4','v43Margin5','v43AffiliateRate','v43PaymentFee'].forEach(id=>{const el=document.getElementById(id);if(!el||el===document.activeElement)return;const raw=String(el.value||'').trim();if(raw!=='')el.value=v77NaturalPercent(raw);});
+}
+
+function v77EnsureMarginFactoryReset(){
+  const first=document.querySelector('#autoMinimumPanelV43 .v43-rule-card');if(!first)return;
+  const head=first.querySelector('.v43-card-head');if(!head)return;
+  let btn=document.getElementById('v77ResetMarginFactory');
+  if(!btn){btn=document.createElement('button');btn.type='button';btn.id='v77ResetMarginFactory';btn.className='secondary-btn';btn.textContent='恢复原厂 / Reset to Factory';head.appendChild(btn);}
+}
+document.addEventListener('click',e=>{
+  const btn=e.target.closest?.('#v77ResetMarginFactory');if(!btn)return;
+  e.preventDefault();e.stopPropagation();
+  if(!window.confirm('确认把「目标净利率」整个区块恢复原厂？\n\nRM 0–300 = 30%\nRM 300.01–500 = 35%\nRM 500.01–799.99 = 40%\nRM 800–4,999.99 = 45%\nRM 5,000–7,999.99 = 50%\nRM 8,000以上 = 60%\n\n只恢复目标净利率，不影响 VND 花盆、Packaging、Payment Fee、Affiliate 或运费设置。'))return;
+  const vals=[30,35,40,45,50,60];['v43Margin0','v43Margin1','v43Margin2','v43Margin3','v43Margin4','v43Margin5'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.value=String(vals[i]);});
+  try{v43SaveUi(ui=>{ui.pricing={...(ui.pricing||{}),marginTiers:{...V77_MARGIN_FACTORY}};},'V7.7 目标净利率恢复原厂 30/35/40/45/50/60');}catch(err){console.error('V7.7 margin reset failed',err);window.alert('恢复原厂失败，请重新尝试。');return;}
+  const st=document.getElementById('v43AutoMinimumStatus');if(st)st.textContent='目标净利率已恢复原厂 · 30 / 35 / 40 / 45 / 50 / 60';
+  btn.textContent='已恢复原厂';setTimeout(()=>{if(btn.isConnected)btn.textContent='恢复原厂 / Reset to Factory';},1200);
+  v77SettingsChanged('margin-factory-reset');
+},true);
+
+// Single fresh-settings recalc path. Every settings write converges here.
+function v77SettingsChanged(reason='settings'){
+  try{v77NormalizePercentInputs();}catch(_){}
+  try{if(String(onlineStoreSelectedProductIdV10||'').trim())v76RefreshPricing();}catch(err){console.warn('V7.7 pricing recalc skipped',reason,err);}
+  try{v76EnsureShippingOverrideUi();}catch(_){}
+  try{window.dispatchEvent(new CustomEvent('online-store-settings-changed',{detail:{reason}}));}catch(_){}
+}
+const v43SaveUiBaseV77=v43SaveUi;
+v43SaveUi=function(mutator,historyText){const out=v43SaveUiBaseV77(mutator,historyText);v77SettingsChanged('working-settings-save');return out;};
+
+// Explicit shipping-mode save also uses the canonical refresh path.
+document.addEventListener('click',e=>{if(e.target.closest?.('#v76SaveShippingResponsibility'))setTimeout(()=>v77SettingsChanged('shipping-responsibility-save'),0);},true);
+document.addEventListener('change',e=>{if(e.target?.id==='v52AffiliateEnabled')setTimeout(()=>v77SettingsChanged('affiliate-toggle'),0);},true);
+// Returning to Product Management always reloads derived values from current settings.
+document.addEventListener('click',e=>{if(e.target.closest?.('.nav-btn[data-page="onlineStorePage"],#v44BackProducts,#productRoomExitV32,[data-product-room-tab-v30],[data-room-first-v27]'))setTimeout(()=>{try{v77SettingsChanged('product-navigation');}catch(_){}},0);},true);
+
+function v77CurrentRoom(){
+  const r=(typeof v69CurrentRoom==='function'?v69CurrentRoom():null)||String(onlineStoreSelectedRoomV27||'')||String(onlineStoreRoomV16||'');
+  return ['vip','premium','entry'].includes(String(r))?String(r):'';
+}
+function v77RoomLabel(room){return room==='vip'?'VIP 贵宾室':room==='premium'?'Premium 精品馆':room==='entry'?'Starter 入门首选':'';}
+function v77EnsureCurrentRoomBadge(){
+  const head=document.querySelector('#onlineStoreEditorV10 .online-store-editor-head-v10'),remove=document.getElementById('v46RemoveFromRoom');if(!head||!remove)return;
+  let badge=document.getElementById('v77CurrentRoomBadge');if(!badge){badge=document.createElement('span');badge.id='v77CurrentRoomBadge';badge.className='v77-current-room-badge';remove.insertAdjacentElement('beforebegin',badge);}
+  const room=v77CurrentRoom();badge.textContent=room?`当前房间：${v77RoomLabel(room)}`:'当前房间：—';badge.hidden=!room;
+}
+
+// Representative-photo UX: always show count and stop at 5.
+const renderOnlineStorePhotoListV14BaseV77=renderOnlineStorePhotoListV14;
+renderOnlineStorePhotoListV14=function(){
+  renderOnlineStorePhotoListV14BaseV77();
+  const ta=document.getElementById('onlineStoreRandomPhotosV10'),arr=String(ta?.value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean).slice(0,5),title=document.querySelector('#onlineRoomRandomBlockV16 .media-section-title-v14');
+  if(title)title.textContent=`代表照片（${arr.length}/5）`;
+  ['onlineStoreAddPhotoUrlV14','onlineStoreChoosePhotosV14','onlineStoreTakePhotoV14'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=arr.length>=5;});
+};
+
+function v77MotherPrice(){return Math.max(0,parseOnlineNumberV12(document.getElementById('onlineStoreMotherRegularPriceV33')?.value));}
+function v77PriceCeilingInputs(){
+  const list=[];const random=document.getElementById('onlineStoreRegularPriceV10');if(random&&!random.closest('[hidden]'))list.push({el:random,label:'随机发货'});
+  document.querySelectorAll('#onlineStoreEditorV10 [data-online-field-v10="regularPrice"]').forEach(el=>{if(el===random)return;const card=el.closest('[data-v34-child-card],[data-item-id-v10]');if(!card||card.hidden)return;const id=String(card.dataset.itemIdV10||'子产品');list.push({el,label:id});});
+  return list;
+}
+function v77ValidatePriceCeiling(showAlert=false){
+  const mother=v77MotherPrice();let first=null;
+  for(const row of v77PriceCeilingInputs()){
+    const val=Math.max(0,parseOnlineNumberV12(row.el.value)),bad=mother>0&&val>mother;
+    row.el.classList.toggle('v77-price-over-mother',bad);row.el.setCustomValidity(bad?`售价不得高于母产品默认售价 RM ${formatOnlineMoneyInputV12(mother)}`:'');
+    if(bad&&!first)first={...row,val};
+  }
+  let warn=document.getElementById('v77PriceCeilingWarning');const host=document.getElementById('onlineStorePriceFloorWarningV21');
+  if(!warn&&host){warn=document.createElement('div');warn.id='v77PriceCeilingWarning';warn.className='online-store-warning-v10 v77-price-ceiling-warning';host.insertAdjacentElement('afterend',warn);}
+  if(warn){warn.hidden=!first;warn.textContent=first?`⚠ ${first.label} 售价 RM ${formatOnlineMoneyInputV12(first.val)} 高于母产品默认售价 RM ${formatOnlineMoneyInputV12(mother)}。子产品 / 单棵盆景 / Random 只可等于或低于母产品默认售价。`:'';}
+  if(first&&showAlert)window.alert(`${first.label} 售价 RM ${formatOnlineMoneyInputV12(first.val)} 高于母产品默认售价 RM ${formatOnlineMoneyInputV12(mother)}。\n\n请先把下级售价调整为母产品默认售价或更低，才能保存 / 上架。`);
+  return !first;
+}
+const v50ValidateBeforeSaveBaseV77=v50ValidateBeforeSave;
+v50ValidateBeforeSave=function(){if(!v77ValidatePriceCeiling(true))return false;return v50ValidateBeforeSaveBaseV77();};
+document.addEventListener('input',e=>{if(e.target?.id==='onlineStoreMotherRegularPriceV33'||e.target?.id==='onlineStoreRegularPriceV10'||e.target?.matches?.('[data-online-field-v10="regularPrice"]'))requestAnimationFrame(()=>v77ValidatePriceCeiling(false));},true);
+
+// One authoritative Product Overview state. This fixes the long-running blank screen
+// by activating both the page and its overview subview, including the outer panel.
+function v77ShowProductsOverview(){
+  try{v50ClearDirty();}catch(_){}
+  onlineStoreSelectedProductIdV10='';onlineStoreRoomV16='';onlineStoreRoomDirtyV16=false;onlineStoreSelectedRoomV27='';onlineStoreSelectedCategoryV32='bonsai';
+  const page=document.getElementById('onlineStorePage');if(!page)return false;
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p===page));
+  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',String(b.dataset.page||'')==='onlineStorePage'));
+  page.hidden=false;page.style.removeProperty('display');page.querySelectorAll(':scope > .panel').forEach(p=>{p.hidden=false;p.style.removeProperty('display');});
+  ['onlineStoreEditorV10','productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10','contentTemplatesPanelV41','autoMinimumPanelV43','v70LocalProductPanel'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  ['roomFirstHubV27','productCategoryHubV32'].forEach(id=>{const el=document.getElementById(id);if(el){el.hidden=false;el.style.removeProperty('display');}});
+  const list=document.getElementById('onlineStoreProductListV10');if(list)list.innerHTML='';
+  const search=document.getElementById('onlineStoreSearchV10');if(search)search.value='';
+  const filter=document.getElementById('onlineStoreCategoryFilterV32');if(filter){filter.value='all';filter.disabled=false;filter.hidden=false;}
+  try{setProductRoomActiveStateV32('');setProductCategoryActiveStateV32('bonsai');updateAdminTopbarTitleV28('onlineStorePage');}catch(_){}
+  document.querySelectorAll('#onlineStorePage nav.module-tabs-v30 button').forEach(b=>b.classList.toggle('active',b.hasAttribute('data-product-room-tab-v30')&&!String(b.dataset.productRoomTabV30||'')));
+  window.scrollTo({top:0,behavior:'auto'});return true;
+}
+window.v77ShowProductsOverview=v77ShowProductsOverview;
+// All old overview helpers converge to the state-machine function.
+showProductOverviewV32=v77ShowProductsOverview;v47ShowOverviewNow=v77ShowProductsOverview;v44ShowProductOverviewNow=v77ShowProductsOverview;v72RestoreRoomView=v77ShowProductsOverview;v75ShowProductOverviewHard=v77ShowProductsOverview;
+
+v46RemoveCurrentProductFromRoom=function(){
+  const id=String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase(),room=v77CurrentRoom();if(!id||!room)return;
+  if(v50HasUnsaved()&&!window.confirm('当前房间有尚未保存的资料。\n\n继续会丢弃这些未保存内容并移除此房，是否继续？'))return;
+  if(!window.confirm(`确认把 ${id} 从「${v46RoomName(room)}」移除？\n\n只移除这个房间的 Online 分配；不会删除 Import 产品、真实库存、平均成本、最低售价、Sold history 或订单记录。`))return;
+  try{
+    const state=getOnlineStoreStateV10(),raw=state.products?.[id];if(raw&&typeof raw==='object'){
+      const copy=JSON.parse(JSON.stringify(raw));if(v67ValidRoom(copy.parentListingRoom)===room){copy.parentListingRoom='';copy.parentPublished=false;}
+      const items=Array.isArray(copy.uniqueItems)?copy.uniqueItems:[];copy.uniqueItems=items.filter(item=>{const itemRoom=v38TierRoom(item),sold=String(item?.status||'available')==='sold';return itemRoom!==room||sold;});
+      if(room==='entry'){copy.randomQty=0;copy.randomPublished=false;copy.regularPrice=0;copy.promotionPrice=0;copy.randomPhotos=[];copy.randomVideo='';}
+      copy.updatedAt=new Date().toISOString();state.products[id]=copy;saveOnlineStoreStateV10(state);
+    }
+    try{addOnlineStoreHistoryV14('allocation',id,getOnlineStoreProductV10(id)?.name||'',`移除 ${v46RoomName(room)} 的 Online 分配`);}catch(_){}
+    v77ShowProductsOverview();
+  }catch(err){console.error('V7.7 remove-room failed',err);window.alert('移除此房失败，请保留当前页面并重新尝试。');}
+};
+
+const setOnlineStoreEditorValuesV10BaseV77=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){const out=setOnlineStoreEditorValuesV10BaseV77(productId,preserveRoomV16);requestAnimationFrame(()=>{v77EnsureCurrentRoomBadge();renderOnlineStorePhotoListV14();v77ValidatePriceCeiling(false);v77SettingsChanged('editor-open');});return out;};
+const renderOnlineRoomChooserV16BaseV77=renderOnlineRoomChooserV16;
+renderOnlineRoomChooserV16=function(){const out=renderOnlineRoomChooserV16BaseV77();v77EnsureCurrentRoomBadge();return out;};
+
+function v77RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.7');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.7';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.7';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.7 · Product Management Safety + State Machine Fix · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.7 · Import Base V41.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.7';
+}
+function v77Setup(){v77RefreshStatic();try{v43BuildAutoMinPanel();v77EnsureMarginFactoryReset();v77NormalizePercentInputs();}catch(_){}try{v76BuildShippingResponsibilitySetting();}catch(_){}try{v76ArrangePriceGrid();v77SettingsChanged('setup');v77EnsureCurrentRoomBadge();renderOnlineStorePhotoListV14();v77ValidatePriceCeiling(false);}catch(_){}}
+window.addEventListener('DOMContentLoaded',()=>{setTimeout(v77Setup,3900);setTimeout(v77RefreshStatic,6200);});
+window.addEventListener('load',()=>{setTimeout(v77Setup,4100);setTimeout(v77RefreshStatic,6600);});
+try{v76RefreshStatic=v77RefreshStatic;}catch(_){}try{v75RefreshStatic=v77RefreshStatic;}catch(_){}try{v74RefreshStatic=v77RefreshStatic;}catch(_){}try{v73RefreshStatic=v77RefreshStatic;}catch(_){}try{v72RefreshStatic=v77RefreshStatic;}catch(_){}try{v71RefreshStatic=v77RefreshStatic;}catch(_){}try{v70RefreshStatic=v77RefreshStatic;}catch(_){}try{v67RefreshStatic=v77RefreshStatic;}catch(_){}try{v66RefreshStatic=v77RefreshStatic;}catch(_){}
