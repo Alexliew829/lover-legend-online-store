@@ -1,3 +1,7 @@
+Lover Legend Online Store V7.2 PATCH from V7.1
+
+Changes: room default allocation visibility; remove-room blank-page recovery; unified V7.2 labels; compact Online Local Product variation list; optional/auto Parent SKU; Option size prefill to package L/W/H; performance-safe local rendering.
+
 Lover Legend Online Store Management Admin V7.1
 
 V7.1 changes
