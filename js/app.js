@@ -3697,7 +3697,7 @@ function renderSystemInformationV203() {
   const stock = active.reduce((sum, item) => sum + (Number(item?.stock) || 0), 0);
   const config = typeof getCloudConfig === "function" ? getCloudConfig() : {};
   const set = (id, text) => { const el=document.getElementById(id); if(el) el.textContent=text; };
-  set("systemInfoVersionV203", "V6.2");
+  set("systemInfoVersionV203", "V6.3");
   set("systemInfoApiVersionV203", systemHealthV203.apiOk === true ? `V${systemHealthV203.apiVersion || APP_VERSION}` : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoGoogleSheetV203", systemHealthV203.apiOk === true ? "已连接 Google Web App" : (systemHealthV203.apiOk === false ? "连接异常" : "尚未检查"));
   set("systemInfoLastSyncV203", formatSystemDateTimeV203(config.lastSyncAt) || "尚未同步");
@@ -21975,7 +21975,7 @@ function v43ShowAutoMin(){
 function v43HideAutoMin(){const p=document.getElementById('autoMinimumPanelV43');if(p)p.hidden=true;}
 
 function v43BuildShippingSettings(){
-  const page=document.getElementById('shippingPageV27');if(!page||document.getElementById('v43FreightRules'))return;const ui=getOnlineStoreUiSettingsV12(),tiers=ui.shipping.freightTiers||V43_FREIGHT_DEFAULTS;const sec=document.createElement('section');sec.className='panel v43-rule-card';sec.id='v43FreightRules';sec.innerHTML=`<div class="v43-card-head"><div><strong>Online \u5305\u88c5\u5c3a\u5bf8 / \u91cd\u91cf\u8fd0\u8d39\u6863</strong><small>V6.2 \u6309\u771f\u5b9e Line Clear \u51fa\u8d27\u5c3a\u5bf8\u91cd\u65b0\u5206\u5c42\uff1b\u5c3a\u5bf8\u4f1a\u81ea\u52a8\u4ee5\u957f\u8fb9 / \u4e2d\u8fb9 / \u77ed\u8fb9\u6bd4\u8f83\uff0c\u4e0d\u53d7 L/W/H \u8f93\u5165\u65b9\u5411\u5f71\u54cd\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-freight-grid">${tiers.map((t,i)=>`<div class="v43-freight-row"><div class="v59-tier-key"><strong>${t.key}</strong><span>${V59_FREIGHT_TIER_NAMES[t.key]||''}</span></div>${v43Field('长边 cm',`v43FreightL${i}`,t.maxL)}${v43Field('中边 cm',`v43FreightW${i}`,t.maxW)}${v43Field('短边 cm',`v43FreightH${i}`,t.maxH)}${v43Field('kg',`v43FreightKg${i}`,t.maxKg)}${v43Field('RM',`v43FreightCost${i}`,t.cost)}</div>`).join('')}</div><div class="v59-freight-note">A \u5c0f\u578b \u00b7 B \u4e2d\u5c0f\u578b \u00b7 C \u4e2d\u5927\u578b \u00b7 D \u5927\u578b \u00b7 E Oversize\u3002\u8fd0\u8d39 RM \u4ecd\u4fdd\u7559\u4f60\u73b0\u6709\u8bbe\u5b9a\uff0cLine Clear \u8ba1\u7b97\u5668\u53ea\u505a\u5bf9\u7167\u3002</div><div class="v43-packaging-single">${v43Field('Online \u9ed8\u8ba4\u5305\u88c5\u8017\u6750\u6210\u672c (RM)','v43PackagingCost',ui.shipping.packagingCost,'','\u6ce1\u6cab\u7bb1 / \u6728\u6761 / Tape / Wrapping Bubble \u7b49\u5305\u88c5\u7528\u54c1\u5408\u8ba1\uff1b\u5f53\u524d\u9ed8\u8ba4 RM20\uff0c\u53ef\u4fee\u6539\u3002')}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveShippingRules">\u4fdd\u5b58 Working Settings</button>${v43DisabledFactoryButton()}<span id="v43ShippingStatus"></span></div>`;const reserve=document.getElementById('packageReserveSettingsV40');reserve?.after(sec);
+  const page=document.getElementById('shippingPageV27');if(!page||document.getElementById('v43FreightRules'))return;const ui=getOnlineStoreUiSettingsV12(),tiers=ui.shipping.freightTiers||V43_FREIGHT_DEFAULTS;const sec=document.createElement('section');sec.className='panel v43-rule-card';sec.id='v43FreightRules';sec.innerHTML=`<div class="v43-card-head"><div><strong>Online \u5305\u88c5\u5c3a\u5bf8 / \u91cd\u91cf\u8fd0\u8d39\u6863</strong><small>V6.3 \u6309\u771f\u5b9e Line Clear \u51fa\u8d27\u5c3a\u5bf8\u91cd\u65b0\u5206\u5c42\uff1b\u5c3a\u5bf8\u4f1a\u81ea\u52a8\u4ee5\u957f\u8fb9 / \u4e2d\u8fb9 / \u77ed\u8fb9\u6bd4\u8f83\uff0c\u4e0d\u53d7 L/W/H \u8f93\u5165\u65b9\u5411\u5f71\u54cd\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-freight-grid">${tiers.map((t,i)=>`<div class="v43-freight-row"><div class="v59-tier-key"><strong>${t.key}</strong><span>${V59_FREIGHT_TIER_NAMES[t.key]||''}</span></div>${v43Field('长边 cm',`v43FreightL${i}`,t.maxL)}${v43Field('中边 cm',`v43FreightW${i}`,t.maxW)}${v43Field('短边 cm',`v43FreightH${i}`,t.maxH)}${v43Field('kg',`v43FreightKg${i}`,t.maxKg)}${v43Field('RM',`v43FreightCost${i}`,t.cost)}</div>`).join('')}</div><div class="v59-freight-note">A \u5c0f\u578b \u00b7 B \u4e2d\u5c0f\u578b \u00b7 C \u4e2d\u5927\u578b \u00b7 D \u5927\u578b \u00b7 E Oversize\u3002\u8fd0\u8d39 RM \u4ecd\u4fdd\u7559\u4f60\u73b0\u6709\u8bbe\u5b9a\uff0cLine Clear \u8ba1\u7b97\u5668\u53ea\u505a\u5bf9\u7167\u3002</div><div class="v43-packaging-single">${v43Field('Online \u9ed8\u8ba4\u5305\u88c5\u8017\u6750\u6210\u672c (RM)','v43PackagingCost',ui.shipping.packagingCost,'','\u6ce1\u6cab\u7bb1 / \u6728\u6761 / Tape / Wrapping Bubble \u7b49\u5305\u88c5\u7528\u54c1\u5408\u8ba1\uff1b\u5f53\u524d\u9ed8\u8ba4 RM20\uff0c\u53ef\u4fee\u6539\u3002')}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveShippingRules">\u4fdd\u5b58 Working Settings</button>${v43DisabledFactoryButton()}<span id="v43ShippingStatus"></span></div>`;const reserve=document.getElementById('packageReserveSettingsV40');reserve?.after(sec);
 }
 function v43BuildFinanceSettings(){const page=document.getElementById('financePageV27');if(!page||document.getElementById('v43FinanceRules'))return;const ui=getOnlineStoreUiSettingsV12(),sec=document.createElement('section');sec.id='v43FinanceRules';sec.className='panel v43-rule-card';sec.innerHTML=`<div class="v43-card-head"><div><strong>Payment Gateway Fee</strong><small>\u8fd9\u662f Online \u6700\u4f4e\u552e\u4ef7\u516c\u5f0f\u4e2d\u7684\u6b63\u5f0f Payment Fee Source of Truth\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-rule-grid one">${v43Field('Payment Gateway Fee (%)','v43PaymentFee',ui.finance.paymentGatewayFee)}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveFinanceRules">\u4fdd\u5b58 Payment Fee</button>${v43DisabledFactoryButton()}<span id="v43FinanceStatus"></span></div>`;page.querySelector('.module-page-head-v27')?.after(sec);}
 function v43BuildAffiliateSettings(){const page=document.getElementById('affiliatePageV27');if(!page||document.getElementById('v43AffiliateRules'))return;const ui=getOnlineStoreUiSettingsV12(),sec=document.createElement('section');sec.id='v43AffiliateRules';sec.className='panel v43-rule-card';sec.innerHTML=`<div class="v43-card-head"><div><strong>\u9ed8\u8ba4 Affiliate \u4f63\u91d1</strong><small>\u8fd9\u662f Online \u6700\u4f4e\u552e\u4ef7\u516c\u5f0f\u4e2d\u7684\u6b63\u5f0f Affiliate Source of Truth\u3002\u6307\u5b9a Affiliate / Product / Campaign Override \u540e\u7eed\u518d\u5f00\u653e\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-rule-grid one">${v43Field('Affiliate \u4f63\u91d1 (%)','v43AffiliateRate',ui.affiliate.defaultRate)}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveAffiliateRules">\u4fdd\u5b58 Affiliate \u4f63\u91d1</button>${v43DisabledFactoryButton()}<span id="v43AffiliateStatus"></span></div>`;page.querySelector('.module-page-head-v27')?.after(sec);}
@@ -21996,8 +21996,8 @@ function v43SetupRuleEvents(){
 }
 
 function v43RefreshStaticLabels(){
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 \u00b7 Import \u6570\u636e\u53ea\u8bfb \u00b7 Online \u72ec\u7acb\u81ea\u52a8\u6700\u4f4e\u552e\u4ef7';
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 \u00b7 Import \u6570\u636e\u53ea\u8bfb \u00b7 Online \u72ec\u7acb\u81ea\u52a8\u6700\u4f4e\u552e\u4ef7';
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
   const floor=document.getElementById('onlineStorePriceFloorV21')?.closest('label');if(floor){floor.childNodes[0].nodeValue='Online \u9500\u552e\u4fdd\u62a4\u5e95\u7ebf (RM)';const sm=floor.querySelector('small');if(sm)sm.textContent='\u81ea\u52a8\uff1aImport \u5e73\u5747\u6210\u672c + Online \u82b1\u76c6 + \u7269\u6d41 + \u5305\u88c5\uff0c\u518d\u6309 Affiliate\u3001Payment Fee \u4e0e\u76ee\u6807\u51c0\u5229\u7387\u53cd\u63a8\u3002';}
 }
 function v43Setup(){v43BuildAutoMinPanel();v43BuildShippingSettings();v43BuildFinanceSettings();v43BuildAffiliateSettings();v43BuildSettingsControl();v43EnsureMasterWeight();v43RefreshStaticLabels();v43SetupRuleEvents();}
@@ -22047,7 +22047,7 @@ v42RouteProductTab = function(btn){
 
 
 /* ================================================================
-   Online Store V6.2 - Sync Priority + Safe Navigation + Final Price Engine
+   Online Store V6.3 - Sync Priority + Safe Navigation + Final Price Engine
    - Final runtime assignment fixes V4.3 legacy-wrapper precedence.
    - Background revision checks are handled by sync.js; navigation never waits for cloud.
    - Product overview navigation is restored synchronously before old editor DOM is hidden.
@@ -22194,10 +22194,10 @@ window.refreshOnlineImportReadOnlyFieldsV21=function(){
 };
 
 function v44RefreshLabels(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Import 数据只读 · Online 独立自动最低售价 · 快速后台 Revision Check';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Import 数据只读 · Online 独立自动最低售价 · 快速后台 Revision Check';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
 }
 function v44Setup(){v44InstallBackButtons();v44CleanCareGuide();v44RefreshLabels();try{if(onlineStoreSelectedProductIdV10)updateOnlineProtectionFloorV21();}catch(_){} }
 window.addEventListener('DOMContentLoaded',()=>window.setTimeout(v44Setup,180));
@@ -22235,7 +22235,7 @@ v44Setup=function(){v44SetupBase();v44ConsolidateSettingsPage();v44ClarifyPackag
 
 
 /* ================================================================
-   Online Store V6.2 - Performance & Runtime Cleanup
+   Online Store V6.3 - Performance & Runtime Cleanup
    Conservative consolidation only: no business-rule changes here.
    - obsolete duplicate declarations removed above
    - Online runtime skips Import-only reload housekeeping
@@ -22245,7 +22245,7 @@ window.ONLINE_STORE_RUNTIME_CLEANUP_V45 = true;
 
 
 /* ================================================================
-   Online Store V6.2 - Safe Product Navigation + QA Consolidation
+   Online Store V6.3 - Safe Product Navigation + QA Consolidation
    - One canonical Product Management router
    - No Product Management click may trigger Import pull/full reload
    - Current-minimum profit/margin, safe room removal, long-term test cleanup
@@ -22420,10 +22420,10 @@ function v46SetupHistoryCleanup(){
 }
 
 function v46RefreshStaticUi(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Safe Product Navigation · Import Read-Only · Online 独立自动最低售价';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Safe Product Navigation · Import Read-Only · Online 独立自动最低售价';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
   v46NormalizeMoneyFields();v46RefreshRemoveRoomButton();
 }
 function v46Setup(){v46RunOneTimeHistoryMigration();v46SetupHistoryCleanup();v46RefreshStaticUi();}
@@ -22448,7 +22448,7 @@ document.addEventListener('click',e=>{
 
 
 /* ================================================================
-   Online Store V6.2 - Product Editor Flow + Stable Product Routing
+   Online Store V6.3 - Product Editor Flow + Stable Product Routing
    - window-capture canonical Product Management navigation
    - shared defaults before price/protection calculations
    - reference profit uses Online protection floor; actual profit uses mother price
@@ -22522,7 +22522,7 @@ window.addEventListener('click',function(e){
 
 function v47EnsureProfitFields(){
   const grid=document.querySelector('#onlineStoreEditorV10 .online-store-price-foundation-v11');if(!grid)return;
-  // V6.2: reference profit / margin no longer occupy separate cards.
+  // V6.3: reference profit / margin no longer occupy separate cards.
   ['onlineStoreCurrentMinNetProfitV46','onlineStoreCurrentMinNetMarginV46'].forEach(id=>document.getElementById(id)?.closest('label')?.remove());
   if(!document.getElementById('onlineStoreActualNetProfitV47')){
     const a=document.createElement('label');a.className='v47-actual-profit';a.innerHTML='Online 实际净利（RM）<input id="onlineStoreActualNetProfitV47" readonly type="text" placeholder="输入母产品默认售价后自动计算"/><small class="field-hint-v12">按母产品默认售价计算。</small>';
@@ -22576,7 +22576,7 @@ function v47PolishOverview(){
   document.querySelectorAll('#productCategoryHubV32 [data-product-category-v32]').forEach(b=>b.classList.remove('active'));
 }
 function v47RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Stable Product Routing · Import Read-Only · Online 独立自动最低售价';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Stable Product Routing · Import Read-Only · Online 独立自动最低售价';
 }
 function v47Setup(){v47RefreshStatic();v47PolishOverview();v47ReflowProductEditor();v47PolishRemoveRoom();try{v47UpdateProfitDisplays();}catch(_){}}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v47Setup,70));
@@ -22585,7 +22585,7 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){v47SetEd
 
 
 /* ================================================================
-   Online Store V6.2 - Product Flow & Visual Consistency
+   Online Store V6.3 - Product Flow & Visual Consistency
    - remove Import Initial Minimum from Online decision UI
    - Shared Product Defaults truly precede Shipping/protection
    - consistent money/read-only field geometry
@@ -22596,11 +22596,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){v47SetEd
 window.ONLINE_STORE_V48_ACTIVE = true;
 
 function v48RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Product Flow Cleanup · Import Read-Only · Online 独立自动最低售价';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Product Flow Cleanup · Import Read-Only · Online 独立自动最低售价';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 // Older delayed setup callbacks must not paint an older version after V5.0.
 try{v43RefreshStaticLabels=v48RefreshStatic;}catch(_){}
@@ -22798,7 +22798,7 @@ navigateToProductManagementV47=navigateToProductManagementV48;
 navigateToProductManagementV46=navigateToProductManagementV48;
 
 /* ================================================================
-   Online Store V6.2 - Product Flow + Child Allocation Integrity
+   Online Store V6.3 - Product Flow + Child Allocation Integrity
    - product content -> package/dimensions -> price/cost -> sales modes
    - no separate Shared Product Defaults shell
    - safe close navigation
@@ -22810,11 +22810,11 @@ navigateToProductManagementV46=navigateToProductManagementV48;
 window.ONLINE_STORE_V49_ACTIVE = true;
 
 function v49RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Product Flow + Child Allocation Integrity · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Product Flow + Child Allocation Integrity · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 try{v48RefreshStatic=v49RefreshStatic;}catch(_){}
 try{v47RefreshStatic=v49RefreshStatic;}catch(_){}
@@ -22991,7 +22991,7 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v49Setup,360));
 
 
 /* ================================================================
-   Online Store V6.2 - Performance & Runtime Cleanup
+   Online Store V6.3 - Performance & Runtime Cleanup
    - one Save Controller / Dirty Controller / Safe Navigation Controller
    - removes stale save/close listener races
    - child draft blocks creating the next child until saved or deleted
@@ -23006,11 +23006,11 @@ let v50Saving = false;
 let v50Dirty = false;
 
 function v50RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Performance & Runtime Cleanup · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Performance & Runtime Cleanup · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 
 // ---------- V5.0 single Dirty Controller ----------
@@ -23196,7 +23196,7 @@ function v50Setup(){v50RunPerformanceCleanup();v50RefreshStatic();v50PolishEdito
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v50Setup,80));
 
 /* ================================================================
-   Online Store V6.2 - Pricing Clarity + Content Inheritance
+   Online Store V6.3 - Pricing Clarity + Content Inheritance
    - Shipping is a reference fee by default (buyer pays), not seller cost
    - Reference profit cards removed; target margin is compact in protection floor
    - Product Details / Care Guide visible at mother, child and Random levels
@@ -23205,11 +23205,11 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v50Setup,80));
 window.ONLINE_STORE_V51_ACTIVE = true;
 
 function v51RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Pricing Clarity + Content Inheritance · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Pricing Clarity + Content Inheritance · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 
 // Online Store owns the shipping commercial rule. Default is buyer-pays.
@@ -23224,7 +23224,7 @@ function v51SellerShippingAmount(referenceFee){
   return mode==='seller'?v43Money(referenceFee):0;
 }
 
-// Canonical V6.2 protection calculation: shipping reference is not a seller cost when buyer pays.
+// Canonical V6.3 protection calculation: shipping reference is not a seller cost when buyer pays.
 calculateOnlineProtectionFloorV21=function(product,item=null){
   const avg=v43Money(product?.averageCost),pot=v43OnlineVndPotCost(product),ship=v43AutomaticShipping(product,item),ui=getOnlineStoreUiSettingsV12();
   const packaging=v43Money(ui.shipping?.packagingCost),affiliateRate=v43Pct(ui.affiliate?.defaultRate),gatewayRate=v43Pct(ui.finance?.paymentGatewayFee),targetMargin=v43MarginRateForCost(avg);
@@ -23345,7 +23345,7 @@ window.addEventListener('load',()=>setTimeout(()=>{v51RefreshStatic();v51EnsureS
 
 
 /* ================================================================
-   Online Store V6.2 - Pricing UI final cleanup
+   Online Store V6.3 - Pricing UI final cleanup
    - Reference profit amount/card removed
    - Reference margin card removed; target margin stays as small badge in protection floor
    - Actual Online profit remains tied to mother product selling price
@@ -23365,7 +23365,7 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v52FinalPricingPass,16
 window.addEventListener('load',()=>setTimeout(v52FinalPricingPass,520));
 
 /* ================================================================
-   Online Store V6.2 - Affiliate master switch
+   Online Store V6.3 - Affiliate master switch
    - Configured commission rate is retained (factory/default 10%)
    - Affiliate is disabled by default until explicitly enabled
    - Protection floor / actual profit use 0% while disabled
@@ -23384,7 +23384,7 @@ getOnlineStoreUiSettingsV12=function(){
   return ui;
 };
 
-// Canonical V6.2 calculation: Affiliate only becomes a cost when the master switch is enabled.
+// Canonical V6.3 calculation: Affiliate only becomes a cost when the master switch is enabled.
 calculateOnlineProtectionFloorV21=function(product,item=null){
   const avg=v43Money(product?.averageCost),pot=v43OnlineVndPotCost(product),ship=v43AutomaticShipping(product,item),ui=getOnlineStoreUiSettingsV12();
   const packaging=v43Money(ui.shipping?.packagingCost),affiliateConfiguredRate=v52ConfiguredAffiliateRate(ui),affiliateEnabled=v52AffiliateEnabled(ui),affiliateRate=affiliateEnabled?affiliateConfiguredRate:0,gatewayRate=v43Pct(ui.finance?.paymentGatewayFee),targetMargin=v43MarginRateForCost(avg);
@@ -23419,7 +23419,7 @@ function v52SaveAffiliateEnabled(enabled){
   // Keep configured 10% (or user's edited value) even while disabled.
   ui.pricing={...(ui.pricing||{}),affiliateRate:v43Pct(ui.affiliate.defaultRate)};
   saveOnlineStoreUiSettingsV12(ui);
-  try{addOnlineStoreHistoryV14('settings','','',`V6.2 Affiliate ${enabled?'开启':'关闭'} · 设定 ${v43Pct(ui.affiliate.defaultRate).toFixed(2)}%`);}catch(_){}
+  try{addOnlineStoreHistoryV14('settings','','',`V6.3 Affiliate ${enabled?'开启':'关闭'} · 设定 ${v43Pct(ui.affiliate.defaultRate).toFixed(2)}%`);}catch(_){}
   v52RenderAffiliateSwitch();
   try{v51UpdatePricingUi();updateOnlineStoreProfitDisplaysV13();}catch(_){}
 }
@@ -23461,7 +23461,7 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v52AffiliateSetup,220)
 window.addEventListener('load',()=>setTimeout(v52AffiliateSetup,620));
 
 /* ================================================================
-   Online Store V6.2 - Child ID Copy + Room-Accurate Entry
+   Online Store V6.3 - Child ID Copy + Room-Accurate Entry
    Performance-safe patch from V5.2:
    - one delegated click handler; no polling / no observer / no sync call
    - child IDs copy on click unless the element is a navigation control
@@ -23572,17 +23572,17 @@ document.addEventListener('keydown',function(e){
 },true);
 
 function v55RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{v55RefreshStatic();v55PrepareChildCopyTargets();if(onlineStoreAllTreesModeV38)v55EnhanceAllTrees();},80));
 window.addEventListener('load',()=>setTimeout(v55RefreshStatic,560));
 
 
 /* ================================================================
-   Online Store V6.2 - Line Clear local postage calculator
+   Online Store V6.3 - Line Clear local postage calculator
    Performance-safe:
    - local arithmetic only; no fetch / sync / observer / polling
    - A-E comparison reads existing Online freight settings only
@@ -23658,7 +23658,7 @@ function v56LineClearCalculate(){
   if(warn){warn.className='v56-lineclear-warning ok';warn.textContent=service==='premium'?'Premium Next Day 参考范围内。NDA / ODA 等区域仍须以 Line Clear 官方资格与 Quote 为准。':'Express 参考范围内。Line Clear 结果只用于比较 / 估算，不会自动修改你现有 A–E 运费档，也不会进入主同步。';}
 }
 function v56LcLoadSender(){const ui=getOnlineStoreUiSettingsV12();const el=document.getElementById('v56LineClearSender');if(el)el.value=String(ui.shipping?.lineClearSenderPostcode||'43300');}
-function v56LcSaveSender(){const el=document.getElementById('v56LineClearSender');const code=String(el?.value||'').trim();if(code&&!/^\d{5}$/.test(code)){alert('寄件邮编请输入 5 位数字。');return;}v43SaveUi(ui=>{ui.shipping={...(ui.shipping||{}),lineClearSenderPostcode:code};},'V6.2 保存 Line Clear 默认寄件邮编');const btn=document.getElementById('v56SaveLineClearSender');if(btn){const old=btn.textContent;btn.textContent='已保存';setTimeout(()=>{if(btn.isConnected)btn.textContent=old;},900);}}
+function v56LcSaveSender(){const el=document.getElementById('v56LineClearSender');const code=String(el?.value||'').trim();if(code&&!/^\d{5}$/.test(code)){alert('寄件邮编请输入 5 位数字。');return;}v43SaveUi(ui=>{ui.shipping={...(ui.shipping||{}),lineClearSenderPostcode:code};},'V6.3 保存 Line Clear 默认寄件邮编');const btn=document.getElementById('v56SaveLineClearSender');if(btn){const old=btn.textContent;btn.textContent='已保存';setTimeout(()=>{if(btn.isConnected)btn.textContent=old;},900);}}
 function v56LcReset(){['v56LineClearRecipient','v56LineClearWeight','v56LineClearL','v56LineClearW','v56LineClearH'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});const z=document.getElementById('v56LineClearZone');if(z)z.value='peninsular';const svc=document.getElementById('v56LineClearService');if(svc)svc.value='express';v56LineClearCalculate();}
 function v56SetupLineClear(){
   const panel=document.getElementById('freightEstimatePanelV31');if(!panel||panel.dataset.v56Bound==='1')return;panel.dataset.v56Bound='1';v56LcLoadSender();
@@ -23672,7 +23672,7 @@ window.addEventListener('load',()=>setTimeout(v56LcLoadSender,420));
 
 
 /* ================================================================
-   Online Store V6.2 - verified UI placement fixes
+   Online Store V6.3 - verified UI placement fixes
    - Line Clear estimator is embedded in the visible A-E Working Settings card
    - child copy feedback is inline at the clicked ID (no bottom-right toast)
    - no sync/fetch/observer/polling changes
@@ -23693,16 +23693,16 @@ function v57AttachLineClearToWorkingSettings(){
   try{v56SetupLineClear();v56LcLoadSender();v56LineClearCalculate();}catch(_){}
 }
 function v57RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{v57AttachLineClearToWorkingSettings();v57RefreshStatic();},260));
 window.addEventListener('load',()=>setTimeout(()=>{v57AttachLineClearToWorkingSettings();v57RefreshStatic();},680));
 
 /* ================================================================
-   Online Store V6.2 - Line Clear reference shipping + manual override
+   Online Store V6.3 - Line Clear reference shipping + manual override
    - Product reference shipping defaults to local Line Clear estimate
    - User may override (e.g. RM13.78 -> RM15.00)
    - Manual override is explicit and reversible to suggested value
@@ -23751,7 +23751,7 @@ function v60ReferenceShipping(product,item=null){
   return {...suggested,effective:manual.manual?manual.value:suggestedValue,manual:manual.manual,suggested:suggestedValue};
 }
 
-// Preserve old product state but only treat shipping as manual when the explicit V6.2 flag exists.
+// Preserve old product state but only treat shipping as manual when the explicit V6.3 flag exists.
 const normalizeOnlineStoreConfigV10BaseV60=normalizeOnlineStoreConfigV10;
 normalizeOnlineStoreConfigV10=function(productId,raw){
   const cfg=normalizeOnlineStoreConfigV10BaseV60(productId,raw);
@@ -23769,7 +23769,7 @@ collectOnlineStoreConfigFromEditorV10=function(){
   return cfg;
 };
 
-// Canonical V6.2 pricing calculation: reference shipping uses Line Clear suggestion/manual override,
+// Canonical V6.3 pricing calculation: reference shipping uses Line Clear suggestion/manual override,
 // but buyer-paid shipping still contributes RM0 to seller cost.
 calculateOnlineProtectionFloorV21=function(product,item=null){
   const avg=v43Money(product?.averageCost),pot=v43OnlineVndPotCost(product),ref=v60ReferenceShipping(product,item),ui=getOnlineStoreUiSettingsV12();
@@ -23847,14 +23847,14 @@ document.addEventListener('input',function(e){
 },true);
 
 function v60RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Line Clear Reference Shipping · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Line Clear Reference Shipping · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 function v60PerformanceCleanup(){
-  // V6.2 integer-version cleanup: no new timers/observers/sync hooks are introduced.
+  // V6.3 integer-version cleanup: no new timers/observers/sync hooks are introduced.
   // Only remove the obsolete V5.x one-time UI marker; never touch Sold history, orders,
   // payments, Import sync records, audit logs or permanent Child history.
   try{localStorage.removeItem('loverLegendOnlineStoreV59UiMarker');}catch(_){ }
@@ -23865,7 +23865,7 @@ window.addEventListener('load',()=>setTimeout(()=>{v60RefreshStatic();v60EnsureS
 
 
 /* ================================================================
-   Online Store V6.2 - Manual Shipping Edit Guard + Input Flow
+   Online Store V6.3 - Manual Shipping Edit Guard + Input Flow
    - Line Clear suggestion and adopted reference shipping stay separate
    - while the reference shipping field is focused/being edited, no pricing refresh may overwrite raw user input
    - blur commits a clean 2-decimal manual value; Restore Suggestion is the only path back to auto suggestion
@@ -23887,7 +23887,7 @@ function v61RestoreShippingSnapshot(snap){
   try{if(document.activeElement===input&&snap.start!=null)input.setSelectionRange(snap.start,snap.end??snap.start);}catch(_){ }
 }
 
-// Guard every existing pricing refresh: older V6.2 layers may redraw the field,
+// Guard every existing pricing refresh: older V6.3 layers may redraw the field,
 // but the exact raw text being typed by the user always wins while focused.
 const v61PricingUiBase=v51UpdatePricingUi;
 v51UpdatePricingUi=function(){
@@ -23938,26 +23938,26 @@ document.addEventListener('focusout',function(e){
   if(e.target?.id==='onlineStoreShippingCostV14')v61CommitShippingManual();
 },true);
 
-// Restore Suggestion immediately exits edit/manual mode. Existing V6.2 click handler then restores the current suggestion.
+// Restore Suggestion immediately exits edit/manual mode. Existing V6.3 click handler then restores the current suggestion.
 document.addEventListener('pointerdown',function(e){
   if(!e.target.closest?.('#v60RestoreShippingSuggestion'))return;
   const input=v61ShippingInput();if(input)input.dataset.v61Editing='0';
 },true);
 
 function v61RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Stable Shipping Override · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Stable Shipping Override · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 function v61Setup(){v61RefreshStatic();try{v60EnsureShippingOverrideUi();v60ApplyShippingUi();}catch(_){ }}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v61Setup,210));
 window.addEventListener('load',()=>setTimeout(v61Setup,680));
 
 /* ================================================================
-   Online Store V6.2 - Stable Reference Shipping Input Controller
-   - fixes V6.2 duplicate-key/input composition issue (e.g. 20 -> 2200)
+   Online Store V6.3 - Stable Reference Shipping Input Controller
+   - fixes V6.3 duplicate-key/input composition issue (e.g. 20 -> 2200)
    - one raw text value is authoritative while editing
    - formatting occurs only on blur
    - Line Clear suggestion never overwrites active manual typing
@@ -24078,12 +24078,144 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v62RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.2');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.2';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.2 · Stable Shipping Input · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.2 · Import Base V41.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Stable Shipping Input · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
 }
 function v62Setup(){v62RefreshStatic();v62BindShippingInput();try{v60EnsureShippingOverrideUi();v60ApplyShippingUi();}catch(_){ }}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v62Setup,230));
 window.addEventListener('load',()=>setTimeout(v62Setup,720));
+
+/* ================================================================
+   Online Store V6.3 - Unified RM Money Input Controller
+   - Full-width digits/punctuation normalize safely (５８０ -> 580.00)
+   - No ×100 / duplicate concatenation while typing
+   - Thousands separators + 2 decimals only on blur/save
+   - Shipping manual input keeps raw text while editing; Line Clear suggestion stays separate
+   - No sync/fetch/observer/polling changes
+   ================================================================ */
+window.ONLINE_STORE_V63_ACTIVE=true;
+
+function v63NormalizeNumericText(value){
+  return String(value??'')
+    .replace(/[０-９]/g,ch=>String(ch.charCodeAt(0)-0xFF10))
+    .replace(/[．。]/g,'.')
+    .replace(/[，]/g,',')
+    .replace(/\u00a0/g,' ')
+    .replace(/^\s*RM\s*/i,'')
+    .trim();
+}
+
+// Canonical Online numeric parser from V6.3 onward.
+parseOnlineNumberV12=function(value){
+  const s=v63NormalizeNumericText(value).replace(/,/g,'').replace(/\s+/g,'');
+  if(!s)return 0;
+  const n=Number(s);
+  return Number.isFinite(n)?n:0;
+};
+
+function v63SanitizeMoneyRaw(value){
+  let s=v63NormalizeNumericText(value).replace(/,/g,'').replace(/\s+/g,'').replace(/[^0-9.]/g,'');
+  const p=s.indexOf('.');
+  if(p>=0)s=s.slice(0,p+1)+s.slice(p+1).replace(/\./g,'');
+  if(s.startsWith('.'))s='0'+s;
+  return s;
+}
+function v63FormatMoneyRaw(raw){
+  const s=v63SanitizeMoneyRaw(raw);
+  if(s==='')return '';
+  const n=Number(s);
+  return Number.isFinite(n)?formatOnlineMoneyInputV12(Math.max(0,n)):'';
+}
+
+function v63RefreshMoneyDerived(){
+  try{v47UpdateProfitDisplays?.();}catch(_){ }
+  try{updateOnlineStoreProfitDisplaysV13?.();}catch(_){ }
+}
+
+function v63BindShippingInput(){
+  let old=document.getElementById('onlineStoreShippingCostV14');
+  if(!old)return;
+  // Remove V6.1/V6.3 target-level experimental handlers once; delegated stable handlers remain.
+  if(old.dataset.v63Bound!=='1'){
+    const input=old.cloneNode(true);
+    input.dataset.v63Bound='1';
+    input.type='text';input.inputMode='decimal';input.autocomplete='off';
+    old.replaceWith(input);old=input;
+  }
+  if(old.dataset.v63Handlers==='1')return;
+  old.dataset.v63Handlers='1';
+  old.addEventListener('focus',()=>{old.dataset.v61Editing='1';old.dataset.v63Raw=v63SanitizeMoneyRaw(old.value);});
+  old.addEventListener('input',()=>{
+    old.dataset.v61Editing='1';old.dataset.v60Manual='1';
+    const raw=v63SanitizeMoneyRaw(old.value);
+    old.dataset.v63Raw=raw;
+    if(old.value!==raw)old.value=raw;
+    const badge=document.getElementById('v60ShippingModeBadge');if(badge){badge.textContent='手动调整';badge.classList.add('manual');}
+    const reset=document.getElementById('v60RestoreShippingSuggestion');if(reset)reset.disabled=false;
+    try{v42MarkEditorDirty?.();}catch(_){ }
+    v63RefreshMoneyDerived();
+  });
+  old.addEventListener('blur',()=>{
+    old.dataset.v61Editing='0';
+    const raw=old.dataset.v63Raw!=null?old.dataset.v63Raw:v63SanitizeMoneyRaw(old.value);
+    old.value=v63FormatMoneyRaw(raw);
+    delete old.dataset.v63Raw;
+    try{v60ApplyShippingUi?.();}catch(_){ }
+    v63RefreshMoneyDerived();
+  });
+}
+
+// Prevent future V6.3 rebinding from re-attaching the old target-level controller.
+v62BindShippingInput=v63BindShippingInput;
+
+function v63IsEditableRmInput(input){
+  if(!(input instanceof HTMLInputElement)||input.readOnly||input.disabled)return false;
+  if(input.id==='onlineStoreShippingCostV14')return false;
+  if(input.id==='onlineStoreMotherRegularPriceV33')return true;
+  if(input.matches('[data-online-field-v10="regularPrice"],[data-online-field-v10="promotionPrice"]'))return true;
+  const label=input.closest('label');
+  if(!label)return false;
+  const own=[...label.childNodes].filter(n=>n.nodeType===Node.TEXT_NODE||n.nodeName==='SPAN').map(n=>String(n.textContent||'')).join(' ');
+  return /\bRM\b|\(RM\)/i.test(own);
+}
+
+function v63BindGeneralMoneyInputs(root=document){
+  root.querySelectorAll('input').forEach(input=>{
+    if(!v63IsEditableRmInput(input)||input.dataset.v63MoneyBound==='1')return;
+    input.dataset.v63MoneyBound='1';
+    input.inputMode='decimal';
+    input.addEventListener('focus',()=>{input.dataset.v63Raw=v63SanitizeMoneyRaw(input.value);});
+    input.addEventListener('input',()=>{
+      const raw=v63SanitizeMoneyRaw(input.value);
+      input.dataset.v63Raw=raw;
+      if(input.value!==raw)input.value=raw;
+    });
+    input.addEventListener('blur',()=>{
+      const raw=input.dataset.v63Raw!=null?input.dataset.v63Raw:v63SanitizeMoneyRaw(input.value);
+      input.value=v63FormatMoneyRaw(raw);
+      delete input.dataset.v63Raw;
+      v63RefreshMoneyDerived();
+    });
+  });
+}
+
+const v63SetEditorBase=setOnlineStoreEditorValuesV10;
+setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
+  const out=v63SetEditorBase(productId,preserveRoomV16);
+  requestAnimationFrame(()=>{v63BindShippingInput();v63BindGeneralMoneyInputs(document.getElementById('onlineStorePage')||document);});
+  return out;
+};
+
+function v63RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.3');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.3';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.3';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.3 · Unified RM Input · Import Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.3 · Import Base V41.8 · Import Data Read-Only';
+}
+function v63Setup(){v63RefreshStatic();v63BindShippingInput();v63BindGeneralMoneyInputs(document);}
+window.addEventListener('DOMContentLoaded',()=>setTimeout(v63Setup,70));
+window.addEventListener('load',()=>setTimeout(v63Setup,420));

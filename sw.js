@@ -1,4 +1,4 @@
-const CACHE = "lover-legend-online-store-V6.2-shipping-input-fix-r1";
+const CACHE = "lover-legend-online-store-V6.3-unified-money-input-r1";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",

@@ -1,13 +1,11 @@
-Lover Legend Online Store Management Admin — V6.2 PATCH from V6.1
+Lover Legend Online Store Management Admin — V6.3 PATCH from V6.2
 
-V6.2 changes:
-- Fixes Reference Shipping manual input duplication (for example, typing 20 no longer becomes 2200).
-- Manual raw input is authoritative while editing; Line Clear suggestion cannot overwrite it.
-- Supports clear/retype and intermediate values such as 15., 15.0 and 15.00.
-- Formats to two decimals only after leaving the field.
-- Restore Suggestion remains the only path back to the current Line Clear automatic suggestion.
-- No change to sync.js, cloud sync, Import read-only flow, polling or observer behavior.
+V6.3 changes:
+- Unified RM money input controller for Online Store editable money fields.
+- Full-width Chinese IME digits normalize correctly: ５８０ -> 580.00; １２００ -> 1,200.00.
+- No duplicate concatenation such as 20 -> 2200.
+- Editing remains raw while typing; comma + 2-decimal formatting happens only on blur/save.
+- Reference Shipping keeps Line Clear suggestion separate from manual adopted value.
+- V6.0 stable sync/runtime path preserved; no new sync/fetch/observer/polling logic.
 
-Deployment:
-- Replace Frontend files only.
-- Apps Script / Code.gs redeployment is not required.
+Deployment: replace Frontend only. Apps Script / Code.gs redeploy is not required.
