@@ -1,37 +1,4 @@
-const APP_VERSION = "40.2";
-
-// Online Store V2.6: GitHub Pages apps share the same origin, so localStorage is
-// shared across /lover-legend-import-system/ and /lover-legend-online-store/.
-// Namespace every inherited Import-system key inside Online Store to prevent the
-// Online app from changing the Import app's local cache/settings on the same PC.
-const ONLINE_STORE_IMPORT_MIRROR_PREFIX_V20 = "llaOnlineImportMirrorV26_40_2_initial_current::";
-const ONLINE_STORE_ISOLATE_IMPORT_STORAGE_V20 = /\/lover-legend-online-store(?:\/|$)/i.test(location.pathname);
-const __nativeStorageGetItemV20 = Storage.prototype.getItem;
-const __nativeStorageSetItemV20 = Storage.prototype.setItem;
-const __nativeStorageRemoveItemV20 = Storage.prototype.removeItem;
-function mapOnlineImportStorageKeyV20(key) {
-  const raw = String(key ?? "");
-  if (!ONLINE_STORE_ISOLATE_IMPORT_STORAGE_V20) return raw;
-  if (/^importSystem/i.test(raw) || raw === "minimumPricePendingV345") return ONLINE_STORE_IMPORT_MIRROR_PREFIX_V20 + raw;
-  return raw;
-}
-Storage.prototype.getItem = function(key){ return __nativeStorageGetItemV20.call(this, mapOnlineImportStorageKeyV20(key)); };
-Storage.prototype.setItem = function(key,value){ return __nativeStorageSetItemV20.call(this, mapOnlineImportStorageKeyV20(key), value); };
-Storage.prototype.removeItem = function(key){ return __nativeStorageRemoveItemV20.call(this, mapOnlineImportStorageKeyV20(key)); };
-
-if (ONLINE_STORE_ISOLATE_IMPORT_STORAGE_V20) document.documentElement.classList.add("online-store-app-v26");
-
-// V2.6 corrected: Initial Minimum Price is preferred; Current Minimum Price is used only when Initial is missing/0.
-// No embedded backup is used; fallback reads only the live Import Current Minimum Price when Initial is missing/0.
-
-// V2.6: inherited Import modules register beforeunload guards for hidden Import-only
-// forms. Suppress those guards in Online Store; a dedicated Online-only guard is
-// registered later for genuine unsaved sales/settings edits.
-window.__nativeAddEventListenerOnlineV21 = window.addEventListener.bind(window);
-window.addEventListener = function(type, listener, options) {
-  if (ONLINE_STORE_ISOLATE_IMPORT_STORAGE_V20 && String(type) === "beforeunload") return;
-  return window.__nativeAddEventListenerOnlineV21(type, listener, options);
-};
+const APP_VERSION = "42.8";
 
 function formatMoney(value, prefix = "") {
   const number = Number(value) || 0;

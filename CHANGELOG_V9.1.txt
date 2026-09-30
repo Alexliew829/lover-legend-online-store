@@ -1,0 +1,18 @@
+Lover Legend Online Store V9.1
+
+Direction
+- Restore V8.3 UI / layout / page structure as the visual and functional parity baseline.
+- Keep Import V42.8 as read-only source of truth.
+
+V9.1 changes
+- Restored V8.3 navigation, dashboard, room cards, product editor layout, Line Clear shipping area, branding/settings UI, history/preview pages and existing settings sections.
+- Corrected Online Import product source to match Import dashboard semantics: current real stock > 0 only. This removes zero-stock records from the Online product count/list so it aligns with Import active product count.
+- Restored V8.3 branding fields: company name, Chinese/English system name, browser title and left/right logo URLs.
+- Restored Line Clear postage calculator and Package Reserve sections from V8.3 UI.
+- Ctrl/Cmd-click or middle-click on navigation can open a new tab.
+- Product name / product ID / child ID copy uses inline “已复制” feedback instead of bottom-right copy toast for Online Store copy surfaces.
+- Top/Bottom jump controls are hidden by default and appear only when the active result/list contains more than 50 items.
+- Important settings save buttons require confirmation before existing save logic runs.
+
+Import boundary
+- Import V42.8 data remains read-only in Online Store.

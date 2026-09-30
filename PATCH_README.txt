@@ -1,4 +1,4 @@
-Lover Legend Online Store V8.3 PATCH from V8.2
+Lover Legend Online Store V9.1 PATCH from V8.2
 
 Key fixes / changes:
 - Critical Product Management click path audited: first-click fast handling for room cards, Manage Template, Remove from Room, per-unit Save/Publish
