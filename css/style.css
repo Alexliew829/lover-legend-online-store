@@ -7323,3 +7323,9 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 .v60-shipping-mode-badge.manual{background:#fff4d8;color:#9a6400}
 #onlineStoreShippingCostV14{color:#0a5f36;font-weight:700}
 @media(max-width:700px){.v60-shipping-suggestion-row{align-items:flex-start}.v60-shipping-suggestion-row #v60ShippingSuggestionText{flex:1 1 100%}}
+
+/* Online Store V6.6 - room allocation clarity */
+.v66-allocation-hint{margin-top:8px;padding:7px 10px;border-radius:9px;background:#f3f8f4;color:#496659;font-size:12px;font-weight:700;line-height:1.45}
+.v66-allocation-hint.blocked{background:#fff5df;color:#8a5a00}
+.v66-room-search-card .online-store-manage-btn-v12:disabled{opacity:.62;cursor:not-allowed;background:#e8efea;color:#62766b;border-color:#d7e2da}
+@media(max-width:700px){.v66-allocation-hint{font-size:11px;margin-top:6px;padding:6px 8px}}
