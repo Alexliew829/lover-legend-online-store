@@ -1,4 +1,4 @@
-Lover Legend Online Store V6.4 PATCH from V6.3
+Lover Legend Online Store V6.5 PATCH from V6.3
 
 Scope:
 - Fix reference shipping manual input so raw typing is never reformatted or duplicated during input.
