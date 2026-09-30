@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-V7.0-parent-local-perf-r1";
+const CACHE = "lover-legend-online-store-V7.1-local-variations-r1";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=69-variations-publish-r1",
-  "./css/style.css?v=69-variations-publish-r1",
-  "./js/common.js?v=69-variations-publish-r1",
-  "./js/sync.js?v=69-variations-publish-r1",
-  "./js/app.js?v=69-variations-publish-r1",
-  "./manifest.json?v=69-variations-publish-r1",
+  "./index.html?v=71-local-variations-r1",
+  "./css/style.css?v=71-local-variations-r1",
+  "./js/common.js?v=71-local-variations-r1",
+  "./js/sync.js?v=71-local-variations-r1",
+  "./js/app.js?v=71-local-variations-r1",
+  "./manifest.json?v=71-local-variations-r1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -49,11 +49,11 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=69-variations-publish-r1", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=71-local-variations-r1", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=69-variations-publish-r1")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=71-local-variations-r1")) || (await caches.match("./index.html")))
     );
     return;
   }

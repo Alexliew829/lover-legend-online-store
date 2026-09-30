@@ -1,3 +1,12 @@
+Lover Legend Online Store Management Admin V7.1
+
+V7.1 changes
+- Import stock=1: Variations forced OFF + disabled; Individual Trees and Random hidden; Parent Direct only.
+- Online Local Product: 1-8 shared product photos, optional Add Variations, per-variation size/color/price/qty/package L/W/H/weight/Seller SKU.
+- Online Local Product copy-to-new-Draft flow.
+- Category pages can add/edit/copy Local Products directly.
+- Preserves V7.0 performance cleanup and Import read-only boundary.
+
 Lover Legend Online Store V6.9 PATCH from V6.8
 Frontend only. No Apps Script / Code.gs deployment required.
 Key changes: TikTok-style Variations switch, direct Parent allocation without Child ID when OFF, explicit Save vs Publish/Unpublish, new Child drafts default unpublished, Random remains independent.
