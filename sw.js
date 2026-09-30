@@ -1,12 +1,12 @@
-const CACHE = "lover-legend-online-store-V9.2-fast-core-r1";
+const CACHE = "lover-legend-online-store-V8.3-clean-r2";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=92-fast-core-r1",
-  "./css/style.css?v=92-fast-core-r1",
-  "./js/sync.js?v=92-fast-core-r1",
-  "./js/app.js?v=92-fast-core-r1",
-  "./manifest.json?v=92-fast-core-r1",
+  "./index.html?v=83-clean-r2",
+  "./css/style.css?v=83-clean-r2",
+  "./js/sync.js?v=83-clean-r2",
+  "./js/app.js?v=83-clean-r2",
+  "./manifest.json?v=83-clean-r2",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -44,16 +44,16 @@ self.addEventListener("fetch", event => {
 
   if (event.request.mode === "navigate") {
     event.respondWith((async () => {
-      const cached = (await caches.match("./index.html?v=92-fast-core-r1")) || (await caches.match("./index.html")) || (await caches.match("./"));
-      const refresh = fetch(event.request, { cache: "no-store" }).then(response => {
+      const cached = (await caches.match("./index.html?v=83-clean-r2")) || (await caches.match("./index.html"));
+      const update = fetch(event.request, { cache: "no-store" }).then(response => {
         if (response && response.ok) {
           const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put("./index.html?v=92-fast-core-r1", copy));
+          caches.open(CACHE).then(cache => cache.put("./index.html?v=83-clean-r2", copy));
         }
         return response;
       }).catch(() => null);
-      if (cached) { event.waitUntil(refresh); return cached; }
-      return (await refresh) || Response.error();
+      if (cached) { event.waitUntil(update); return cached; }
+      return (await update) || new Response("Offline", { status: 503, headers: { "Content-Type": "text/plain; charset=utf-8" } });
     })());
     return;
   }
