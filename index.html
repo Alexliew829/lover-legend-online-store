@@ -15,18 +15,18 @@
   document.title="线上商店管理系统 | Online Store Management Admin";
 })();
 </script>
-<link href="./manifest.json?v=10.9-stability-r1" rel="manifest"/>
-<link href="./assets/icons/online-store-orange-v15.ico?v=10.9-stability-r1" rel="shortcut icon"/>
-<link href="./assets/icons/online-store-orange-v15.ico?v=10.9-stability-r1" rel="icon" sizes="any"/>
-<link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=10.9-stability-r1" rel="icon" sizes="16x16" type="image/png"/>
-<link href="./assets/icons/online-store-orange-v15-favicon-32.png?v=10.9-stability-r1" rel="icon" sizes="32x32" type="image/png"/>
-<link href="./assets/icons/online-store-orange-v15-192.png?v=10.9-stability-r1" rel="icon" sizes="192x192" type="image/png"/>
-<link href="./assets/icons/apple-touch-icon-v15.png?v=10.9-stability-r1" rel="apple-touch-icon" sizes="180x180"/>
+<link href="./manifest.json?v=11.0-room-simplify-r1" rel="manifest"/>
+<link href="./assets/icons/online-store-orange-v15.ico?v=11.0-room-simplify-r1" rel="shortcut icon"/>
+<link href="./assets/icons/online-store-orange-v15.ico?v=11.0-room-simplify-r1" rel="icon" sizes="any"/>
+<link href="./assets/icons/online-store-orange-v15-favicon-16.png?v=11.0-room-simplify-r1" rel="icon" sizes="16x16" type="image/png"/>
+<link href="./assets/icons/online-store-orange-v15-favicon-32.png?v=11.0-room-simplify-r1" rel="icon" sizes="32x32" type="image/png"/>
+<link href="./assets/icons/online-store-orange-v15-192.png?v=11.0-room-simplify-r1" rel="icon" sizes="192x192" type="image/png"/>
+<link href="./assets/icons/apple-touch-icon-v15.png?v=11.0-room-simplify-r1" rel="apple-touch-icon" sizes="180x180"/>
 <meta content="yes" name="apple-mobile-web-app-capable"/>
 <meta content="default" name="apple-mobile-web-app-status-bar-style"/>
 <meta content="线上商店管理系统" name="application-name"/>
 <meta content="#f97316" name="msapplication-TileColor"/>
-<meta content="./assets/icons/online-store-orange-v15-192.png?v=10.9-stability-r1" name="msapplication-TileImage"/>
+<meta content="./assets/icons/online-store-orange-v15-192.png?v=11.0-room-simplify-r1" name="msapplication-TileImage"/>
 <style id="access-lock-critical-v299">
     html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif}
     .access-lock{position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(242,248,244,.96)}
@@ -47,12 +47,12 @@
       }
     } catch (_) {}
   </script>
-<link as="style" href="./css/style.css?v=10.9-stability-r1" rel="preload"/>
-<link href="./css/style.css?v=10.9-stability-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
-<noscript><link href="./css/style.css?v=10.9-stability-r1" rel="stylesheet"/></noscript>
-<script defer="" src="./js/common.js?v=10.9-stability-r1"></script>
-<script defer="" src="./js/sync.js?v=10.9-stability-r1"></script>
-<script defer="" src="./js/app.js?v=10.9-stability-r1"></script>
+<link as="style" href="./css/style.css?v=11.0-room-simplify-r1" rel="preload"/>
+<link href="./css/style.css?v=11.0-room-simplify-r1" media="print" onload="this.media='all'" rel="stylesheet"/>
+<noscript><link href="./css/style.css?v=11.0-room-simplify-r1" rel="stylesheet"/></noscript>
+<script defer="" src="./js/common.js?v=11.0-room-simplify-r1"></script>
+<script defer="" src="./js/sync.js?v=11.0-room-simplify-r1"></script>
+<script defer="" src="./js/app.js?v=11.0-room-simplify-r1"></script>
 </head>
 <body>
 <div aria-labelledby="accessLockTitle" aria-modal="true" class="access-lock" id="accessLock" role="dialog" hidden>
@@ -98,7 +98,7 @@
     <a class="nav-btn" data-page="onlineStoreHistoryPageV14" href="./?page=history"><span class="sidebar-icon-v27">≡</span><span>历史查询</span></a>
     <a class="nav-btn" data-page="settingsPage" href="./?page=settings"><span class="sidebar-icon-v27">⚙</span><span>设置</span></a>
   </nav>
-  <div class="sidebar-version-v27">Online Store V10.9</div>
+  <div class="sidebar-version-v27">Online Store V11.0</div>
 </aside>
 <header class="app-header-wrap admin-topbar-wrap-v28">
 <div class="admin-topbar-v28 admin-topbar-v29">
@@ -108,7 +108,7 @@
       <div class="app-header-brand">Lover Legend Gardening</div>
       <div class="app-header-main-title">线上商店管理系统</div>
       <div class="app-header-subtitle">Online Store Management Admin</div>
-      <small>Online Store V10.9 · Import Base V42.8 · Import Data Read-Only</small>
+      <small>Online Store V11.0 · Import Base V42.8 · Import Data Read-Only</small>
       <span id="adminCurrentPageTitleV28" hidden>首页</span>
     </div>
     <img alt="Lover Legend red logo" class="app-header-logo app-header-logo-red admin-brand-logo-v29" src="./assets/images/logo-red.jpg"/>
@@ -130,7 +130,7 @@
 <main class="content">
 <section class="page active" id="dashboardPage">
 <div class="section-title-row dashboard-title-row-v29">
-<div><h2>Shop Performance</h2><div class="dashboard-kicker-v27">商店经营动态</div></div>
+<div><h2 id="dashboardMainTitleV110">商店经营动态</h2><div class="dashboard-kicker-v27" id="dashboardKickerV110" hidden></div></div>
 </div>
 <section class="shop-performance-v27" aria-label="商店表现">
   <article><span>今日销售额</span><strong id="shopSalesTodayV27">RM 0.00</strong><small>Orders · Today</small></article>
@@ -246,10 +246,10 @@
 <div class="section-title-row online-store-title-row-v10">
 <div>
 <h2>商品管理</h2>
-<div class="muted">Online Store V10.9 · V8.2 Business Logic Base · Import V42.8 Read-Only</div>
+<div class="muted">Online Store V11.0 · V8.2 Business Logic Base · Import V42.8 Read-Only</div>
 <div class="online-store-live-source-v15">库存来源：Import / Inventory V41.8 · Live Read-Only Mirror</div>
 </div>
-<span class="online-store-version-v10">V10.9</span>
+<span class="online-store-version-v10">V11.0</span>
 </div>
 <nav class="module-tabs-v30" aria-label="商品管理分类">
   <button type="button" class="active" data-product-room-tab-v30="">商品总览</button>
@@ -257,6 +257,7 @@
   <button type="button" data-product-room-tab-v30="vip">VIP Room</button>
   <button type="button" data-product-room-tab-v30="premium">Premium</button>
   <button type="button" data-product-room-tab-v30="entry">Starter</button>
+  <button type="button" data-product-room-tab-v30="random">Random</button>
   <button type="button" data-v41-content-templates="1">盆景内容模板</button>
 </nav>
 <section class="v41-template-panel" id="contentTemplatesPanelV41" hidden>
@@ -277,7 +278,8 @@
   <div class="room-first-grid-v27">
     <button class="room-first-card-v27 vip" data-room-first-v27="vip" type="button"><span class="room-first-icon-v27">◆</span><strong>贵宾室</strong><small>VIP Room</small><em>藏家级别 · 专属浏览</em></button>
     <button class="room-first-card-v27 premium" data-room-first-v27="premium" type="button"><span class="room-first-icon-v27">✦</span><strong>精品馆</strong><small>Premium</small><em>高品质精选商品</em></button>
-    <button class="room-first-card-v27 starter" data-room-first-v27="entry" type="button"><span class="room-first-icon-v27">●</span><strong>入门首选</strong><small>Starter</small><em>一物一拍 / One-of-a-Kind · 随机发货 / Random</em></button>
+    <button class="room-first-card-v27 starter" data-room-first-v27="entry" type="button"><span class="room-first-icon-v27">●</span><strong>入门首选</strong><small>Starter</small><em>一物一拍 / One-of-a-Kind</em></button>
+    <button class="room-first-card-v27 random" data-room-first-v27="random" type="button"><span class="room-first-icon-v27">↻</span><strong>随机发货</strong><small>Random</small><em>Display Only · 5 Photos + 1 Video</em></button>
   </div>
   <div class="selected-room-banner-v27" id="selectedRoomBannerV27" hidden></div>
 </section>
@@ -384,7 +386,8 @@
   <div class="online-room-choice-grid-v16">
     <button type="button" class="room-choice-v16 room-vip-v16" data-room-open-v16="vip"><strong>贵宾室 / VIP Room</strong><small>藏家级别</small><span data-room-status-v16="vip"></span></button>
     <button type="button" class="room-choice-v16 room-premium-v16" data-room-open-v16="premium"><strong>精品馆 / Premium</strong><small>高端精品</small><span data-room-status-v16="premium"></span></button>
-    <button type="button" class="room-choice-v16 room-entry-v16" data-room-open-v16="entry"><strong>入门首选 / Starter</strong><small>One-of-a-Kind / Random</small><span data-room-status-v16="entry"></span></button>
+    <button type="button" class="room-choice-v16 room-entry-v16" data-room-open-v16="entry"><strong>入门首选 / Starter</strong><small>One-of-a-Kind</small><span data-room-status-v16="entry"></span></button>
+    <button type="button" class="room-choice-v16 room-random-v110" data-room-open-v16="random"><strong>随机发货 / Random</strong><small>Display Only</small><span data-room-status-v16="random"></span></button>
   </div>
 </div>
 <div class="online-room-toolbar-v16" id="onlineRoomToolbarV16" hidden>
@@ -395,7 +398,7 @@
 <div class="online-store-block-head-v10">
 <div>
 <strong>随机发货 / Random</strong>
-<small>Starter 销售方式；与 One-of-a-Kind 可同时从真实库存分配。</small>
+<small>独立销售房间；顾客购买后随机发货。照片与视频只作造型参考（For Display Only）。</small>
 </div>
 <input id="onlineStoreRandomPublishedV10" type="checkbox" hidden/>
 </div>
@@ -1152,7 +1155,7 @@
 <div class="v107-logic-body">
   <div class="v107-logic-head">
     <div><h3>Online Store 核心逻辑备忘录</h3><p>只用于查看当前系统规则，不在这里修改任何参数。所有可调参数继续在各自对应页面修改。</p></div>
-    <div class="v107-logic-meta"><span>Logic Spec v1.1</span><span>Online Store V10.9</span><span>Updated 01-10-2026</span></div>
+    <div class="v107-logic-meta"><span>Logic Spec v1.1</span><span>Online Store V11.0</span><span>Updated 01-10-2026</span></div>
   </div>
   <section class="v107-example-product">
     <strong>统一计算案例</strong>
@@ -1188,7 +1191,7 @@
 
 <section class="panel system-information-v203">
 <h3>系统资料 / System Information</h3>
-<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V10.9</strong></div>
+<div class="info-row"><span>Online Store Version</span><strong id="systemInfoVersionV203">V11.0</strong></div>
 <div class="info-row"><span>数据权限 / Data Boundary</span><strong>Import 库存 / 成本 / 初始最低售价只读 · Online 只管销售</strong></div>
 <div class="info-row"><span>Inventory API / Import Base</span><strong id="systemInfoApiVersionV203">检查中…</strong></div>
 <div class="info-row"><span>库存来源</span><strong>Import / Inventory V41.8 · Live Read-Only</strong></div>
@@ -1207,9 +1210,9 @@
 </section>
 </main>
 <aside class="admin-assist-v27" aria-label="辅助信息">
-  <section><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
+  <section class="assist-system-status-v110"><strong>系统状态</strong><div class="assist-status-v27"><span></span><b>Import Read-Only</b></div><small>库存、平均成本、最低售价基准来自 Import。</small></section>
   <section><strong>快捷操作</strong><button class="nav-btn assist-link-v27" data-page="storePreviewPage" type="button">查看前台</button><button class="nav-btn assist-link-v27" data-page="ordersPageV27" type="button">查看订单</button></section>
-  <section><strong>当前版本</strong><p>Online Store V10.9</p><small>Import Base 42.8 Read-Only</small></section>
+  <section><strong>当前版本</strong><p>Online Store V11.0</p><small>Import Base 42.8 Read-Only</small></section>
 </aside>
 <nav aria-label="Main Navigation" class="bottom-nav mobile-admin-nav-v27">
 <a class="nav-btn active" data-page="dashboardPage" href="./?page=home"><span>⌂</span><small>首页</small></a>

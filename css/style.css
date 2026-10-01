@@ -7641,3 +7641,51 @@ html:not(.v109-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 @media(max-width:760px){
   .v109-parent-media{grid-template-columns:1fr}.v109-workflow-actions,#onlineRoomRandomBlockV16>.v109-workflow-actions,.v109-parent-workflow{grid-template-columns:1fr!important}.v109-workflow-status,.v109-parent-workflow .v69-publish-status{white-space:normal;}
 }
+
+
+/* ========================================================================== 
+   Online Store V11.0 - room simplification / workflow / keyboard UX
+   ========================================================================== */
+/* Home language title: Chinese mode shows only the Chinese title. */
+#dashboardPage #dashboardKickerV110[hidden]{display:none!important;}
+
+/* Detailed system status belongs to Home only. Other assist cards may remain. */
+body:not(.v110-home-active) .admin-assist-v27 .assist-system-status-v110{display:none!important;}
+
+/* Random is a first-class room. */
+.room-first-card-v27.random .room-first-icon-v27{background:#edf6f1;color:#176b46;}
+.room-choice-v16.room-random-v110{border-color:#d6e7dc;background:#fbfdfb;}
+
+/* Editor room mode: no cross-room elevator navigation. Elevator is intra-page only. */
+#onlineStoreEditorV10.v110-room-random #v34SingleTrees{display:none!important;}
+#onlineStoreEditorV10.v110-room-random #v34RandomWrap{display:block!important;}
+#onlineStoreEditorV10:not(.v110-room-random) #v34RandomWrap{display:none!important;}
+#onlineStoreEditorV10.v110-room-random [data-v34-jump="v34SingleTrees"]{display:none!important;}
+#onlineStoreEditorV10:not(.v110-room-random) [data-v34-jump="v34RandomWrap"]{display:none!important;}
+
+/* One full-width publication workflow block, visually equal to the former check bar. */
+.v110-workflow-panel,
+.v109-workflow-actions.v110-workflow-panel,
+#onlineRoomRandomBlockV16>.v109-workflow-actions.v110-workflow-panel,
+.v109-parent-workflow.v110-workflow-panel{
+  width:100%!important;
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(150px,1fr)) minmax(120px,.7fr)!important;
+  gap:10px!important;
+  margin:14px 0 0!important;
+  padding:16px!important;
+  border:1px solid #cfe1d5!important;
+  border-radius:14px!important;
+  background:#f7fbf8!important;
+  align-items:center!important;
+}
+.v110-workflow-panel>button{width:100%!important;min-height:46px!important;margin:0!important;font-weight:800!important;}
+.v110-workflow-panel .v109-workflow-status,.v110-workflow-panel .v69-publish-status{justify-self:center;text-align:center;white-space:normal!important;font-weight:850!important;}
+@media(max-width:760px){.v110-workflow-panel,.v109-workflow-actions.v110-workflow-panel,#onlineRoomRandomBlockV16>.v109-workflow-actions.v110-workflow-panel,.v109-parent-workflow.v110-workflow-panel{grid-template-columns:1fr!important;}}
+
+/* Published edits are staged: visible badge; live storefront stays on last published snapshot until update. */
+.v110-live-edit-note{margin:8px 0 0;padding:9px 11px;border-radius:10px;background:#eef6f1;color:#255d42;font-size:12px;font-weight:700;}
+
+/* Random media is display-only. */
+#onlineRoomRandomBlockV16 .media-section-title-v14::after{content:" · For Display Only";font-size:11px;font-weight:700;color:#728078;margin-left:6px;}
