@@ -7471,3 +7471,26 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 /* V10.0 FULL DEPLOY FIX */
 #v43FreightRules .v43-rule-actions{gap:10px;flex-wrap:wrap}
 #v100ResetFreightFactory{white-space:nowrap}
+
+
+/* ================= Online Store V10.5 ================= */
+/* Keep the two brand marks visually tied to the centered title without crowding it. */
+@media (min-width:1201px){
+  .admin-brand-v29{grid-template-columns:58px minmax(390px,520px) 58px!important;justify-content:center!important;gap:26px!important;}
+  .admin-brand-v29 .admin-brand-logo-v29:first-child,.admin-brand-v29 .admin-brand-logo-v29:last-child{transform:none!important;}
+}
+/* The detailed System Status card remains on the right; remove the duplicate yellow top status control. */
+#importAnomalyStatusButtonV202{display:none!important;}
+/* Room keyword result stats: one clean row on desktop; responsive wrapping remains on narrow screens. */
+@media (min-width:1200px){
+  .v67-room-search-card .room-product-meta-v28{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;}
+  .v67-room-search-card .room-product-meta-v28 span{padding:7px 8px!important;}
+  .v67-room-search-card .room-product-meta-v28 i,.v67-room-search-card .room-product-meta-v28 strong{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+}
+/* Immediate field-level price validation. */
+.v105-live-price-warning{display:block;margin-top:5px;color:#b3261e;font-size:11px;font-weight:800;line-height:1.35;}
+.v105-live-price-warning[hidden]{display:none!important;}
+.v105-price-invalid{border-color:#d9534f!important;box-shadow:0 0 0 2px rgba(217,83,79,.10)!important;}
+/* Remove the unnecessary vertical offset on operational pages. */
+#ordersPageV27.page.active,#marketingPageV27.page.active,#onlineStoreHistoryPageV14.page.active{margin-top:0!important;padding-top:0!important;align-self:start!important;}
+#ordersPageV27>.module-page-head-v27,#marketingPageV27>.module-page-head-v27,#onlineStoreHistoryPageV14>.online-store-history-v14{margin-top:0!important;}
