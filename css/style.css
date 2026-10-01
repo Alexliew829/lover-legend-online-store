@@ -7560,7 +7560,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 @media(max-width:600px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr}.v107-logic-reference>summary{align-items:flex-start}.v107-readonly-badge{flex:0 0 auto}}
 
 /* ========================================================================== 
-   Online Store V11.4 - CLEAN ROOM ARCHITECTURE BASELINE
+   Online Store V11.5 - CLEAN ROOM ARCHITECTURE BASELINE
    ========================================================================== */
 @media (min-width:1001px){
   .admin-layout-v27{display:grid!important;grid-template-columns:190px minmax(0,1fr) 220px!important;grid-template-rows:auto minmax(0,1fr)!important;grid-template-areas:"sidebar header header" "sidebar content assist"!important;align-items:start!important;min-height:100vh!important;row-gap:14px!important;}
@@ -7592,7 +7592,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 @media(max-width:760px){.v113-media-columns,.v113-workflow-panel{grid-template-columns:1fr!important}}
 
 
-/* ===== V11.4 focused professional UI ===== */
+/* ===== V11.5 focused professional UI ===== */
 .v114-mother-price-warning{display:block;margin-top:7px;font-size:13px;font-weight:800;line-height:1.35;color:#b42318}
 .v114-price-invalid{border-color:#ef7b72!important;box-shadow:0 0 0 2px rgba(180,35,24,.08)!important}
 .v114-workflow-panel{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px!important;align-items:center;width:100%;padding:14px!important;border:1px solid #d4e5da;border-radius:14px;background:#f8fbf9}
@@ -7616,3 +7616,35 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 .v34-tree-card{border-radius:14px!important}
 .v34-tree-editor{padding:14px!important}
 @media(max-width:760px){.v114-workflow-panel{grid-template-columns:1fr}.v114-workflow-help{grid-column:1}.v114-workflow-panel .v114-workflow-btn{min-height:48px}}
+
+
+/* ===== V11.5 room editor + Child selection clarity ===== */
+/* Once a product editor is open, the room browse/search/list is deliberately absent.
+   It is restored only after returning/closing through the existing navigation path. */
+#onlineStoreEditorV10:not([hidden]) ~ #onlineStoreProductListV10{display:none!important}
+
+/* Child collapsed rows prioritise the action a new staff member actually needs:
+   identify the tree, see room/price/status, then press Edit. Detailed dimensions live inside. */
+#v34TreeList .v35-tree-row{
+  grid-template-columns:58px minmax(150px,1fr) 92px 112px 86px 74px!important;
+  gap:8px!important;
+}
+#v34TreeList .v35-tree-row .v36-dim-cell{display:none!important}
+#v34TreeList .v34-edit-btn.v115-child-edit{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  width:74px!important;min-width:74px!important;height:38px!important;min-height:38px!important;
+  padding:0 10px!important;border-radius:10px!important;font-size:13px!important;font-weight:800!important;
+  white-space:nowrap!important;justify-self:end!important;
+}
+#v34TreeList [data-v115-selectable-child="1"]{transition:border-color .15s ease,box-shadow .15s ease}
+#v34TreeList [data-v115-selectable-child="1"].v115-child-open{border-color:#77b48f!important;box-shadow:0 0 0 2px rgba(31,112,66,.07)!important}
+#v34TreeList [data-v115-selectable-child="1"].v115-child-open .v34-edit-btn{background:#e8f5ed!important;color:#14633a!important;border-color:#a8cfb7!important}
+@media(max-width:900px){
+  #v34TreeList .v35-tree-row{grid-template-columns:54px minmax(120px,1fr) auto 74px!important;grid-template-rows:auto auto!important}
+  #v34TreeList .v35-tree-row .v34-photo-cell{grid-column:1;grid-row:1 / span 2}
+  #v34TreeList .v35-tree-row .v34-child-id{grid-column:2;grid-row:1}
+  #v34TreeList .v35-tree-row .v34-tier-chip{grid-column:3;grid-row:1}
+  #v34TreeList .v35-tree-row .v34-row-price{grid-column:2;grid-row:2}
+  #v34TreeList .v35-tree-row .v34-status-chip{grid-column:3;grid-row:2}
+  #v34TreeList .v35-tree-row .v34-edit-btn.v115-child-edit{grid-column:4;grid-row:1 / span 2}
+}
