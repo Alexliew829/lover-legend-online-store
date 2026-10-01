@@ -7689,3 +7689,14 @@ body:not(.v110-home-active) .admin-assist-v27 .assist-system-status-v110{display
 
 /* Random media is display-only. */
 #onlineRoomRandomBlockV16 .media-section-title-v14::after{content:" · For Display Only";font-size:11px;font-weight:700;color:#728078;margin-left:6px;}
+
+/* === Online Store V11.1 final UI polish === */
+.v111-workflow-panel{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) auto!important;gap:10px!important;align-items:center!important;width:100%!important;padding:14px!important;border:1px solid #d8e7dc!important;border-radius:14px!important;background:#f8fcf9!important;box-sizing:border-box!important;}
+.v111-workflow-panel .v111-workflow-button{width:100%!important;min-width:0!important;height:46px!important;margin:0!important;}
+.v111-workflow-panel .v109-workflow-status,.v111-workflow-panel .v69-publish-status{white-space:nowrap;font-weight:800;justify-self:end;}
+.v111-allocation-message{display:block!important;grid-column:1/-1!important;width:100%!important;margin-top:8px!important;padding:10px 12px!important;border-radius:10px!important;background:#fff8e8!important;color:#7a5100!important;font-size:16px!important;font-weight:800!important;text-align:left!important;}
+.v111-room-media{margin-top:14px;padding:16px;border:1px solid #d8e7dc;border-radius:14px;background:#fbfdfb;}
+.v111-media-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px;}.v111-media-head strong{display:block;font-size:16px}.v111-media-head small{display:block;margin-top:4px;color:#64756c}
+.v111-media-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}.v111-media-columns>div>b{display:block;margin-bottom:8px}.v111-media-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-bottom:8px}.v111-media-row input{width:100%;min-width:0}.v111-remove-media{min-width:66px!important}
+body:not(.v110-home-active) .admin-assist-v27{display:none!important;}
+@media(max-width:760px){.v111-workflow-panel{grid-template-columns:1fr!important}.v111-workflow-panel .v109-workflow-status,.v111-workflow-panel .v69-publish-status{justify-self:start}.v111-media-columns{grid-template-columns:1fr}}
