@@ -1,3 +1,64 @@
+// ============================================================================
+// Online Store V10.0 FULL DEPLOY FIX - canonical Product Management navigation
+// Registered before legacy handlers so one click = one route.
+// ============================================================================
+window.addEventListener('click', function v100CanonicalProductNav(e){
+  const t=e.target;
+  if(!(t instanceof Element)) return;
+  const tab=t.closest('#onlineStorePage nav.module-tabs-v30 button');
+  const roomCard=t.closest('[data-room-first-v27]');
+  if(!tab && !roomCard) return;
+  if(tab && tab.disabled) return;
+
+  let target=null;
+  if(roomCard) target=String(roomCard.dataset.roomFirstV27||'');
+  else if(tab.hasAttribute('data-v38-all-trees')) target='all-items';
+  else if(tab.hasAttribute('data-v41-content-templates')) target='templates';
+  else if(tab.hasAttribute('data-product-room-tab-v30')) target=String(tab.dataset.productRoomTabV30||'')||'overview';
+  else return; // Media / other tabs remain owned by their module.
+
+  // Protect real unsaved product edits, but do not let stale legacy dirty flags block navigation.
+  try{
+    const editor=document.getElementById('onlineStoreEditorV10');
+    if(editor && !editor.hidden && typeof v50HasUnsaved==='function' && v50HasUnsaved()){
+      if(!window.confirm('当前商品资料有尚未保存的修改。\n\n确定放弃修改并离开？')) return;
+      try{ if(typeof v42ClearEditorDirty==='function') v42ClearEditorDirty(); }catch(_){ }
+      try{ onlineStoreRoomDirtyV16=false; }catch(_){ }
+    }
+  }catch(_){ }
+
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  try{
+    if(target==='overview'){
+      if(typeof v47ActivateProductPage==='function') v47ActivateProductPage();
+      if(typeof v47ShowOverviewNow==='function') v47ShowOverviewNow();
+      else if(typeof showProductOverviewV32==='function') showProductOverviewV32();
+      try{ onlineStoreSelectedProductIdV10=''; onlineStoreRoomV16=''; onlineStoreRoomDirtyV16=false; }catch(_){ }
+      window.scrollTo({top:0,behavior:'auto'});
+      return;
+    }
+    if(target==='all-items'){
+      if(typeof v47ActivateProductPage==='function') v47ActivateProductPage();
+      if(typeof v47HideProductSubviews==='function') v47HideProductSubviews();
+      if(typeof v38EnterAllTrees==='function') v38EnterAllTrees();
+      window.scrollTo({top:0,behavior:'auto'});
+      return;
+    }
+    if(target==='templates'){
+      if(typeof v82OpenTemplatesFromProduct==='function') v82OpenTemplatesFromProduct();
+      else if(typeof v81ShowBonsaiContentTemplates==='function') v81ShowBonsaiContentTemplates(false);
+      return;
+    }
+    if(['vip','premium','entry'].includes(target)){
+      if(typeof v82EnterRoomFast==='function') v82EnterRoomFast(target);
+      else if(typeof enterProductRoomV32==='function') enterProductRoomV32(target);
+      return;
+    }
+  }catch(err){ console.error('V10.0 canonical Product Management navigation failed',err); }
+}, true);
+
 function isPageReloadV304() {
   try {
     const nav = performance.getEntriesByType?.("navigation")?.[0];
@@ -21813,11 +21874,11 @@ window.ONLINE_STORE_V43_INDEPENDENT_MINIMUM = true;
 const V43_MARGIN_DEFAULTS = Object.freeze({m0_300:30,m300_500:35,m500_800:40,m800_5000:45,m5000_8000:50,m8000_plus:60});
 const V43_VND_POT_DEFAULTS = Object.freeze({under1m:35,m1_4:55,m4_10:105,m10_plus:180});
 const V43_FREIGHT_DEFAULTS = Object.freeze([
-  {key:'A',maxL:50,maxW:30,maxH:30,maxKg:5,cost:20},
-  {key:'B',maxL:65,maxW:45,maxH:45,maxKg:15,cost:50},
-  {key:'C',maxL:80,maxW:60,maxH:60,maxKg:35,cost:80},
-  {key:'D',maxL:100,maxW:75,maxH:60,maxKg:55,cost:120},
-  {key:'E',maxL:120,maxW:100,maxH:90,maxKg:75,cost:180}
+  {key:'A',maxL:40,maxW:33,maxH:40,maxKg:5,cost:25},
+  {key:'B',maxL:55,maxW:40,maxH:55,maxKg:15,cost:50},
+  {key:'C',maxL:55,maxW:55,maxH:55,maxKg:35,cost:80},
+  {key:'D',maxL:70,maxW:55,maxH:70,maxKg:35,cost:120},
+  {key:'E',maxL:95,maxW:75,maxH:95,maxKg:75,cost:180}
 ]);
 const V59_FREIGHT_TIER_NAMES = Object.freeze({A:'小型',B:'中小型',C:'中大型',D:'大型',E:'Oversize'});
 const V59_LEGACY_FREIGHT_SHAPES = Object.freeze([
@@ -21953,7 +22014,6 @@ function v43DisabledFactoryButton(){return `<button type="button" class="seconda
 function v43Field(label,id,value,suffix='',hint=''){return `<label>${label}<input id="${id}" inputmode="decimal" value="${String(value)}"/>${suffix?`<span class="v43-input-suffix">${suffix}</span>`:''}${hint?`<small class="field-hint-v12">${hint}</small>`:''}</label>`;}
 function v43BuildAutoMinPanel(){
   if(document.getElementById('autoMinimumPanelV43'))return;const nav=document.querySelector('#onlineStorePage nav.module-tabs-v30');if(!nav)return;
-  const media=[...nav.querySelectorAll('button')].find(b=>/Coming Soon/.test(b.textContent||''));const tab=document.createElement('button');tab.type='button';tab.dataset.v43AutoMin='1';tab.textContent='\u81ea\u52a8\u6700\u4f4e\u552e\u4ef7';nav.insertBefore(tab,media||null);
   const ui=getOnlineStoreUiSettingsV12(),m=ui.pricing.marginTiers,p=ui.pricing.vndPotTiers;const panel=document.createElement('section');panel.id='autoMinimumPanelV43';panel.className='v43-rules-panel';panel.hidden=true;
   panel.innerHTML=`<div class="v43-rules-head"><div><strong>Online \u81ea\u52a8\u6700\u4f4e\u552e\u4ef7\u7ba1\u7406</strong><small>Working Settings \u00b7 \u53ea\u5f71\u54cd Online\uff1bImport \u5e73\u5747\u6210\u672c / Initial / Current \u5168\u90e8\u53ea\u8bfb\u3002</small></div><span class="v43-working-badge">Working Settings</span></div>
   <div class="v43-source-strip"><span>Import \u53ea\u8bfb\uff1a\u5e73\u5747\u6210\u672c</span><b>+</b><span>Online \u56fa\u5b9a\u6210\u672c</span><b>\u00f7</b><span>1 - Affiliate - Payment - \u76ee\u6807\u51c0\u5229\u7387</span><b>=</b><span>Online \u9500\u552e\u4fdd\u62a4\u5e95\u7ebf</span></div>
@@ -21975,7 +22035,7 @@ function v43ShowAutoMin(){
 function v43HideAutoMin(){const p=document.getElementById('autoMinimumPanelV43');if(p)p.hidden=true;}
 
 function v43BuildShippingSettings(){
-  const page=document.getElementById('shippingPageV27');if(!page||document.getElementById('v43FreightRules'))return;const ui=getOnlineStoreUiSettingsV12(),tiers=ui.shipping.freightTiers||V43_FREIGHT_DEFAULTS;const sec=document.createElement('section');sec.className='panel v43-rule-card';sec.id='v43FreightRules';sec.innerHTML=`<div class="v43-card-head"><div><strong>Online \u5305\u88c5\u5c3a\u5bf8 / \u91cd\u91cf\u8fd0\u8d39\u6863</strong><small>V6.4 \u6309\u771f\u5b9e Line Clear \u51fa\u8d27\u5c3a\u5bf8\u91cd\u65b0\u5206\u5c42\uff1b\u5c3a\u5bf8\u4f1a\u81ea\u52a8\u4ee5\u957f\u8fb9 / \u4e2d\u8fb9 / \u77ed\u8fb9\u6bd4\u8f83\uff0c\u4e0d\u53d7 L/W/H \u8f93\u5165\u65b9\u5411\u5f71\u54cd\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-freight-grid">${tiers.map((t,i)=>`<div class="v43-freight-row"><div class="v59-tier-key"><strong>${t.key}</strong><span>${V59_FREIGHT_TIER_NAMES[t.key]||''}</span></div>${v43Field('长边 cm',`v43FreightL${i}`,t.maxL)}${v43Field('中边 cm',`v43FreightW${i}`,t.maxW)}${v43Field('短边 cm',`v43FreightH${i}`,t.maxH)}${v43Field('kg',`v43FreightKg${i}`,t.maxKg)}${v43Field('RM',`v43FreightCost${i}`,t.cost)}</div>`).join('')}</div><div class="v59-freight-note">A \u5c0f\u578b \u00b7 B \u4e2d\u5c0f\u578b \u00b7 C \u4e2d\u5927\u578b \u00b7 D \u5927\u578b \u00b7 E Oversize\u3002\u8fd0\u8d39 RM \u4ecd\u4fdd\u7559\u4f60\u73b0\u6709\u8bbe\u5b9a\uff0cLine Clear \u8ba1\u7b97\u5668\u53ea\u505a\u5bf9\u7167\u3002</div><div class="v43-packaging-single">${v43Field('Online \u9ed8\u8ba4\u5305\u88c5\u8017\u6750\u6210\u672c (RM)','v43PackagingCost',ui.shipping.packagingCost,'','\u6ce1\u6cab\u7bb1 / \u6728\u6761 / Tape / Wrapping Bubble \u7b49\u5305\u88c5\u7528\u54c1\u5408\u8ba1\uff1b\u5f53\u524d\u9ed8\u8ba4 RM20\uff0c\u53ef\u4fee\u6539\u3002')}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveShippingRules">\u4fdd\u5b58 Working Settings</button>${v43DisabledFactoryButton()}<span id="v43ShippingStatus"></span></div>`;const reserve=document.getElementById('packageReserveSettingsV40');reserve?.after(sec);
+  const page=document.getElementById('shippingPageV27');if(!page||document.getElementById('v43FreightRules'))return;const ui=getOnlineStoreUiSettingsV12(),tiers=ui.shipping.freightTiers||V43_FREIGHT_DEFAULTS;const sec=document.createElement('section');sec.className='panel v43-rule-card';sec.id='v43FreightRules';sec.innerHTML=`<div class="v43-card-head"><div><strong>Online \u5305\u88c5\u5c3a\u5bf8 / \u91cd\u91cf\u8fd0\u8d39\u6863</strong><small>V6.4 \u6309\u771f\u5b9e Line Clear \u51fa\u8d27\u5c3a\u5bf8\u91cd\u65b0\u5206\u5c42\uff1b\u5c3a\u5bf8\u4f1a\u81ea\u52a8\u4ee5\u957f\u8fb9 / \u4e2d\u8fb9 / \u77ed\u8fb9\u6bd4\u8f83\uff0c\u4e0d\u53d7 L/W/H \u8f93\u5165\u65b9\u5411\u5f71\u54cd\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-freight-grid">${tiers.map((t,i)=>`<div class="v43-freight-row"><div class="v59-tier-key"><strong>${t.key}</strong><span>${V59_FREIGHT_TIER_NAMES[t.key]||''}</span></div>${v43Field('长边 cm',`v43FreightL${i}`,t.maxL)}${v43Field('中边 cm',`v43FreightW${i}`,t.maxW)}${v43Field('短边 cm',`v43FreightH${i}`,t.maxH)}${v43Field('kg',`v43FreightKg${i}`,t.maxKg)}${v43Field('RM',`v43FreightCost${i}`,t.cost)}</div>`).join('')}</div><div class="v59-freight-note">A \u5c0f\u578b \u00b7 B \u4e2d\u5c0f\u578b \u00b7 C \u4e2d\u5927\u578b \u00b7 D \u5927\u578b \u00b7 E Oversize\u3002\u8fd0\u8d39 RM \u4ecd\u4fdd\u7559\u4f60\u73b0\u6709\u8bbe\u5b9a\uff0cLine Clear \u8ba1\u7b97\u5668\u53ea\u505a\u5bf9\u7167\u3002</div><div class="v43-packaging-single">${v43Field('Online \u9ed8\u8ba4\u5305\u88c5\u8017\u6750\u6210\u672c (RM)','v43PackagingCost',ui.shipping.packagingCost,'','\u6ce1\u6cab\u7bb1 / \u6728\u6761 / Tape / Wrapping Bubble \u7b49\u5305\u88c5\u7528\u54c1\u5408\u8ba1\uff1b\u5f53\u524d\u9ed8\u8ba4 RM20\uff0c\u53ef\u4fee\u6539\u3002')}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveShippingRules">保存 + 确认</button><button type="button" class="secondary-btn" id="v100ResetFreightFactory">回到原厂 Reset To Factory</button><span id="v43ShippingStatus"></span></div>`;const reserve=document.getElementById('packageReserveSettingsV40');reserve?.after(sec);
 }
 function v43BuildFinanceSettings(){const page=document.getElementById('financePageV27');if(!page||document.getElementById('v43FinanceRules'))return;const ui=getOnlineStoreUiSettingsV12(),sec=document.createElement('section');sec.id='v43FinanceRules';sec.className='panel v43-rule-card';sec.innerHTML=`<div class="v43-card-head"><div><strong>Payment Gateway Fee</strong><small>\u8fd9\u662f Online \u6700\u4f4e\u552e\u4ef7\u516c\u5f0f\u4e2d\u7684\u6b63\u5f0f Payment Fee Source of Truth\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-rule-grid one">${v43Field('Payment Gateway Fee (%)','v43PaymentFee',ui.finance.paymentGatewayFee)}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveFinanceRules">\u4fdd\u5b58 Payment Fee</button>${v43DisabledFactoryButton()}<span id="v43FinanceStatus"></span></div>`;page.querySelector('.module-page-head-v27')?.after(sec);}
 function v43BuildAffiliateSettings(){const page=document.getElementById('affiliatePageV27');if(!page||document.getElementById('v43AffiliateRules'))return;const ui=getOnlineStoreUiSettingsV12(),sec=document.createElement('section');sec.id='v43AffiliateRules';sec.className='panel v43-rule-card';sec.innerHTML=`<div class="v43-card-head"><div><strong>\u9ed8\u8ba4 Affiliate \u4f63\u91d1</strong><small>\u8fd9\u662f Online \u6700\u4f4e\u552e\u4ef7\u516c\u5f0f\u4e2d\u7684\u6b63\u5f0f Affiliate Source of Truth\u3002\u6307\u5b9a Affiliate / Product / Campaign Override \u540e\u7eed\u518d\u5f00\u653e\u3002</small></div><span class="v43-working-badge">Working Settings</span></div><div class="v43-rule-grid one">${v43Field('Affiliate \u4f63\u91d1 (%)','v43AffiliateRate',ui.affiliate.defaultRate)}</div><div class="v43-rule-actions"><button type="button" class="primary-btn" id="v43SaveAffiliateRules">\u4fdd\u5b58 Affiliate \u4f63\u91d1</button>${v43DisabledFactoryButton()}<span id="v43AffiliateStatus"></span></div>`;page.querySelector('.module-page-head-v27')?.after(sec);}
@@ -21988,7 +22048,7 @@ function v43SetupRuleEvents(){
     const auto=e.target.closest?.('[data-v43-auto-min]');if(auto){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v43ShowAutoMin();return;}
     const go=e.target.closest?.('#v43GoAutoMin');if(go){e.preventDefault();const btn=document.querySelector('.nav-btn[data-page="onlineStorePage"]');v41FastNavigate('onlineStorePage',btn);setTimeout(v43ShowAutoMin,0);return;}
     if(e.target.closest?.('#v43SaveAutoMinimum')){const ids=['v43Margin0','v43Margin1','v43Margin2','v43Margin3','v43Margin4','v43Margin5','v43Pot0','v43Pot1','v43Pot2','v43Pot3'];const vals=ids.map(id=>v43Money(document.getElementById(id)?.value));if(vals.slice(0,6).some(x=>x>=100)){alert('\u76ee\u6807\u51c0\u5229\u7387\u5fc5\u987b\u5c0f\u4e8e 100%\u3002');return;}v43SaveUi(ui=>{ui.pricing.marginTiers={m0_300:vals[0],m300_500:vals[1],m500_800:vals[2],m800_5000:vals[3],m5000_8000:vals[4],m8000_plus:vals[5]};ui.pricing.vndPotTiers={under1m:vals[6],m1_4:vals[7],m4_10:vals[8],m10_plus:vals[9]};},'V4.3 \u4fdd\u5b58 Online \u76ee\u6807\u51c0\u5229\u7387\u4e0e VND \u82b1\u76c6 Working Settings');const st=document.getElementById('v43AutoMinimumStatus');if(st)st.textContent='\u5df2\u4fdd\u5b58 \u00b7 \u5c1a\u672a\u8bbe\u5b9a\u539f\u5382\u57fa\u51c6';return;}
-    if(e.target.closest?.('#v43SaveShippingRules')){const tiers=v43ReadFreightForm();if(!v43ValidateFreight(tiers)){alert('\u7269\u6d41\u6863\u4f4d\u5fc5\u987b\u4ece A \u5230 E \u9010\u6b65\u653e\u5927\uff0c\u4e14 L/W/H/kg \u90fd\u5fc5\u987b\u5927\u4e8e 0\u3002');return;}const packaging=v43Money(document.getElementById('v43PackagingCost')?.value);v43SaveUi(ui=>{ui.shipping.freightTiers=tiers;ui.shipping.packagingCost=packaging;},'V4.3 \u4fdd\u5b58 Online \u7269\u6d41\u6863\u4f4d\u4e0e\u5305\u88c5 Working Settings');const st=document.getElementById('v43ShippingStatus');if(st)st.textContent='\u5df2\u4fdd\u5b58\uff0c\u4fdd\u62a4\u5e95\u7ebf\u5df2\u91cd\u7b97';return;}
+    if(e.target.closest?.('#v43SaveShippingRules')){const tiers=v43ReadFreightForm();if(!v43ValidateFreight(tiers)){alert('物流档位必须从 A 到 E 逐步放大，且 L/W/H/kg 都必须大于 0。');return;}const packaging=v43Money(document.getElementById('v43PackagingCost')?.value);const summary=tiers.map(t=>`${t.key}: ${t.maxL} / ${t.maxW} / ${t.maxH} cm · ${t.maxKg} kg · RM ${Number(t.cost).toFixed(2)}`).join('\n');if(!window.confirm(`确认保存 Online 包装尺寸 / 重量运费档？\n\n${summary}\n\n包装耗材成本：RM ${Number(packaging).toFixed(2)}\n\n确认后立即用于 Online 保护底线计算。`))return;v43SaveUi(ui=>{ui.shipping.freightTiers=tiers;ui.shipping.packagingCost=packaging;},'V10.0 保存 Online 物流档位与包装设置');const st=document.getElementById('v43ShippingStatus');if(st)st.textContent='已保存并确认 · Online 保护底线已重算';return;}
     if(e.target.closest?.('#v43SaveFinanceRules')){const fee=v43Pct(document.getElementById('v43PaymentFee')?.value);if(fee>=100){alert('Payment Fee \u5fc5\u987b\u5c0f\u4e8e 100%\u3002');return;}v43SaveUi(ui=>{ui.finance.paymentGatewayFee=fee;},'V4.3 \u4fdd\u5b58 Payment Gateway Fee Working Setting');const st=document.getElementById('v43FinanceStatus');if(st)st.textContent='\u5df2\u4fdd\u5b58';return;}
     if(e.target.closest?.('#v43SaveAffiliateRules')){const rate=v43Pct(document.getElementById('v43AffiliateRate')?.value);if(rate>=100){alert('Affiliate \u4f63\u91d1\u5fc5\u987b\u5c0f\u4e8e 100%\u3002');return;}v43SaveUi(ui=>{ui.affiliate.defaultRate=rate;},'V4.3 \u4fdd\u5b58 Affiliate Working Setting');const st=document.getElementById('v43AffiliateStatus');if(st)st.textContent='\u5df2\u4fdd\u5b58';return;}
   },true);
@@ -21997,7 +22057,7 @@ function v43SetupRuleEvents(){
 
 function v43RefreshStaticLabels(){
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.7 \u00b7 Import \u6570\u636e\u53ea\u8bfb \u00b7 Online \u72ec\u7acb\u81ea\u52a8\u6700\u4f4e\u552e\u4ef7';
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
   const floor=document.getElementById('onlineStorePriceFloorV21')?.closest('label');if(floor){floor.childNodes[0].nodeValue='Online \u9500\u552e\u4fdd\u62a4\u5e95\u7ebf (RM)';const sm=floor.querySelector('small');if(sm)sm.textContent='\u81ea\u52a8\uff1aImport \u5e73\u5747\u6210\u672c + Online \u82b1\u76c6 + \u7269\u6d41 + \u5305\u88c5\uff0c\u518d\u6309 Affiliate\u3001Payment Fee \u4e0e\u76ee\u6807\u51c0\u5229\u7387\u53cd\u63a8\u3002';}
 }
 function v43Setup(){v43BuildAutoMinPanel();v43BuildShippingSettings();v43BuildFinanceSettings();v43BuildAffiliateSettings();v43BuildSettingsControl();v43EnsureMasterWeight();v43RefreshStaticLabels();v43SetupRuleEvents();}
@@ -22194,10 +22254,10 @@ window.refreshOnlineImportReadOnlyFieldsV21=function(){
 };
 
 function v44RefreshLabels(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Import 数据只读 · Online 独立自动最低售价 · 快速后台 Revision Check';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
 }
 function v44Setup(){v44InstallBackButtons();v44CleanCareGuide();v44RefreshLabels();try{if(onlineStoreSelectedProductIdV10)updateOnlineProtectionFloorV21();}catch(_){} }
 window.addEventListener('DOMContentLoaded',()=>window.setTimeout(v44Setup,180));
@@ -22420,10 +22480,10 @@ function v46SetupHistoryCleanup(){
 }
 
 function v46RefreshStaticUi(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Safe Product Navigation · Import Read-Only · Online 独立自动最低售价';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   v46NormalizeMoneyFields();v46RefreshRemoveRoomButton();
 }
 function v46Setup(){v46RunOneTimeHistoryMigration();v46SetupHistoryCleanup();v46RefreshStaticUi();}
@@ -22576,7 +22636,7 @@ function v47PolishOverview(){
   document.querySelectorAll('#productCategoryHubV32 [data-product-category-v32]').forEach(b=>b.classList.remove('active'));
 }
 function v47RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Stable Product Routing · Import Read-Only · Online 独立自动最低售价';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V10.0 · Stable Product Routing · Import Read-Only · Online 独立自动最低售价';
 }
 function v47Setup(){v47RefreshStatic();v47PolishOverview();v47ReflowProductEditor();v47PolishRemoveRoom();try{v47UpdateProfitDisplays();}catch(_){}}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v47Setup,70));
@@ -22596,11 +22656,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){v47SetEd
 window.ONLINE_STORE_V48_ACTIVE = true;
 
 function v48RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Product Flow Cleanup · Import Read-Only · Online 独立自动最低售价';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 // Older delayed setup callbacks must not paint an older version after V5.0.
 try{v43RefreshStaticLabels=v48RefreshStatic;}catch(_){}
@@ -22810,11 +22870,11 @@ navigateToProductManagementV46=navigateToProductManagementV48;
 window.ONLINE_STORE_V49_ACTIVE = true;
 
 function v49RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Product Flow + Child Allocation Integrity · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 try{v48RefreshStatic=v49RefreshStatic;}catch(_){}
 try{v47RefreshStatic=v49RefreshStatic;}catch(_){}
@@ -23006,11 +23066,11 @@ let v50Saving = false;
 let v50Dirty = false;
 
 function v50RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Performance & Runtime Cleanup · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 
 // ---------- V5.0 single Dirty Controller ----------
@@ -23205,11 +23265,11 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v50Setup,80));
 window.ONLINE_STORE_V51_ACTIVE = true;
 
 function v51RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Pricing Clarity + Content Inheritance · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 
 // Online Store owns the shipping commercial rule. Default is buyer-pays.
@@ -23572,10 +23632,10 @@ document.addEventListener('keydown',function(e){
 },true);
 
 function v55RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{v55RefreshStatic();v55PrepareChildCopyTargets();if(onlineStoreAllTreesModeV38)v55EnhanceAllTrees();},80));
 window.addEventListener('load',()=>setTimeout(v55RefreshStatic,560));
@@ -23693,10 +23753,10 @@ function v57AttachLineClearToWorkingSettings(){
   try{v56SetupLineClear();v56LcLoadSender();v56LineClearCalculate();}catch(_){}
 }
 function v57RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{v57AttachLineClearToWorkingSettings();v57RefreshStatic();},260));
 window.addEventListener('load',()=>setTimeout(()=>{v57AttachLineClearToWorkingSettings();v57RefreshStatic();},680));
@@ -23847,11 +23907,11 @@ document.addEventListener('input',function(e){
 },true);
 
 function v60RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Line Clear Reference Shipping · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v60PerformanceCleanup(){
   // V6.4 integer-version cleanup: no new timers/observers/sync hooks are introduced.
@@ -23945,11 +24005,11 @@ document.addEventListener('pointerdown',function(e){
 },true);
 
 function v61RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Stable Shipping Override · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v61Setup(){v61RefreshStatic();try{v60EnsureShippingOverrideUi();v60ApplyShippingUi();}catch(_){ }}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v61Setup,210));
@@ -24078,11 +24138,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v62RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Stable Shipping Input · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v62Setup(){v62RefreshStatic();v62BindShippingInput();try{v60EnsureShippingOverrideUi();v60ApplyShippingUi();}catch(_){ }}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v62Setup,230));
@@ -24210,11 +24270,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v63RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Unified RM Input · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v63Setup(){v63RefreshStatic();v63BindShippingInput();v63BindGeneralMoneyInputs(document);}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v63Setup,70));
@@ -24329,11 +24389,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v64RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Stable RM Commit · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v64Setup(){v64RefreshStatic();v64BindShippingInput();v64BindGeneralMoneyInputs(document);}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v64Setup,80));
@@ -24486,11 +24546,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v65RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Isolated Shipping Input · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v65Setup(){v65RefreshStatic();v65EnsureShippingInput();v65ApplyShippingUi();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v65Setup,520));
@@ -24691,11 +24751,11 @@ window.addEventListener('click',function(e){
 },true);
 
 function v66RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Room Allocation Clarity + Save/Dirty Stability · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v66RefreshStatic,620));
 window.addEventListener('load',()=>setTimeout(v66RefreshStatic,1080));
@@ -24890,7 +24950,7 @@ renderStorePreviewV13=function(){
 };
 
 function v67RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Variations + Performance Cleanup · Import Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V10.0 · Variations + Performance Cleanup · Import Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v67Setup(){v67RefreshStatic();v67SetupFastSearch();const toggle=document.getElementById('onlineStoreVariationsEnabledV67');toggle?.addEventListener('change',()=>{onlineStoreRoomDirtyV16=true;v67ApplyVariationUi();updateOnlineStoreAllocationSummaryV10();});v67ApplyVariationUi();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v67Setup,1220));window.addEventListener('load',()=>setTimeout(v67RefreshStatic,1460));
@@ -25016,11 +25076,11 @@ collectOnlineStoreConfigFromEditorV10=function(){
 };
 
 function v68RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Money + Variations Regression Fix · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v68Setup(){v68RefreshStatic();v68BindMotherPrice();v68BindVariationToggle();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v68Setup,1500));
@@ -25236,11 +25296,11 @@ const setOnlineStoreEditorValuesV10BaseV69=setOnlineStoreEditorValuesV10;
 setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){const out=setOnlineStoreEditorValuesV10BaseV69(productId,preserveRoomV16);requestAnimationFrame(()=>{v69EnsureControls();v69BindVariationSwitch();});return out;};
 
 function v69RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V6.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V6.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V6.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V6.9 · Variations + Publish Control · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V6.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v69Setup(){v69RefreshStatic();v69EnsureControls();v69BindVariationSwitch();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v69Setup,1560));window.addEventListener('load',()=>setTimeout(v69Setup,1780));
@@ -25513,11 +25573,11 @@ function v70BindFastRoomSearch(){
 }
 
 function v70RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.1 · Parent Direct + Local Product Variations + Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.1 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v70Setup(){v70RefreshStatic();v70EnsureLocalProductUi();v70BindVariationSwitch();v70ApplyVariationUi();v70BindFastRoomSearch();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v70Setup,1650));window.addEventListener('load',()=>setTimeout(v70Setup,1900));
@@ -25763,7 +25823,7 @@ function v71BindAddProductCapture(){if(window.__v71AddProductCaptureBound)return
 // Preview uses first photo and variation minimum price / total stock when variations are enabled.
 renderStorePreviewV13=function(){const grid=document.getElementById('storePreviewGridV13');if(!grid)return;const audience=String(document.getElementById('storePreviewAudienceV13')?.value||'normal'),state=getOnlineStoreStateV10(),cards=[];getProducts().filter(p=>!p?.inventoryArchived).forEach(product=>{const id=String(product?.id||'').trim().toUpperCase(),cfg=normalizeOnlineStoreConfigV10(id,state.products[id]),publicName=String(cfg.publicName||cleanOnlinePublicNameV36(product?.name||'')||product?.name||'');if(!v67VariationsEnabled(cfg)&&v69ParentPublished(cfg)&&cfg.motherRegularPrice>0){const vip=cfg.parentListingRoom==='vip';if(!vip||audience==='vip')cards.push({id,name:publicName,price:cfg.motherRegularPrice,photo:'',tier:v67RoomLabel(cfg.parentListingRoom),vip});}if(v67VariationsEnabled(cfg)){if(cfg.randomPublished&&cfg.randomQty>0&&cfg.regularPrice>0)cards.push({id,name:publicName,price:cfg.regularPrice,photo:cfg.randomPhotos?.[0]||'',tier:'入门首选 / Starter',vip:false});(cfg.uniqueItems||[]).filter(x=>x.published&&x.status!=='sold'&&x.variationParked!==true).forEach(item=>{const vip=item.accessZone==='vip';if(vip&&audience!=='vip')return;const price=Math.max(0,Number(item.regularPrice)||0)||(String(item.priceMode||'follow')==='follow'?Math.max(0,Number(cfg.motherRegularPrice)||0):0);if(price>0)cards.push({id:item.id,name:publicName,price,photo:(item.photos?.[0]||item.photo||''),tier:v67RoomLabel(v69RoomFromTier(item.tier)),vip});});}});v70LoadLocalProducts().filter(p=>p.published).forEach(p=>{const qty=p.variationsEnabled?p.variations.reduce((s,v)=>s+Math.max(0,Number(v.qty)||0),0):Math.max(0,Number(p.qty)||0);const prices=p.variationsEnabled?p.variations.map(v=>Number(v.price)||0).filter(x=>x>0):[Number(p.price)||0];if(qty<=0||!prices.length)return;cards.push({id:p.sku,name:p.name,price:Math.min(...prices),photo:p.photos?.[0]||'',tier:v70LocalCategoryLabel(p.category),vip:false});});const label=document.getElementById('storePreviewAudienceLabelV13');if(label)label.textContent=audience==='vip'?'贵宾厅 / VIP Room · 可浏览商品':'顾客商城 · 可浏览商品';grid.innerHTML=cards.map(x=>{const photo=x.photo?v37DisplayMediaUrl(x.photo):'';return `<article class="store-preview-product-v13">${photo?`<div class="v37-store-photo"><img src="${escapeHTML(photo)}" alt="" loading="lazy" decoding="async"/></div>`:'<div class="store-preview-placeholder-v13 v37-photo-fallback">暂无图片</div>'}<div class="store-preview-card-body-v13"><small>${escapeHTML(x.tier)}</small><strong>${escapeHTML(x.name)}</strong><div class="store-preview-price-v13"><b>RM ${formatOnlineMoneyInputV12(x.price)}</b></div></div></article>`;}).join('')||'<div class="empty-state">目前没有符合这个顾客身份的已上架商品。</div>';};
 
-function v71RefreshStatic(){document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.1';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.1 · Parent Direct + Local Product Variations + Import Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.1 · Import Base V42.8 · Import Data Read-Only';}
+function v71RefreshStatic(){document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V10.0 · Parent Direct + Local Product Variations + Import Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';}
 function v71Setup(){v71RefreshStatic();v71RebuildLocalPanel();v71BindDelegated();v71BindAddProductCapture();try{v71ApplyImportVariationRules();}catch(_){};}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v71Setup,2150));window.addEventListener('load',()=>setTimeout(v71Setup,2350));
 
@@ -25856,8 +25916,8 @@ function v72BindLocalUx(){if(window.__v72LocalBound)return;window.__v72LocalBoun
 }
 
 function v72RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.2');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.2';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.2 · Room Visibility + Compact Local Variations · Import Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.2 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V10.0 · Room Visibility + Compact Local Variations · Import Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 function v72Setup(){v72RefreshStatic();v72EnhanceLocalPanel();v72BindLocalUx();try{v71ApplyImportVariationRules();}catch(_){}try{renderOnlineStoreProductListV10();}catch(_){};}
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v72Setup,2500);setTimeout(v72RefreshStatic,3600);});window.addEventListener('load',()=>{setTimeout(v72Setup,2750);setTimeout(v72RefreshStatic,4200);});
@@ -26017,11 +26077,11 @@ navigateToProductManagementV47=navigateToProductManagementV73;
 navigateToProductManagementV46=navigateToProductManagementV73;
 
 function v73RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.3');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.3';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.3';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.3 · Pricing Grid + Room Stability + Compact Variations · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.3 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 
 function v73Setup(){
@@ -26124,11 +26184,11 @@ v70EnsureLocalProductUi=function(){
 };
 
 function v74RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.4');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.4';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.4';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.4 · Input Stability + Pricing Grid + Room Stability · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.4 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
   const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
   const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.4';
   v74RemoveGlobalAddProduct();
@@ -26338,11 +26398,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v75RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.5');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.5';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.5';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.5 · Cost Linkage + Global Promotion + Shipping Override · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.5 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.5';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V10.1';
 }
 function v75Setup(){v75RefreshStatic();v75BuildGlobalPromotion();v75NormalizePercentFields();try{v75EnsureShippingOverrideUi();v75RefreshPricing();}catch(_){}try{v74RemoveGlobalAddProduct?.();}catch(_){} }
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v75Setup,3400);setTimeout(v75RefreshStatic,5600);});window.addEventListener('load',()=>{setTimeout(v75Setup,3600);setTimeout(v75RefreshStatic,6000);});
@@ -26515,11 +26575,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v76RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.6');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.6';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.6';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.6 \u00b7 Product Management Accuracy + Pricing UI Cleanup \u00b7 Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.6 \u00b7 Import Base V42.8 \u00b7 Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.6';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.0 \u00b7 Import Base V42.8 \u00b7 Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V10.1';
 }
 function v76Setup(){
   v76RefreshStatic();v75BuildGlobalPromotion();
@@ -26671,11 +26731,11 @@ const renderOnlineRoomChooserV16BaseV77=renderOnlineRoomChooserV16;
 renderOnlineRoomChooserV16=function(){const out=renderOnlineRoomChooserV16BaseV77();v77EnsureCurrentRoomBadge();return out;};
 
 function v77RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.8');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.8';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.8';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.8 · Live Settings Recalc + Editable Pot Cost · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.8 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.8';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V10.1';
 }
 function v77Setup(){v77RefreshStatic();try{v43BuildAutoMinPanel();v77EnsureMarginFactoryReset();v77NormalizePercentInputs();}catch(_){}try{v76BuildShippingResponsibilitySetting();}catch(_){}try{v76ArrangePriceGrid();v77SettingsChanged('setup');v77EnsureCurrentRoomBadge();renderOnlineStorePhotoListV14();v77ValidatePriceCeiling(false);}catch(_){}}
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v77Setup,3900);setTimeout(v77RefreshStatic,6200);});
@@ -26802,12 +26862,12 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{if(e.target?.id==='v52AffiliateEnabled')setTimeout(()=>v78BroadcastSettingsChanged('affiliate-toggle'),0);},true);
 
 function v78RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.8');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.8';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.8';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.8 · Live Settings Recalc + Editable Pot Cost · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.8 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.8';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V10.1';
 }
 function v78Setup(){
   v78RefreshStatic();
@@ -26883,11 +26943,11 @@ document.addEventListener('click',e=>{
 },true);
 
 function v79RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V7.9');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V7.9';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V7.9';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V7.9 · Working Settings Factory Reset + Live Recalc · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V7.9 · Import Base V42.8 · Import Data Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
   const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
   const p=assist?.querySelector('p');if(p)p.textContent='Online Store V7.9';
 }
@@ -27056,12 +27116,12 @@ v69SetPublished=function(next){
 };
 
 function v80RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V8.0');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V8.0';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V8.0';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V8.0 \u00b7 Centralized Bonsai Content Templates \u00b7 Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V8.0 \u00b7 Import Base V42.8 \u00b7 Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V8.0';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.0 \u00b7 Import Base V42.8 \u00b7 Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V10.1';
 }
 function v80Setup(){
   v80RefreshStatic();
@@ -27266,12 +27326,12 @@ if(!window.__v81DelegatedBound){
 }
 
 function v81RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V8.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V8.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V8.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V8.1 · Template Match + Performance Clean Up · Import Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V8.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V8.1';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V10.1';
 }
 let v81SetupDone=false;
 function v81Setup(){
@@ -27445,12 +27505,276 @@ function v82Setup(){
   v82RefreshStatic();
 }
 function v82RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.0');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.0';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.0';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V10.0 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.0 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V10.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
 }
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',v82Setup,{once:true});else v82Setup();
 window.addEventListener('load',v82RefreshStatic,{once:true});
 try{v81RefreshStatic=v82RefreshStatic;}catch(_){}try{v80RefreshStatic=v82RefreshStatic;}catch(_){}try{v79RefreshStatic=v82RefreshStatic;}catch(_){}try{v78RefreshStatic=v82RefreshStatic;}catch(_){}try{v77RefreshStatic=v82RefreshStatic;}catch(_){}try{v76RefreshStatic=v82RefreshStatic;}catch(_){}
+
+
+// ============================================================================
+// Online Store V10.0 FULL DEPLOY FIX - factory reset, template recovery,
+// version freeze, and Product Management cleanup.
+// ============================================================================
+function v100FreightFactorySummary(){
+  return V43_FREIGHT_DEFAULTS.map(t=>`${t.key}: ${t.maxL} / ${t.maxW} / ${t.maxH} cm · ${t.maxKg} kg · RM ${Number(t.cost).toFixed(2)}`).join('\n');
+}
+function v100WriteFreightFactoryToForm(){
+  V43_FREIGHT_DEFAULTS.forEach((t,i)=>{
+    const pairs=[['L',t.maxL],['W',t.maxW],['H',t.maxH],['Kg',t.maxKg],['Cost',t.cost]];
+    pairs.forEach(([s,v])=>{const el=document.getElementById(`v43Freight${s}${i}`);if(el)el.value=String(v);});
+  });
+}
+window.addEventListener('click',e=>{
+  const btn=e.target instanceof Element?e.target.closest('#v100ResetFreightFactory'):null;
+  if(!btn)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  if(!window.confirm(`确认回到原厂物流档位？\n\n${v100FreightFactorySummary()}\n\n这会覆盖目前 A–E 的尺寸、重量与 RM 运费，并立即保存。\n不会修改包装耗材成本、商品资料或 Import 数据。`))return;
+  const ui=getOnlineStoreUiSettingsV12();
+  ui.shipping={...(ui.shipping||{}),freightTiers:V43_FREIGHT_DEFAULTS.map(x=>({...x}))};
+  saveOnlineStoreUiSettingsV12(ui);
+  v100WriteFreightFactoryToForm();
+  window.__v43RulesDirty=false;
+  const st=document.getElementById('v43ShippingStatus');if(st)st.textContent='已恢复原厂并保存 · A–E 物流档位已生效';
+  try{v76SettingsRefresh();}catch(_){try{v75RefreshPricing();}catch(__){}}
+},true);
+
+function v100NormalizeRecoveredTemplate(name,key,t){
+  if(!t||typeof t!=='object'||Array.isArray(t))return null;
+  const description=String(t.description||t.productDetails||t.publicDescription||'').trim();
+  const careGuide=String(t.careGuide||t.careGuideText||'').trim();
+  if(!description&&!careGuide)return null;
+  const nm=String(t.name||t.templateName||name||key||'').trim();
+  const kw=String(t.keyword||t.matchKeyword||t.match||nm||key||'').trim();
+  if(!nm&&!kw)return null;
+  return {name:nm||kw,keyword:kw||nm,description,careGuide,updatedAt:String(t.updatedAt||new Date().toISOString())};
+}
+function v100RecoverLegacyContentTemplates(){
+  let current={};
+  try{current=JSON.parse(localStorage.getItem(V41_CONTENT_TEMPLATE_KEY)||'{}')||{};}catch(_){current={};}
+  if(!current||typeof current!=='object'||Array.isArray(current))current={};
+  const merged={...current};
+  let added=0;
+  const accept=(name,key,t)=>{const rec=v100NormalizeRecoveredTemplate(name,key,t);if(!rec)return;const k=v41TemplateKey(rec.name||rec.keyword||key);if(!k||merged[k])return;merged[k]=rec;added++;};
+
+  // Recover from any legacy template-like localStorage object without deleting the source.
+  for(let i=0;i<localStorage.length;i++){
+    const storageKey=localStorage.key(i)||'';
+    if(storageKey===V41_CONTENT_TEMPLATE_KEY||!/template|bonsai.*content|content.*bonsai/i.test(storageKey))continue;
+    let value=null;try{value=JSON.parse(localStorage.getItem(storageKey)||'null');}catch(_){continue;}
+    if(!value||typeof value!=='object')continue;
+    if(Array.isArray(value)) value.forEach((t,n)=>accept(t?.name||`template-${n+1}`,String(n),t));
+    else Object.entries(value).forEach(([k,t])=>accept(t?.name||k,k,t));
+  }
+
+  // Recover content from product configs only when a previous template key/name is still present.
+  try{
+    const state=getOnlineStoreStateV10();
+    Object.entries(state?.products||{}).forEach(([pid,raw])=>{
+      const key=String(raw?.contentTemplateKey||raw?.templateKey||'').trim();
+      if(!key)return;
+      const p=typeof getOnlineStoreProductV10==='function'?getOnlineStoreProductV10(pid):null;
+      accept(raw?.templateName||key,key,{name:raw?.templateName||key,keyword:raw?.templateKeyword||key,description:raw?.productDetails||raw?.publicDescription||'',careGuide:raw?.careGuideText||raw?.careGuide||'',updatedAt:raw?.updatedAt});
+    });
+  }catch(_){ }
+
+  if(added){
+    localStorage.setItem(V41_CONTENT_TEMPLATE_KEY,JSON.stringify(merged));
+    try{v81InvalidateTemplateIndex();}catch(_){ }
+    try{v41RenderTemplateList(true);}catch(_){ }
+  }
+  return added;
+}
+
+function v100RemoveAutoMinimumProductTab(){
+  document.querySelectorAll('#onlineStorePage nav.module-tabs-v30 [data-v43-auto-min]').forEach(el=>el.remove());
+}
+function v100FreezeVersionLabels(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V10.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
+  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V10.1';
+}
+function v100FinalUiStabilize(){
+  v100RemoveAutoMinimumProductTab();
+  v100FreezeVersionLabels();
+  const recovered=v100RecoverLegacyContentTemplates();
+  if(recovered>0){const st=document.getElementById('contentTemplateStatusV41');if(st)st.textContent=`已恢复 ${recovered} 个旧模板资料`;}
+}
+if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',()=>{v100FinalUiStabilize();setTimeout(v100FinalUiStabilize,0);setTimeout(v100FinalUiStabilize,180);},{once:true});else v100FinalUiStabilize();
+window.addEventListener('load',v100FinalUiStabilize,{once:true});
+
+// Older modules still run delayed static refreshes. Keep only the version labels locked;
+// no polling, no sync, no repeated render.
+const v100VersionObserver=new MutationObserver(()=>{v100FreezeVersionLabels();v100RemoveAutoMinimumProductTab();});
+window.addEventListener('DOMContentLoaded',()=>{try{v100VersionObserver.observe(document.body,{subtree:true,childList:true,characterData:true});setTimeout(()=>v100VersionObserver.disconnect(),1200);}catch(_){}},{once:true});
+
+// ============================================================================
+// Online Store V10.1 - responsiveness + non-blank navigation stabilization
+// - Local-first Online Store product index to avoid repeated expensive getProducts() normalization.
+// - One capture path for Manage/Edit so saved room data opens immediately.
+// - Remove-room transitions directly to Product Overview and blocks legacy delayed room restores.
+// - Product Management navigation stays single-click and synchronous.
+// ============================================================================
+window.ONLINE_STORE_V101_ACTIVE = true;
+
+let v101ProductListCache = null;
+let v101ProductMapCache = null;
+let v101ProductCacheAt = 0;
+const V101_PRODUCT_CACHE_TTL = 15000;
+
+function v101InvalidateProductCache(){
+  v101ProductListCache = null;
+  v101ProductMapCache = null;
+  v101ProductCacheAt = 0;
+  try{ invalidateOnlineStoreSearchCacheV33(); }catch(_){ }
+}
+function v101ProductSnapshot(force=false){
+  const now = Date.now();
+  if(!force && v101ProductListCache && (now-v101ProductCacheAt)<V101_PRODUCT_CACHE_TTL) return v101ProductListCache;
+  let list=[];
+  try{ list=getProducts(); }catch(_){ list=[]; }
+  if(!Array.isArray(list)) list=[];
+  v101ProductListCache=list;
+  v101ProductMapCache=new Map();
+  for(const p of list){
+    const id=String(p?.id||'').trim().toUpperCase();
+    if(id && !p?.inventoryArchived) v101ProductMapCache.set(id,p);
+  }
+  v101ProductCacheAt=now;
+  return list;
+}
+
+// Online Store read path only. Import remains authoritative and read-only.
+getOnlineStoreProductV10=function(productId){
+  const id=String(productId||'').trim().toUpperCase();
+  if(!id)return null;
+  v101ProductSnapshot(false);
+  return v101ProductMapCache?.get(id)||null;
+};
+getOnlineStoreImportProductsV30=function(){
+  v101ProductSnapshot(false);
+  return [...(v101ProductMapCache?.values()||[])];
+};
+window.getOnlineStoreImportProductsV30=getOnlineStoreImportProductsV30;
+
+const refreshOnlineStoreImportProductsV30BaseV101=refreshOnlineStoreImportProductsV30;
+refreshOnlineStoreImportProductsV30=async function(force=false){
+  const out=await refreshOnlineStoreImportProductsV30BaseV101(force);
+  if(out){v101InvalidateProductCache();v101ProductSnapshot(true);}
+  return out;
+};
+window.refreshOnlineStoreImportProductsV30=refreshOnlineStoreImportProductsV30;
+window.addEventListener('storage',e=>{if(e.key==='importSystemProducts'||e.key==='importSystemMinimumPriceRules'||e.key==='importSystemMinimumPriceManualOverrides')v101InvalidateProductCache();});
+window.addEventListener('online-store-import-updated',v101InvalidateProductCache);
+
+function v101ShowProductsOverview(){
+  window.__v101ForceOverviewUntil=Date.now()+900;
+  try{v50ClearDirty();}catch(_){ }
+  try{onlineStoreSelectedProductIdV10='';onlineStoreRoomV16='';onlineStoreRoomDirtyV16=false;onlineStoreSelectedRoomV27='';onlineStoreSelectedCategoryV32='bonsai';}catch(_){ }
+  const page=document.getElementById('onlineStorePage');if(!page)return false;
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p===page));
+  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',String(b.dataset.page||'')==='onlineStorePage'));
+  page.hidden=false;page.style.removeProperty('display');
+  page.querySelectorAll(':scope > .panel').forEach(p=>{p.hidden=false;p.style.removeProperty('display');});
+  ['onlineStoreEditorV10','productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10','contentTemplatesPanelV41','autoMinimumPanelV43','v70LocalProductPanel'].forEach(id=>{const el=document.getElementById(id);if(el){el.hidden=true;el.style.removeProperty('display');}});
+  ['roomFirstHubV27','productCategoryHubV32'].forEach(id=>{const el=document.getElementById(id);if(el){el.hidden=false;el.style.removeProperty('display');}});
+  const list=document.getElementById('onlineStoreProductListV10');if(list)list.innerHTML='';
+  const search=document.getElementById('onlineStoreSearchV10');if(search)search.value='';
+  const filter=document.getElementById('onlineStoreCategoryFilterV32');if(filter){filter.value='all';filter.disabled=false;filter.hidden=false;}
+  try{setProductRoomActiveStateV32('');setProductCategoryActiveStateV32('bonsai');updateAdminTopbarTitleV28('onlineStorePage');}catch(_){ }
+  document.querySelectorAll('#onlineStorePage nav.module-tabs-v30 button').forEach(b=>b.classList.toggle('active',b.hasAttribute('data-product-room-tab-v30')&&!String(b.dataset.productRoomTabV30||'')));
+  window.scrollTo({top:0,behavior:'auto'});
+  return true;
+}
+window.v101ShowProductsOverview=v101ShowProductsOverview;
+showProductOverviewV32=v101ShowProductsOverview;
+v77ShowProductsOverview=v101ShowProductsOverview;
+v47ShowOverviewNow=v101ShowProductsOverview;
+v44ShowProductOverviewNow=v101ShowProductsOverview;
+v75ShowProductOverviewHard=v101ShowProductsOverview;
+
+// Legacy delayed restore timers from older versions must never override an explicit
+// remove-room -> Product Overview transition.
+const v72RestoreRoomViewBaseV101=typeof v72RestoreRoomView==='function'?v72RestoreRoomView:null;
+v72RestoreRoomView=function(room){
+  if(Date.now()<(window.__v101ForceOverviewUntil||0))return v101ShowProductsOverview();
+  return v72RestoreRoomViewBaseV101?v72RestoreRoomViewBaseV101(room):undefined;
+};
+
+// Canonical remove-room implementation: persist once, then synchronously restore overview.
+v46RemoveCurrentProductFromRoom=function(){
+  const id=String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase();
+  const room=(typeof v77CurrentRoom==='function'?v77CurrentRoom():String(onlineStoreSelectedRoomV27||onlineStoreRoomV16||''));
+  if(!id||!['vip','premium','entry'].includes(room))return false;
+  if(v50HasUnsaved()&&!window.confirm('当前房间有尚未保存的资料。\n\n继续会丢弃这些未保存内容并移除此房，是否继续？'))return false;
+  if(!window.confirm(`确认把 ${id} 从「${v46RoomName(room)}」移除？\n\n只移除这个房间的 Online 分配；不会删除 Import 产品、真实库存、平均成本、最低售价、Sold history 或订单记录。`))return false;
+  try{
+    const state=getOnlineStoreStateV10(),raw=state.products?.[id];
+    if(raw&&typeof raw==='object'){
+      const copy=JSON.parse(JSON.stringify(raw));
+      if(v67ValidRoom(copy.parentListingRoom)===room){copy.parentListingRoom='';copy.parentPublished=false;}
+      const items=Array.isArray(copy.uniqueItems)?copy.uniqueItems:[];
+      copy.uniqueItems=items.filter(item=>{const itemRoom=v38TierRoom(item),sold=String(item?.status||'available')==='sold';return itemRoom!==room||sold;});
+      if(room==='entry'){copy.randomQty=0;copy.randomPublished=false;copy.regularPrice=0;copy.promotionPrice=0;copy.randomPhotos=[];copy.randomVideo='';}
+      copy.updatedAt=new Date().toISOString();state.products[id]=copy;saveOnlineStoreStateV10(state);
+    }
+    try{addOnlineStoreHistoryV14('allocation',id,getOnlineStoreProductV10(id)?.name||'',`移除 ${v46RoomName(room)} 的 Online 分配`);}catch(_){ }
+    v101ShowProductsOverview();
+    requestAnimationFrame(v101ShowProductsOverview);
+    setTimeout(()=>{if(Date.now()<(window.__v101ForceOverviewUntil||0))v101ShowProductsOverview();},120);
+    return true;
+  }catch(err){console.error('V10.1 remove-room failed',err);window.alert('移除此房失败，请保留当前页面并重新尝试。');return false;}
+};
+
+// Manage/Edit is local-first: open the already-saved product/config immediately.
+// Background cloud refresh, if any, is allowed only after the editor is visible.
+document.addEventListener('click',e=>{
+  const btn=e.target instanceof Element?e.target.closest('[data-online-manage-v10]'):null;
+  if(!btn)return;
+  const id=String(btn.dataset.onlineManageV10||'').trim().toUpperCase();if(!id)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  const p=getOnlineStoreProductV10(id);
+  if(!p){v101InvalidateProductCache();v101ProductSnapshot(true);}
+  setOnlineStoreEditorValuesV10(id);
+  if(onlineStoreSelectedRoomV27)openOnlineRoomV16(onlineStoreSelectedRoomV27,'room-first');
+  // Do not block the click on cloud freshness. Refresh quietly after first paint.
+  requestAnimationFrame(()=>{
+    try{document.getElementById('onlineStoreEditorV10')?.scrollIntoView({behavior:'auto',block:'start'});}catch(_){ }
+    setTimeout(async()=>{
+      try{
+        const changed=await refreshOnlineStoreImportProductsV30(false);
+        if(changed&&String(onlineStoreSelectedProductIdV10||'')===id)setOnlineStoreEditorValuesV10(id,true);
+      }catch(_){ }
+    },0);
+  });
+},true);
+
+// Make room/tab navigation visually immediate and do only one local render per click.
+document.addEventListener('click',e=>{
+  const el=e.target instanceof Element?e.target.closest('#onlineStorePage nav.module-tabs-v30 button,[data-room-first-v27]'):null;
+  if(!el||el.disabled)return;
+  // V10.0's earliest window-capture router owns the real route. This only gives immediate pressed state.
+  requestAnimationFrame(()=>{
+    try{document.querySelectorAll('#onlineStorePage nav.module-tabs-v30 button').forEach(b=>b.setAttribute('aria-busy','false'));}catch(_){ }
+  });
+},true);
+
+function v101RefreshStatic(){
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V10.1');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V10.1';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V10.1';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V10.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V10.1 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V10.1';
+}
+try{v82RefreshStatic=v101RefreshStatic;v81RefreshStatic=v101RefreshStatic;v80RefreshStatic=v101RefreshStatic;v79RefreshStatic=v101RefreshStatic;v78RefreshStatic=v101RefreshStatic;v77RefreshStatic=v101RefreshStatic;v76RefreshStatic=v101RefreshStatic;v75RefreshStatic=v101RefreshStatic;v74RefreshStatic=v101RefreshStatic;v73RefreshStatic=v101RefreshStatic;v72RefreshStatic=v101RefreshStatic;v71RefreshStatic=v101RefreshStatic;v70RefreshStatic=v101RefreshStatic;}catch(_){ }
+if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',()=>{v101ProductSnapshot(true);v101RefreshStatic();},{once:true});else{v101ProductSnapshot(true);v101RefreshStatic();}
+window.addEventListener('load',v101RefreshStatic,{once:true});

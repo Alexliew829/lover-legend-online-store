@@ -1,17 +1,24 @@
 Lover Legend Online Store Management Admin
 Unified CHANGELOG
 
+V10.1 FULL DEPLOY
+- Based on V10.0 FULL DEPLOY; no rollback of V8.2 business logic.
+- Performance: Online Store product reads now use a short-lived local normalized-product map instead of repeatedly rebuilding the full Import product collection for every card/editor lookup.
+- Manage/Edit is local-first: saved product + room data opens immediately; Import freshness refresh runs only after the editor is already visible.
+- Product Management navigation remains one-click through the earliest capture router; no cloud request is allowed to block a tab/room click.
+- Fixed Remove From Room: after confirmation it returns directly to Product Overview and suppresses legacy delayed room-restore timers that could leave the center panel blank.
+- Keeps Product Management free of Auto Minimum Price; that feature remains in Settings.
+- Keeps V10.0 freight factory defaults and Reset To Factory + save confirmation.
+- Keeps legacy Bonsai Content Template recovery logic.
+- Release identity updated to V10.1 / Build 10100; service-worker cache moved to V10.1 r1.
+- Import/Inventory remains V42.8 Read-Only. No Online Store write-back to Import was added.
+
 V10.0 FULL DEPLOY
 - Rebased release packaging on V8.2 business logic.
-- Restored missing shared runtime dependency js/common.js from the earlier FULL DEPLOY lineage.
-- Restored complete assets/images and assets/icons required by index.html, manifest.json and sw.js.
-- Removed patch-only .bak files and PATCH_README accumulation from the deploy package.
-- Updated release identity to V10.0 / Build 10000.
-- Updated displayed Import/Inventory reference baseline to V42.8 Read-Only.
-- Online Store remains read-only toward Import/Inventory; no write-back was added.
-- Service-worker cache namespace and cache-busting tokens updated for V10.0.
-- This package is intended to contain every local file referenced at runtime, so it can be deployed to an empty GitHub repository without relying on old repository leftovers.
+- Restored js/common.js plus all referenced images/icons so an empty GitHub repository can run independently.
+- Removed .bak / patch-only accumulation from the deploy package.
+- Added freight A-E factory baseline + Reset To Factory and template-recovery cleanup.
 
-Apps Script / Code.gs:
-- No Code.gs change is included in this package.
-- No Web App redeploy is required by this V10.0 packaging integration itself.
+Apps Script / Code.gs
+- No Code.gs change in V10.1.
+- No Apps Script Web App redeploy required.

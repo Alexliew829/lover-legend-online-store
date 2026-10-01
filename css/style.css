@@ -7467,3 +7467,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 .v82-unit-floor-warning{display:block;margin-top:6px;font-weight:700;color:#c62828;line-height:1.35}
 .v34-tree-actions{display:flex;justify-content:flex-end;gap:10px;align-items:center;flex-wrap:wrap}
 @media (max-width:700px){.v82-unit-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}.v82-unit-actions button{width:100%}#onlineRoomRandomBlockV16>.v82-unit-actions{display:grid;grid-template-columns:1fr 1fr}}
+
+/* V10.0 FULL DEPLOY FIX */
+#v43FreightRules .v43-rule-actions{gap:10px;flex-wrap:wrap}
+#v100ResetFreightFactory{white-space:nowrap}
