@@ -7560,159 +7560,33 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 @media(max-width:600px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr}.v107-logic-reference>summary{align-items:flex-start}.v107-readonly-badge{flex:0 0 auto}}
 
 /* ========================================================================== 
-   Online Store V10.9 - foundation stability / workflow cleanup
+   Online Store V11.3 - CLEAN ROOM ARCHITECTURE BASELINE
    ========================================================================== */
-/* Robust desktop shell: the sidebar spans both rows, but the second row absorbs
-   the viewport remainder. This prevents a tall sidebar from inflating the header
-   row and pushing every page below the fold. */
 @media (min-width:1001px){
-  .admin-layout-v27{
-    display:grid!important;
-    grid-template-columns:var(--admin-nav-w-v27) minmax(0,1fr) var(--admin-assist-w-v27)!important;
-    grid-template-rows:auto minmax(0,1fr)!important;
-    grid-template-areas:"sidebar header header" "sidebar content assist"!important;
-    align-items:start!important;
-    align-content:stretch!important;
-    row-gap:14px!important;
-    min-height:100vh!important;
-  }
-  .admin-sidebar-v27{
-    grid-area:sidebar!important;
-    align-self:start!important;
-    position:sticky!important;
-    top:16px!important;
-    height:auto!important;
-    min-height:calc(100vh - 32px)!important;
-    max-height:calc(100vh - 32px)!important;
-    overflow:auto!important;
-  }
-  .admin-layout-v27>.app-header-wrap{grid-area:header!important;align-self:start!important;min-width:0!important;}
-  .admin-layout-v27>.content{grid-area:content!important;align-self:start!important;min-width:0!important;min-height:0!important;}
+  .admin-layout-v27{display:grid!important;grid-template-columns:190px minmax(0,1fr) 220px!important;grid-template-rows:auto minmax(0,1fr)!important;grid-template-areas:"sidebar header header" "sidebar content assist"!important;align-items:start!important;min-height:100vh!important;row-gap:14px!important;}
+  .admin-sidebar-v27{grid-area:sidebar!important;align-self:start!important;position:sticky!important;top:16px!important;min-height:calc(100vh - 32px)!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;}
+  .admin-layout-v27>.app-header-wrap{grid-area:header!important;min-width:0!important;}
+  .admin-layout-v27>.content{grid-area:content!important;min-width:0!important;min-height:0!important;}
   .admin-layout-v27>.admin-assist-v27{grid-area:assist!important;align-self:start!important;}
 }
-@media (max-width:1490px) and (min-width:1001px){
-  .admin-layout-v27{
-    grid-template-columns:190px minmax(0,1fr)!important;
-    grid-template-areas:"sidebar header" "sidebar content"!important;
-  }
-  .admin-assist-v27{display:none!important;}
-}
-/* Price warnings must never steal width from the price input row. */
-.v108-price-field-wrap{display:block!important;min-width:0!important;}
-.v108-price-field-wrap>.v105-live-price-warning,.v108-mother-price-warning{display:block!important;width:100%!important;margin:5px 0 0!important;}
-.v108-mother-price-warning{color:#b3261e;font-size:11px;font-weight:800;line-height:1.35;}
-.v108-mother-price-warning[hidden]{display:none!important;}
-/* Draft / confirm / publish workflow */
-.v108-unit-workflow{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;}
-.v108-workflow-status{font-size:11px;font-weight:800;color:#63766a;white-space:nowrap;}
-.v108-workflow-status.ready{color:#8a6316;}
-.v108-workflow-status.confirmed{color:#1f7048;}
-.v108-confirmed-lock input,.v108-confirmed-lock select,.v108-confirmed-lock textarea{background:#f3f6f4!important;color:#5b675f!important;pointer-events:none!important;}
-.v108-confirmed-lock .v34-media-btn,.v108-confirmed-lock [data-v34-delete-photo],.v108-confirmed-lock [data-v34-delete-video]{pointer-events:none!important;opacity:.55!important;}
+@media(max-width:1220px) and (min-width:1001px){.admin-layout-v27{grid-template-columns:190px minmax(0,1fr)!important;grid-template-areas:"sidebar header" "sidebar content"!important}.admin-assist-v27{display:none!important}}
+@media(min-width:1221px){.admin-assist-v27{display:flex!important}body:not(.v110-home-active) .admin-assist-v27 .assist-system-status-v110{display:none!important}}
+html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 
-/* ========================================================================== 
-   Online Store V10.9 - test-stable UI polish
-   ========================================================================== */
-/* Keep detailed system status visible on ordinary desktop widths. */
-@media (min-width:1221px){
-  .admin-layout-v27{grid-template-columns:190px minmax(0,1fr) 220px!important;grid-template-areas:"sidebar header header" "sidebar content assist"!important;}
-  .admin-assist-v27{display:flex!important;}
-}
-@media (max-width:1220px) and (min-width:1001px){
-  .admin-layout-v27{grid-template-columns:190px minmax(0,1fr)!important;grid-template-areas:"sidebar header" "sidebar content"!important;}
-  .admin-assist-v27{display:none!important;}
-}
-/* Avoid the isolated sidebar-logo flash before first stable paint. */
-html:not(.v109-ui-ready) .admin-sidebar-v27{visibility:hidden;}
-/* Mother warning stays below its field and never changes input width. */
-#v109MotherPriceWarning{display:block;width:100%;margin:6px 0 0;color:#b3261e;font-size:11px;font-weight:800;line-height:1.4;}
-#v109MotherPriceWarning[hidden]{display:none!important;}
-/* Parent-direct media: compact and clearly scoped to the direct-sale mode. */
-.v109-parent-media{margin-top:14px;padding:14px;border:1px solid #dce8e1;border-radius:14px;background:#fbfdfb;display:grid;grid-template-columns:minmax(210px,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:end;}
-.v109-parent-media>div strong,.v109-parent-media>div small{display:block}.v109-parent-media>div small{margin-top:4px;color:#74827a}.v109-parent-media label{font-weight:700;color:#2b4f3d}.v109-parent-media input{width:100%;margin-top:6px;}
-.v109-parent-media[hidden]{display:none!important;}
-/* One professional workflow strip: Save Draft -> Confirm Save -> Publish -> status. */
-.v109-workflow-actions,#onlineRoomRandomBlockV16>.v109-workflow-actions{display:grid!important;grid-template-columns:repeat(3,minmax(130px,1fr)) auto;gap:10px;align-items:center;justify-content:stretch;margin-top:14px;padding:14px;border:1px solid #dce7e0;border-radius:14px;background:#f8fbf9;}
-.v109-workflow-actions>button{width:100%!important;min-height:42px!important;margin:0!important;}
-.v109-workflow-status{font-size:12px;font-weight:850;color:#1f6848;white-space:nowrap;padding:0 4px;}
-.v109-parent-workflow{position:static!important;bottom:auto!important;display:grid!important;grid-template-columns:repeat(3,minmax(140px,1fr)) auto!important;gap:10px!important;align-items:center!important;justify-content:stretch!important;padding:14px!important;margin:16px 0 0!important;border:1px solid #dce7e0;border-radius:14px;background:#f8fbf9!important;}
-.v109-parent-workflow>button{width:100%!important;min-height:44px!important;margin:0!important;}
-.v109-parent-workflow .v69-publish-status{width:auto!important;order:initial!important;margin:0!important;white-space:nowrap;}
-@media(max-width:760px){
-  .v109-parent-media{grid-template-columns:1fr}.v109-workflow-actions,#onlineRoomRandomBlockV16>.v109-workflow-actions,.v109-parent-workflow{grid-template-columns:1fr!important}.v109-workflow-status,.v109-parent-workflow .v69-publish-status{white-space:normal;}
-}
+/* Four independent rooms. The editor no longer exposes room-to-room transfer controls. */
+#onlineRoomSelectorV16{display:none!important}
+#onlineRoomToolbarActionsV16 [data-room-switch-v16],#onlineRoomToolbarActionsV16 [data-room-random-v16],#onlineRoomToolbarActionsV16 [data-room-entry-v16]{display:none!important}
+.room-first-card-v27.random .room-first-icon-v27{background:#edf6f1;color:#176b46}
 
+/* Canonical room media */
+.v113-room-media{margin-top:14px;padding:16px;border:1px solid #d8e7dc;border-radius:14px;background:#fbfdfb}
+.v113-media-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}.v113-media-head strong{display:block;font-size:16px}.v113-media-head small{display:block;margin-top:4px;color:#64756c}
+.v113-media-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}.v113-media-columns>div>b{display:block;margin-bottom:8px}.v113-media-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-bottom:8px}.v113-media-row input{width:100%;min-width:0}.v113-remove-media{min-width:66px!important}
 
-/* ========================================================================== 
-   Online Store V11.0 - room simplification / workflow / keyboard UX
-   ========================================================================== */
-/* Home language title: Chinese mode shows only the Chinese title. */
-#dashboardPage #dashboardKickerV110[hidden]{display:none!important;}
-
-/* Detailed system status belongs to Home only. Other assist cards may remain. */
-body:not(.v110-home-active) .admin-assist-v27 .assist-system-status-v110{display:none!important;}
-
-/* Random is a first-class room. */
-.room-first-card-v27.random .room-first-icon-v27{background:#edf6f1;color:#176b46;}
-.room-choice-v16.room-random-v110{border-color:#d6e7dc;background:#fbfdfb;}
-
-/* Editor room mode: no cross-room elevator navigation. Elevator is intra-page only. */
-#onlineStoreEditorV10.v110-room-random #v34SingleTrees{display:none!important;}
-#onlineStoreEditorV10.v110-room-random #v34RandomWrap{display:block!important;}
-#onlineStoreEditorV10:not(.v110-room-random) #v34RandomWrap{display:none!important;}
-#onlineStoreEditorV10.v110-room-random [data-v34-jump="v34SingleTrees"]{display:none!important;}
-#onlineStoreEditorV10:not(.v110-room-random) [data-v34-jump="v34RandomWrap"]{display:none!important;}
-
-/* One full-width publication workflow block, visually equal to the former check bar. */
-.v110-workflow-panel,
-.v109-workflow-actions.v110-workflow-panel,
-#onlineRoomRandomBlockV16>.v109-workflow-actions.v110-workflow-panel,
-.v109-parent-workflow.v110-workflow-panel{
-  width:100%!important;
-  box-sizing:border-box!important;
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(150px,1fr)) minmax(120px,.7fr)!important;
-  gap:10px!important;
-  margin:14px 0 0!important;
-  padding:16px!important;
-  border:1px solid #cfe1d5!important;
-  border-radius:14px!important;
-  background:#f7fbf8!important;
-  align-items:center!important;
-}
-.v110-workflow-panel>button{width:100%!important;min-height:46px!important;margin:0!important;font-weight:800!important;}
-.v110-workflow-panel .v109-workflow-status,.v110-workflow-panel .v69-publish-status{justify-self:center;text-align:center;white-space:normal!important;font-weight:850!important;}
-@media(max-width:760px){.v110-workflow-panel,.v109-workflow-actions.v110-workflow-panel,#onlineRoomRandomBlockV16>.v109-workflow-actions.v110-workflow-panel,.v109-parent-workflow.v110-workflow-panel{grid-template-columns:1fr!important;}}
-
-/* Published edits are staged: visible badge; live storefront stays on last published snapshot until update. */
-.v110-live-edit-note{margin:8px 0 0;padding:9px 11px;border-radius:10px;background:#eef6f1;color:#255d42;font-size:12px;font-weight:700;}
-
-/* Random media is display-only. */
-#onlineRoomRandomBlockV16 .media-section-title-v14::after{content:" · For Display Only";font-size:11px;font-weight:700;color:#728078;margin-left:6px;}
-
-/* === Online Store V11.2 final UI polish === */
-.v111-workflow-panel{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) auto!important;gap:10px!important;align-items:center!important;width:100%!important;padding:14px!important;border:1px solid #d8e7dc!important;border-radius:14px!important;background:#f8fcf9!important;box-sizing:border-box!important;}
-.v111-workflow-panel .v111-workflow-button{width:100%!important;min-width:0!important;height:46px!important;margin:0!important;}
-.v111-workflow-panel .v109-workflow-status,.v111-workflow-panel .v69-publish-status{white-space:nowrap;font-weight:800;justify-self:end;}
-.v111-allocation-message{display:block!important;grid-column:1/-1!important;width:100%!important;margin-top:8px!important;padding:10px 12px!important;border-radius:10px!important;background:#fff8e8!important;color:#7a5100!important;font-size:16px!important;font-weight:800!important;text-align:left!important;}
-.v111-room-media{margin-top:14px;padding:16px;border:1px solid #d8e7dc;border-radius:14px;background:#fbfdfb;}
-.v111-media-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px;}.v111-media-head strong{display:block;font-size:16px}.v111-media-head small{display:block;margin-top:4px;color:#64756c}
-.v111-media-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}.v111-media-columns>div>b{display:block;margin-bottom:8px}.v111-media-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-bottom:8px}.v111-media-row input{width:100%;min-width:0}.v111-remove-media{min-width:66px!important}
-body:not(.v110-home-active) .admin-assist-v27{display:none!important;}
-@media(max-width:760px){.v111-workflow-panel{grid-template-columns:1fr!important}.v111-workflow-panel .v109-workflow-status,.v111-workflow-panel .v69-publish-status{justify-self:start}.v111-media-columns{grid-template-columns:1fr}}
-
-/* V11.2 final stability / UI overrides */
-@media(min-width:1221px){
-  .admin-assist-v27{display:flex!important;}
-  body:not(.v110-home-active) .admin-assist-v27 .assist-system-status-v110{display:none!important;}
-}
-.v112-workflow-panel{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(110px,auto)!important;gap:12px!important;align-items:center!important;width:100%!important;padding:16px!important;border:1px solid #d6e5db!important;border-radius:16px!important;background:#f8fcf9!important;box-sizing:border-box!important;}
-.v112-workflow-panel>button,.v112-workflow-panel .v111-workflow-button{width:100%!important;min-width:0!important;height:48px!important;margin:0!important;border-radius:11px!important;}
-.v112-workflow-panel .v109-workflow-status,.v112-workflow-panel .v69-publish-status{justify-self:center!important;text-align:center!important;font-weight:850!important;white-space:normal!important;}
-.v112-allocation-message{display:block!important;grid-column:1/-1!important;width:100%!important;margin:6px 0 0!important;padding:12px 14px!important;border-radius:11px!important;background:#fff8e8!important;color:#704a00!important;font-size:17px!important;line-height:1.45!important;font-weight:850!important;text-align:left!important;box-sizing:border-box!important;}
-@media(max-width:760px){.v112-workflow-panel{grid-template-columns:1fr!important}.v112-workflow-panel .v109-workflow-status,.v112-workflow-panel .v69-publish-status{justify-self:start!important}}
-@media(min-width:1221px){
-  body:not(.v110-home-active) .admin-assist-v27{display:flex!important;}
-  body:not(:has(#dashboardPage.active)) .admin-assist-v27{display:flex!important;}
-  body:not(:has(#dashboardPage.active)) .admin-assist-v27 .assist-system-status-v110{display:none!important;}
-}
+/* One workflow panel style only. */
+.v113-workflow-panel{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(110px,auto)!important;gap:12px!important;align-items:center!important;width:100%!important;padding:16px!important;border:1px solid #d6e5db!important;border-radius:16px!important;background:#f8fcf9!important;box-sizing:border-box!important}
+.v113-workflow-panel>button{width:100%!important;min-width:0!important;min-height:48px!important;margin:0!important;border-radius:11px!important}
+.v105-live-price-warning,.v108-mother-price-warning,#v109MotherPriceWarning{display:block!important;width:100%!important;margin:6px 0 0!important;color:#b3261e!important;font-size:12px!important;font-weight:800!important;line-height:1.4!important}
+.v105-live-price-warning[hidden],.v108-mother-price-warning[hidden],#v109MotherPriceWarning[hidden]{display:none!important}
+.v105-price-invalid{border-color:#d9534f!important;box-shadow:0 0 0 2px rgba(217,83,79,.10)!important}
+@media(max-width:760px){.v113-media-columns,.v113-workflow-panel{grid-template-columns:1fr!important}}
