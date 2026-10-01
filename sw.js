@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-V10.5-ui-price-nav-r1-import42-8-readonly";
+const CACHE = "lover-legend-online-store-V10.6-template-cloud-r1-import42-8-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=10.5-ui-price-nav-r1",
-  "./css/style.css?v=10.5-ui-price-nav-r1",
-  "./js/common.js?v=10.5-ui-price-nav-r1",
-  "./js/sync.js?v=10.5-ui-price-nav-r1",
-  "./js/app.js?v=10.5-ui-price-nav-r1",
-  "./manifest.json?v=10.5-ui-price-nav-r1",
+  "./index.html?v=10.6-template-cloud-r1",
+  "./css/style.css?v=10.6-template-cloud-r1",
+  "./js/common.js?v=10.6-template-cloud-r1",
+  "./js/sync.js?v=10.6-template-cloud-r1",
+  "./js/app.js?v=10.6-template-cloud-r1",
+  "./manifest.json?v=10.6-template-cloud-r1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -43,17 +43,32 @@ self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin || !url.pathname.startsWith(SCOPE_PATH)) return;
 
+  if (url.pathname.endsWith("/js/online-cloud-config.js")) {
+    event.respondWith(
+      fetch(event.request, { cache: "no-store" })
+        .then(response => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(cache => cache.put(event.request, copy));
+          }
+          return response;
+        })
+        .catch(async () => (await caches.match(event.request)) || new Response("window.LL_ONLINE_CLOUD_CONFIG={};", {headers:{"Content-Type":"application/javascript"}}))
+    );
+    return;
+  }
+
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request, { cache: "no-store" })
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=10.5-ui-price-nav-r1", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=10.6-template-cloud-r1", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=10.5-ui-price-nav-r1")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=10.6-template-cloud-r1")) || (await caches.match("./index.html")))
     );
     return;
   }
