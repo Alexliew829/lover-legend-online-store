@@ -7558,3 +7558,54 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 .v107-logic-body{padding-top:16px;display:grid;gap:14px}.v107-logic-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.v107-logic-head p{margin:5px 0 0;color:#6e7d75}.v107-logic-meta{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.v107-logic-meta span{padding:5px 8px;border-radius:999px;background:#f2f6f3;color:#52705f;font-size:11px;font-weight:700}.v107-example-product,.v107-current-params{padding:13px 14px;border:1px solid #d9e8de;border-radius:13px;background:#f8fbf9;display:grid;gap:7px}.v107-example-product span{color:#315b45;font-weight:700}.v107-current-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v107-current-grid span{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:10px;background:#fff;border:1px solid #e4ece7;color:#607169;font-size:12px}.v107-current-grid b{color:#164f34;white-space:nowrap}.v107-logic-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.v107-logic-list article{border:1px solid #dfe8e2;border-radius:14px;padding:14px;background:#fff;min-width:0}.v107-logic-list h4{margin:0 0 8px;color:#174e34;font-size:15px}.v107-logic-list p{margin:6px 0;line-height:1.55;color:#465a4f;font-size:13px}.v107-logic-list small{display:block;margin-top:8px;color:#718078;line-height:1.45}.v107-formula{padding:9px 10px!important;border-radius:10px;background:#f3f8f5;color:#103e29!important;font-weight:800;font-variant-numeric:tabular-nums}
 @media(max-width:900px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr 1fr}.v107-logic-head{display:grid}.v107-logic-meta{justify-content:flex-start}}
 @media(max-width:600px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr}.v107-logic-reference>summary{align-items:flex-start}.v107-readonly-badge{flex:0 0 auto}}
+
+/* ========================================================================== 
+   Online Store V10.8 - foundation stability / workflow cleanup
+   ========================================================================== */
+/* Robust desktop shell: the sidebar spans both rows, but the second row absorbs
+   the viewport remainder. This prevents a tall sidebar from inflating the header
+   row and pushing every page below the fold. */
+@media (min-width:1001px){
+  .admin-layout-v27{
+    display:grid!important;
+    grid-template-columns:var(--admin-nav-w-v27) minmax(0,1fr) var(--admin-assist-w-v27)!important;
+    grid-template-rows:auto minmax(0,1fr)!important;
+    grid-template-areas:"sidebar header header" "sidebar content assist"!important;
+    align-items:start!important;
+    align-content:stretch!important;
+    row-gap:14px!important;
+    min-height:100vh!important;
+  }
+  .admin-sidebar-v27{
+    grid-area:sidebar!important;
+    align-self:start!important;
+    position:sticky!important;
+    top:16px!important;
+    height:auto!important;
+    min-height:calc(100vh - 32px)!important;
+    max-height:calc(100vh - 32px)!important;
+    overflow:auto!important;
+  }
+  .admin-layout-v27>.app-header-wrap{grid-area:header!important;align-self:start!important;min-width:0!important;}
+  .admin-layout-v27>.content{grid-area:content!important;align-self:start!important;min-width:0!important;min-height:0!important;}
+  .admin-layout-v27>.admin-assist-v27{grid-area:assist!important;align-self:start!important;}
+}
+@media (max-width:1490px) and (min-width:1001px){
+  .admin-layout-v27{
+    grid-template-columns:190px minmax(0,1fr)!important;
+    grid-template-areas:"sidebar header" "sidebar content"!important;
+  }
+  .admin-assist-v27{display:none!important;}
+}
+/* Price warnings must never steal width from the price input row. */
+.v108-price-field-wrap{display:block!important;min-width:0!important;}
+.v108-price-field-wrap>.v105-live-price-warning,.v108-mother-price-warning{display:block!important;width:100%!important;margin:5px 0 0!important;}
+.v108-mother-price-warning{color:#b3261e;font-size:11px;font-weight:800;line-height:1.35;}
+.v108-mother-price-warning[hidden]{display:none!important;}
+/* Draft / confirm / publish workflow */
+.v108-unit-workflow{display:inline-flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.v108-workflow-status{font-size:11px;font-weight:800;color:#63766a;white-space:nowrap;}
+.v108-workflow-status.ready{color:#8a6316;}
+.v108-workflow-status.confirmed{color:#1f7048;}
+.v108-confirmed-lock input,.v108-confirmed-lock select,.v108-confirmed-lock textarea{background:#f3f6f4!important;color:#5b675f!important;pointer-events:none!important;}
+.v108-confirmed-lock .v34-media-btn,.v108-confirmed-lock [data-v34-delete-photo],.v108-confirmed-lock [data-v34-delete-video]{pointer-events:none!important;opacity:.55!important;}
