@@ -7473,7 +7473,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 #v100ResetFreightFactory{white-space:nowrap}
 
 
-/* ================= Online Store V10.6 ================= */
+/* ================= Online Store V10.7 ================= */
 /* Keep the two brand marks visually tied to the centered title without crowding it. */
 @media (min-width:1201px){
   .admin-brand-v29{grid-template-columns:58px minmax(390px,520px) 58px!important;justify-content:center!important;gap:26px!important;}
@@ -7496,26 +7496,65 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 #ordersPageV27>.module-page-head-v27,#marketingPageV27>.module-page-head-v27,#onlineStoreHistoryPageV14>.online-store-history-v14{margin-top:0!important;}
 
 
-/* ==========================================================================\n   Online Store V10.6 - layout root fix + room action sizing + template cloud\n   ========================================================================== */
-@media (min-width:981px){
-  /* The sticky sidebar spans both grid rows. With two auto rows its viewport-height
-     min-size could be distributed into the header track, creating the large blank
-     band above Orders / Marketing / History. Lock row 1 to header max-content. */
-  .admin-layout-v27{grid-template-rows:max-content minmax(0,auto)!important;align-content:start!important;row-gap:14px!important;}
-  .admin-layout-v27>.content,.admin-layout-v27>.admin-assist-v27{align-self:start!important;}
+
+
+/* ==========================================================================
+   Online Store V10.7 - stability/layout correction + read-only logic reference
+   ========================================================================== */
+/* Keep the admin shell in the proven two-row geometry. The sidebar spans both
+   rows but must not stretch the header track. */
+@media (min-width:1001px){
+  .admin-layout-v27{
+    grid-template-rows:max-content minmax(0,max-content)!important;
+    align-content:start!important;
+    row-gap:14px!important;
+  }
+  .admin-layout-v27>.app-header-wrap{grid-area:header!important;align-self:start!important;}
+  .admin-layout-v27>.content{grid-area:content!important;align-self:start!important;min-height:0!important;}
+  .admin-layout-v27>.admin-assist-v27{grid-area:assist!important;align-self:start!important;}
+  .admin-sidebar-v27{
+    grid-area:sidebar!important;
+    min-height:0!important;
+    height:calc(100vh - 32px)!important;
+    max-height:calc(100vh - 32px)!important;
+    overflow:auto!important;
+  }
 }
-#onlineStoreEditorV10 .online-store-editor-head-v10{align-items:center!important;}
-#onlineStoreEditorV10 #v46RemoveFromRoom,
-#onlineStoreEditorV10 #v44BackProducts,
-#onlineStoreEditorV10 #onlineStoreCloseEditorV10{
-  width:132px!important;min-width:132px!important;max-width:132px!important;height:42px!important;min-height:42px!important;
-  padding:0 10px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;
+@media (max-width:1400px) and (min-width:1001px){
+  .admin-layout-v27{grid-template-columns:190px minmax(0,1fr)!important;grid-template-areas:"sidebar header" "sidebar content"!important;}
+  .admin-assist-v27{display:none!important;}
 }
-#onlineStoreEditorV10 #v77CurrentRoomBadge{height:42px!important;min-height:42px!important;min-width:170px!important;padding:0 14px!important;box-sizing:border-box!important;justify-content:center!important;}
-@media(max-width:760px){
-  #onlineStoreEditorV10 #v46RemoveFromRoom,#onlineStoreEditorV10 #v44BackProducts,#onlineStoreEditorV10 #onlineStoreCloseEditorV10{width:auto!important;min-width:116px!important;max-width:none!important;flex:1 1 116px!important;}
+/* Page-specific pages should never vertically centre themselves. */
+#ordersPageV27.page.active,#marketingPageV27.page.active,#onlineStoreHistoryPageV14.page.active,#shippingPageV27.page.active,#onlineStorePage.page.active,#settingsPage.page.active{
+  margin-top:0!important;padding-top:0!important;align-self:start!important;
+}
+/* Room editor actions: three operation buttons equal; room status same height, wider. */
+@media (min-width:761px){
+  #onlineStoreEditorV10 .v48-editor-actions{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:nowrap!important;}
+  #onlineStoreEditorV10 .v48-editor-actions>#v46RemoveFromRoom,
+  #onlineStoreEditorV10 .v48-editor-actions>#v44BackProducts,
+  #onlineStoreEditorV10 .v48-editor-actions>#onlineStoreCloseEditorV10{
+    width:132px!important;min-width:132px!important;height:42px!important;min-height:42px!important;padding:0 12px!important;box-sizing:border-box!important;justify-content:center!important;
+  }
+  #onlineStoreEditorV10 #v77CurrentRoomBadge{height:42px!important;min-height:42px!important;min-width:190px!important;padding:0 14px!important;box-sizing:border-box!important;justify-content:center!important;}
+}
+@media (max-width:760px){
+  #onlineStoreEditorV10 .v48-editor-actions{flex-wrap:wrap!important;gap:8px!important;}
+  #onlineStoreEditorV10 .v48-editor-actions>*{min-height:42px!important;}
   #onlineStoreEditorV10 #v77CurrentRoomBadge{width:100%!important;min-width:0!important;}
 }
-.v106-template-cloud{margin:14px 0 16px;padding:14px;border:1px solid #d8e7dc;border-radius:14px;background:#f8fbf9;display:grid;gap:12px}
-.v106-template-cloud-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.v106-template-cloud-head>div{display:grid;gap:3px}.v106-template-cloud-head small,.v106-cloud-help{color:#66766d;line-height:1.45}.v106-cloud-state{display:inline-flex;align-items:center;min-height:30px;padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px}.v106-cloud-state.local{background:#f1f3f2;color:#67736c}.v106-cloud-state.syncing{background:#fff7df;color:#866100}.v106-cloud-state.synced{background:#e9f7ef;color:#176d43}.v106-cloud-state.error{background:#fff0ef;color:#b42318}.v106-cloud-login{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:9px}.v106-cloud-login input{min-height:42px}.v106-cloud-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.v106-cloud-actions button{min-height:40px}
-@media(max-width:760px){.v106-cloud-login{grid-template-columns:1fr}.v106-cloud-actions button{flex:1 1 145px}.v106-template-cloud-head{align-items:flex-start}}
+/* Immediate price guard: warning is a separate row, never part of the inline
+   input/button flex row. */
+.v105-live-price-warning{display:block!important;width:100%!important;box-sizing:border-box;margin:6px 0 0!important;color:#b3261e;font-size:11px;font-weight:800;line-height:1.4;}
+.v105-live-price-warning[hidden]{display:none!important;}
+.v105-price-invalid{border-color:#d9534f!important;box-shadow:0 0 0 2px rgba(217,83,79,.10)!important;}
+#v34TreeList .v34-inline{min-width:0!important;}
+#v34TreeList .v34-inline>input{min-width:0!important;flex:1 1 auto!important;width:auto!important;}
+#v34TreeList .v34-inline>.v34-follow-price{flex:0 0 auto!important;white-space:nowrap!important;}
+/* V10.7 read-only logic/formula reference. */
+.v107-logic-reference{overflow:hidden;}
+.v107-logic-reference>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;}
+.v107-logic-reference>summary::-webkit-details-marker{display:none}.v107-logic-reference>summary span:first-child{display:grid;gap:4px}.v107-logic-reference>summary small{font-weight:600;color:#718078}.v107-readonly-badge{display:inline-flex;align-items:center;min-height:28px;padding:4px 10px;border-radius:999px;background:#eef5f0;color:#1a6744;font-weight:800;font-size:12px;white-space:nowrap}
+.v107-logic-body{padding-top:16px;display:grid;gap:14px}.v107-logic-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.v107-logic-head p{margin:5px 0 0;color:#6e7d75}.v107-logic-meta{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.v107-logic-meta span{padding:5px 8px;border-radius:999px;background:#f2f6f3;color:#52705f;font-size:11px;font-weight:700}.v107-example-product,.v107-current-params{padding:13px 14px;border:1px solid #d9e8de;border-radius:13px;background:#f8fbf9;display:grid;gap:7px}.v107-example-product span{color:#315b45;font-weight:700}.v107-current-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v107-current-grid span{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:10px;background:#fff;border:1px solid #e4ece7;color:#607169;font-size:12px}.v107-current-grid b{color:#164f34;white-space:nowrap}.v107-logic-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.v107-logic-list article{border:1px solid #dfe8e2;border-radius:14px;padding:14px;background:#fff;min-width:0}.v107-logic-list h4{margin:0 0 8px;color:#174e34;font-size:15px}.v107-logic-list p{margin:6px 0;line-height:1.55;color:#465a4f;font-size:13px}.v107-logic-list small{display:block;margin-top:8px;color:#718078;line-height:1.45}.v107-formula{padding:9px 10px!important;border-radius:10px;background:#f3f8f5;color:#103e29!important;font-weight:800;font-variant-numeric:tabular-nums}
+@media(max-width:900px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr 1fr}.v107-logic-head{display:grid}.v107-logic-meta{justify-content:flex-start}}
+@media(max-width:600px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr}.v107-logic-reference>summary{align-items:flex-start}.v107-readonly-badge{flex:0 0 auto}}
