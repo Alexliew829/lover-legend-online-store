@@ -7648,3 +7648,27 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
   #v34TreeList .v35-tree-row .v34-status-chip{grid-column:3;grid-row:2}
   #v34TreeList .v35-tree-row .v34-edit-btn.v115-child-edit{grid-column:4;grid-row:1 / span 2}
 }
+
+/* V11.6 VIP room: simple two-step draft -> publish workflow */
+#onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions{
+  display:grid!important;
+  grid-template-columns:minmax(180px,1fr) minmax(180px,1fr)!important;
+  gap:12px!important;
+  align-items:stretch!important;
+  padding:16px!important;
+}
+#onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions .v116-vip-save,
+#onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions .v116-vip-publish{
+  width:100%!important;min-height:48px!important;margin:0!important;font-size:16px!important;font-weight:800!important;
+}
+#onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions .v116-vip-draft-badge{
+  grid-column:1/-1;text-align:center;padding:10px 12px;border-radius:12px;background:#f5f8f5;color:#466052;font-weight:700;
+}
+#onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-draft-badge[data-state="published"]{background:#eaf2ff;color:#1859a8;}
+#onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-draft-badge[data-state="draft"]{background:#eef8f1;color:#17683d;}
+#onlineStoreEditorV10[data-v114-room="vip"] #v67VariationsPanel,
+#onlineStoreEditorV10[data-v114-room="vip"] #v34SingleTrees,
+#onlineStoreEditorV10[data-v114-room="vip"] #v34RandomWrap{display:none!important;}
+@media(max-width:700px){#onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions{grid-template-columns:1fr!important;}}
+#onlineStoreEditorV10[data-v114-room="vip"] .v114-workflow-help,
+#onlineStoreEditorV10[data-v114-room="vip"] #onlineStorePublishStatusV69{display:none!important;}
