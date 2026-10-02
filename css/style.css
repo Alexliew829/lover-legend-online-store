@@ -7649,7 +7649,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
   #v34TreeList .v35-tree-row .v34-edit-btn.v115-child-edit{grid-column:4;grid-row:1 / span 2}
 }
 
-/* V11.6 VIP room: simple two-step draft -> publish workflow */
+/* V11.7 VIP room: simple two-step draft -> publish workflow */
 #onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions{
   display:grid!important;
   grid-template-columns:minmax(180px,1fr) minmax(180px,1fr)!important;
@@ -7672,3 +7672,39 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 @media(max-width:700px){#onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions{grid-template-columns:1fr!important;}}
 #onlineStoreEditorV10[data-v114-room="vip"] .v114-workflow-help,
 #onlineStoreEditorV10[data-v114-room="vip"] #onlineStorePublishStatusV69{display:none!important;}
+
+/* ========================================================================== */
+/* V11.7 shared room editor + professional two-button workflow               */
+/* ========================================================================== */
+/* Sidebar must be present from first paint; V11.5 delayed reveal caused a flash. */
+html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:visible!important;}
+
+/* Once a product editor is active, the room browser must not survive above it. */
+#onlineStorePage.v117-editor-only #productEnteredHeaderV32,
+#onlineStorePage.v117-editor-only #roomProductToolsV27,
+#onlineStorePage.v117-editor-only #onlineStoreProductListV10,
+#onlineStorePage.v117-editor-only #selectedRoomBannerV27{display:none!important;}
+
+.v117-publish-actions,.v117-unit-actions{
+  display:grid!important;grid-template-columns:minmax(180px,1fr) minmax(220px,1fr)!important;
+  gap:12px!important;align-items:stretch!important;width:100%!important;
+  padding:16px!important;border:1px solid #d6e6dc!important;border-radius:14px!important;background:#f9fcfa!important;
+}
+.v117-unit-actions{margin-top:12px!important;}
+.v117-action{width:100%!important;min-height:48px!important;margin:0!important;border-radius:11px!important;font-size:15px!important;font-weight:800!important;letter-spacing:.01em!important;transition:transform .12s ease,box-shadow .12s ease,opacity .12s ease!important;}
+.v117-action:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,91,58,.10)!important;}
+.v117-action:disabled{opacity:.48!important;cursor:not-allowed!important;transform:none!important;box-shadow:none!important;}
+.v117-draft-btn{background:#176b46!important;color:#fff!important;border-color:#176b46!important;}
+.v117-publish-btn{background:#f7fbf8!important;color:#175f3f!important;border:1px solid #9ecab0!important;}
+.v117-down-btn{background:#fff7f7!important;color:#a13b3b!important;border:1px solid #e6b8b8!important;}
+.v117-status-line{grid-column:1/-1!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;min-height:24px!important;margin-top:1px!important;font-size:13px!important;font-weight:800!important;text-align:center!important;}
+.v117-live,.v117-room-live{color:#165dcc!important;background:#e8f1ff!important;border-radius:999px!important;padding:4px 9px!important;font-weight:800!important;}
+.v117-pending{color:#9a5d00!important;background:#fff2d9!important;border-radius:999px!important;padding:4px 9px!important;}
+.v117-draft{color:#176c3b!important;background:#e8f6ed!important;border-radius:999px!important;padding:4px 9px!important;}
+.v117-muted{color:#69776f!important;}
+.v117-toast{position:fixed;left:50%;bottom:28px;z-index:99999;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:#173f2d;color:#fff;padding:11px 18px;border-radius:10px;font-weight:800;box-shadow:0 8px 24px rgba(0,0,0,.16);transition:.18s ease;}
+.v117-toast.show{opacity:1;transform:translate(-50%,0);}
+/* remove obsolete help surfaces from all shared workflow rows */
+.v117-publish-actions .v114-workflow-help,.v117-publish-actions #onlineStorePublishStatusV69,
+.v117-unit-actions .v114-workflow-help{display:none!important;}
+@media(max-width:760px){.v117-publish-actions,.v117-unit-actions{grid-template-columns:1fr!important;padding:12px!important}.v117-status-line{grid-column:1!important;flex-wrap:wrap}.v117-action{min-height:50px!important}}
