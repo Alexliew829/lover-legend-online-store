@@ -28117,6 +28117,7 @@ function v113ResetDirty(){
   const ed=document.getElementById('onlineStoreEditorV10');if(ed){delete ed.dataset.v42Dirty;delete ed.dataset.v50Dirty;}
 }
 function v113ProductOverview(){
+  document.getElementById('onlineStorePage')?.classList.remove('v117-editor-only');
   v113ResetDirty();
   try{onlineStoreSelectedProductIdV10='';onlineStoreRoomV16='';onlineStoreRoomSourceV16='parent';onlineStoreSelectedRoomV27='';onlineStoreAllTreesModeV38=false;onlineStoreSelectedCategoryV32='bonsai';}catch(_){ }
   const page=document.getElementById('onlineStorePage');if(!page)return false;
@@ -28138,6 +28139,7 @@ function v113RoomHint(room){
   return room==='vip'?'VIP：母产品直接销售；最多 1 张照片 + 1 个视频。':room==='premium'?'Premium：母产品可直接销售，也可建立最多 10 个 Child。':room==='entry'?'Starter：母产品可直接销售，也可建立最多 10 个 Child。':'Random：单一售价随机发货；最多 5 张 Display Photos + 1 个 Display Video，仅供参考。';
 }
 function v113EnterRoom(room){
+  document.getElementById('onlineStorePage')?.classList.remove('v117-editor-only');
   const target=v113ValidRoom(room);if(!target)return false;
   if(onlineStoreRoomDirtyV16&&!confirmRoomLeaveV16())return false;
   onlineStoreAllTreesModeV38=false;document.querySelector('[data-v38-all-trees]')?.classList.remove('active');
@@ -28882,10 +28884,31 @@ function v117EditorOpen(){
   const ed=document.getElementById('onlineStoreEditorV10');
   return Boolean(ed&&!ed.hidden&&String(onlineStoreSelectedProductIdV10||'').trim());
 }
+function v117RoomBrowserCanShow(){
+  const page=document.getElementById('onlineStorePage');
+  if(!page||!page.classList.contains('active')||v117EditorOpen())return false;
+  if(!v117Room())return false;
+  if(window.onlineStoreAllTreesModeV38===true)return false;
+  for(const id of ['contentTemplatesPanelV41','autoMinimumPanelV43','v70LocalProductPanel']){
+    const el=document.getElementById(id);if(el&&!el.hidden)return false;
+  }
+  return true;
+}
+function v117RestoreRoomBrowser(){
+  const page=document.getElementById('onlineStorePage');if(page)page.classList.remove('v117-editor-only');
+  if(!v117RoomBrowserCanShow())return false;
+  ['productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=false;});
+  const banner=document.getElementById('selectedRoomBannerV27');if(banner)banner.hidden=true;
+  try{v117RenderListBase.apply(window,[]);}catch(_){try{renderOnlineStoreProductListV10();}catch(__){}}
+  requestAnimationFrame(v117PolishRoomCards);
+  return true;
+}
 function v117SetEditorOnly(on){
   const page=document.getElementById('onlineStorePage');if(page)page.classList.toggle('v117-editor-only',Boolean(on));
   if(on){
     ['productEnteredHeaderV32','roomProductToolsV27','onlineStoreProductListV10','selectedRoomBannerV27'].forEach(id=>{const el=document.getElementById(id);if(el)el.hidden=true;});
+  }else{
+    v117RestoreRoomBrowser();
   }
 }
 function v117SyncEditorOnly(){v117SetEditorOnly(v117EditorOpen());}
@@ -29093,8 +29116,13 @@ window.addEventListener('click',e=>{
   const up=t.closest('[data-v82-publish-unit]');if(up){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();v117ToggleUnit(up.dataset.v82PublishUnit,String(up.dataset.v82UnitId||''));requestAnimationFrame(v117DecorateAll);return;}
 },true);
 
-document.addEventListener('input',e=>{if(e.target?.closest?.('#onlineStoreEditorV10'))requestAnimationFrame(v117DecorateAll);},true);
-document.addEventListener('change',e=>{if(e.target?.closest?.('#onlineStoreEditorV10'))requestAnimationFrame(v117DecorateAll);},true);
+let v117EditorUiRaf=0;
+function v117ScheduleEditorUi(){
+  if(v117EditorUiRaf)return;
+  v117EditorUiRaf=requestAnimationFrame(()=>{v117EditorUiRaf=0;v117DecorateUnitActions();v117DecorateParentActions();});
+}
+document.addEventListener('input',e=>{if(e.target?.closest?.('#onlineStoreEditorV10'))v117ScheduleEditorUi();},true);
+document.addEventListener('change',e=>{if(e.target?.closest?.('#onlineStoreEditorV10'))v117ScheduleEditorUi();},true);
 
 // Live preview reads last published snapshots, never in-progress drafts.
 const v117LocalPreviewBase=renderStorePreviewV13;
@@ -29115,6 +29143,9 @@ renderStorePreviewV13=function(){
   grid.innerHTML=cards.map(x=>{const photo=x.photo?v37DisplayMediaUrl(x.photo):'';return `<article class="store-preview-product-v13">${photo?`<div class="v37-store-photo"><img src="${escapeHTML(photo)}" alt="" loading="lazy" decoding="async"/></div>`:'<div class="store-preview-placeholder-v13 v37-photo-fallback">暂无图片</div>'}<div class="store-preview-card-body-v13"><small>${escapeHTML(x.tier)}</small><strong>${escapeHTML(x.name)}</strong><div class="store-preview-price-v13"><b>RM ${formatOnlineMoneyInputV12(x.price)}</b></div></div></article>`;}).join('')||'<div class="empty-state">目前没有符合这个顾客身份的已上架商品。</div>';
 };
 
-function v117Setup(){document.documentElement.classList.add('v113-ui-ready','v117-ui-ready');v117Version();v117DecorateAll();}
+function v117Setup(){
+  if(window.__v117SetupDone)return;window.__v117SetupDone=true;
+  document.documentElement.classList.add('v113-ui-ready','v117-ui-ready');v117Version();v117DecorateAll();
+}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',v117Setup,{once:true});else v117Setup();
 window.addEventListener('load',v117Setup,{once:true});
