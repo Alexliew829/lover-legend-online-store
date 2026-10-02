@@ -4727,7 +4727,7 @@ button:disabled{cursor:not-allowed}
 .sales-correction-confirm-v108:disabled{opacity:.72}
 
 
-/* V11.8 Sales inventory transaction lock */
+/* V11.9 Sales inventory transaction lock */
 .sales-operation-status-v117{margin:0 16px 8px;padding:10px 12px;border:1px solid #e1b642;border-radius:10px;background:#fff7d9;color:#6f4a00;font-weight:800;line-height:1.45}
 .sales-startup-overlay-v81.operation-locked-v117 .sales-startup-close-v81,.sales-startup-overlay-v81.operation-locked-v117 .sales-startup-later-v81{opacity:.35;cursor:not-allowed}
 .sales-startup-overlay-v81.operation-locked-v117 .sales-card-confirm-v104,.sales-startup-overlay-v81.operation-locked-v117 .sales-auto-correct-v108{pointer-events:none}
@@ -7649,7 +7649,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
   #v34TreeList .v35-tree-row .v34-edit-btn.v115-child-edit{grid-column:4;grid-row:1 / span 2}
 }
 
-/* V11.8 VIP room: simple two-step draft -> publish workflow */
+/* V11.9 VIP room: simple two-step draft -> publish workflow */
 #onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions{
   display:grid!important;
   grid-template-columns:minmax(180px,1fr) minmax(180px,1fr)!important;
@@ -7674,7 +7674,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 #onlineStoreEditorV10[data-v114-room="vip"] #onlineStorePublishStatusV69{display:none!important;}
 
 /* ========================================================================== */
-/* V11.8 shared room editor + professional two-button workflow               */
+/* V11.9 shared room editor + professional two-button workflow               */
 /* ========================================================================== */
 /* Sidebar must be present from first paint; V11.5 delayed reveal caused a flash. */
 html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:visible!important;}
@@ -7711,7 +7711,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:visible!important;}
 
 
 /* ========================================================================== */
-/* Online Store V11.8 - Child flow + unified workflow visuals */
+/* Online Store V11.9 - Child flow + unified workflow visuals */
 .v118-child-flow>.v34-section-head .v34-add-row{display:none!important;}
 .v118-hidden-room-field{display:none!important;}
 .v118-child-summary{display:flex;align-items:center;min-height:36px;margin:-2px 0 12px;padding:7px 11px;border:1px solid #dce8df;border-radius:10px;background:#f6faf7;color:#355f48;font-size:13px;font-weight:800;}
@@ -7736,3 +7736,16 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:visible!important;}
   .v117-publish-actions.v118-publish-actions{grid-template-columns:1fr!important;}
   .v117-publish-actions.v118-publish-actions>.v117-action,.v117-publish-actions.v118-publish-actions>.v117-status-line{grid-row:auto!important;}
 }
+
+/* Online Store V11.9 - Random/template isolation */
+#onlineStorePage.v119-template-mode #roomFirstHubV27,
+#onlineStorePage.v119-template-mode #productCategoryHubV32,
+#onlineStorePage.v119-template-mode #productEnteredHeaderV32,
+#onlineStorePage.v119-template-mode #roomProductToolsV27,
+#onlineStorePage.v119-template-mode #onlineStoreProductListV10,
+#onlineStorePage.v119-template-mode #onlineStoreEditorV10,
+#onlineStorePage.v119-template-mode #selectedRoomBannerV27{display:none!important;}
+#onlineStoreEditorV10 .online-store-save-bar-v10.v119-random-hide-parent-actions{display:none!important;}
+.v119-random-qty-tools{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;margin-top:8px;}
+.v119-random-qty-tools button{min-height:38px;border:1px solid #bad8c5;border-radius:10px;background:#edf7f0;color:#176b46;font-size:20px;font-weight:900;cursor:pointer;}
+.v119-random-qty-tools span{text-align:center;font-size:12px;font-weight:800;color:#496657;}
