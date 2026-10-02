@@ -29422,22 +29422,21 @@ window.addEventListener('click',e=>{
   setTimeout(()=>{const t=document.getElementById('v75ShippingOverride');if(t)t.checked=keep;},80);
 },true);
 
-// ---- Mother default price auto-follow -------------------------------------
-const v119NormalizeBase=normalizeOnlineStoreConfigV10;
-normalizeOnlineStoreConfigV10=function(productId,raw){const cfg=v119NormalizeBase(productId,raw),src=raw&&typeof raw==='object'?raw:{};cfg.motherPriceManual=src.motherPriceManual===true;cfg.motherPriceImportBasis=Math.max(0,Number(src.motherPriceImportBasis)||0);return cfg;};
-const v119CollectBase=collectOnlineStoreConfigFromEditorV10;
-collectOnlineStoreConfigFromEditorV10=function(){const cfg=v119CollectBase();const input=document.getElementById('onlineStoreMotherRegularPriceV33'),product=getOnlineStoreProductV10(onlineStoreSelectedProductIdV10);if(input){cfg.motherPriceManual=input.dataset.v119Manual==='1';if(product)cfg.motherPriceImportBasis=Math.max(0,Number(getImportCurrentMinimumPriceV26(product))||0);}return cfg;};
-function v119SyncMotherPrice(){
-  const input=document.getElementById('onlineStoreMotherRegularPriceV33'),pid=String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase(),product=getOnlineStoreProductV10(pid);if(!input||!product)return;
-  const cfg=getOnlineStoreConfigV10(pid),current=Math.max(0,Number(getImportCurrentMinimumPriceV26(product))||0),initial=Math.max(0,Number(getImportInitialMinimumPriceV26(product))||0),saved=Math.max(0,Number(cfg?.motherRegularPrice)||0);
-  const inferredAuto=cfg?.motherPriceManual!==true&&(cfg?.motherPriceImportBasis>0||saved<=0||Math.abs(saved-initial)<0.005||Math.abs(saved-current)<0.005);
-  input.dataset.v119Manual=inferredAuto?'0':'1';
-  if(inferredAuto&&current>0&&input!==document.activeElement){input.value=formatOnlineMoneyInputV12(current);try{v73UpdatePricingSummary();v114ValidateMotherPrice(false);}catch(_){}}
+// ---- Import Current Minimum Price live mirror (mother selling price stays manual) ----
+function v119SyncImportCurrentMinimum(){
+  const pid=String(onlineStoreSelectedProductIdV10||'').trim().toUpperCase();
+  const product=getOnlineStoreProductV10(pid);
+  if(!product)return;
+  // Only the read-only Import Current Minimum Price mirrors Import.
+  // Never overwrite onlineStoreMotherRegularPriceV33: mother selling price is manually entered in Online Store.
+  try{v37ApplyCurrentMinimumVisual(product);}catch(_){}
+  try{updateOnlineProtectionFloorV21();}catch(_){}
+  try{v73UpdatePricingSummary();}catch(_){}
+  try{v114ValidateMotherPrice(false);}catch(_){}
 }
-document.addEventListener('input',e=>{if(e.target?.id==='onlineStoreMotherRegularPriceV33')e.target.dataset.v119Manual='1';},true);
 
 const v119SetEditorBase=setOnlineStoreEditorValuesV10;
-setOnlineStoreEditorValuesV10=function(){const room=v119Room();if(room)window.__v119RoomContext=room;const out=v119SetEditorBase.apply(this,arguments);requestAnimationFrame(()=>{v119SyncRoomBadge();v119RandomUi();v119SyncMotherPrice();});return out;};
+setOnlineStoreEditorValuesV10=function(){const room=v119Room();if(room)window.__v119RoomContext=room;const out=v119SetEditorBase.apply(this,arguments);requestAnimationFrame(()=>{v119SyncRoomBadge();v119RandomUi();v119SyncImportCurrentMinimum();});return out;};
 
 // Random saved/live state is shown like every other room; blue is live only.
 const v119PolishCardsBase=v117PolishRoomCards;
@@ -29449,7 +29448,7 @@ window.addEventListener('load',()=>setTimeout(v119Setup,40),{once:true});
 
 // V11.9 final small guards.
 const v119RefreshImportBase=refreshOnlineStoreImportProductsV30;
-refreshOnlineStoreImportProductsV30=async function(){const out=await v119RefreshImportBase.apply(this,arguments);requestAnimationFrame(()=>{try{v119SyncMotherPrice();}catch(_){}});return out;};
+refreshOnlineStoreImportProductsV30=async function(){const out=await v119RefreshImportBase.apply(this,arguments);requestAnimationFrame(()=>{try{v119SyncImportCurrentMinimum();}catch(_){}});return out;};
 window.refreshOnlineStoreImportProductsV30=refreshOnlineStoreImportProductsV30;
 const v119RandomUiBase=v119RandomUi;
 v119RandomUi=function(){v119RandomUiBase();if(v119Room()==='random'){const editor=document.getElementById('onlineStoreEditorV10'),bar=editor?.querySelector('.online-store-save-bar-v10');if(bar)bar.classList.add('v119-random-hide-parent-actions');}};
