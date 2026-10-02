@@ -4727,7 +4727,7 @@ button:disabled{cursor:not-allowed}
 .sales-correction-confirm-v108:disabled{opacity:.72}
 
 
-/* V11.7 Sales inventory transaction lock */
+/* V11.8 Sales inventory transaction lock */
 .sales-operation-status-v117{margin:0 16px 8px;padding:10px 12px;border:1px solid #e1b642;border-radius:10px;background:#fff7d9;color:#6f4a00;font-weight:800;line-height:1.45}
 .sales-startup-overlay-v81.operation-locked-v117 .sales-startup-close-v81,.sales-startup-overlay-v81.operation-locked-v117 .sales-startup-later-v81{opacity:.35;cursor:not-allowed}
 .sales-startup-overlay-v81.operation-locked-v117 .sales-card-confirm-v104,.sales-startup-overlay-v81.operation-locked-v117 .sales-auto-correct-v108{pointer-events:none}
@@ -7649,7 +7649,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
   #v34TreeList .v35-tree-row .v34-edit-btn.v115-child-edit{grid-column:4;grid-row:1 / span 2}
 }
 
-/* V11.7 VIP room: simple two-step draft -> publish workflow */
+/* V11.8 VIP room: simple two-step draft -> publish workflow */
 #onlineStoreEditorV10[data-v114-room="vip"] .v116-vip-actions{
   display:grid!important;
   grid-template-columns:minmax(180px,1fr) minmax(180px,1fr)!important;
@@ -7674,7 +7674,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 #onlineStoreEditorV10[data-v114-room="vip"] #onlineStorePublishStatusV69{display:none!important;}
 
 /* ========================================================================== */
-/* V11.7 shared room editor + professional two-button workflow               */
+/* V11.8 shared room editor + professional two-button workflow               */
 /* ========================================================================== */
 /* Sidebar must be present from first paint; V11.5 delayed reveal caused a flash. */
 html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:visible!important;}
@@ -7708,3 +7708,31 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:visible!important;}
 .v117-publish-actions .v114-workflow-help,.v117-publish-actions #onlineStorePublishStatusV69,
 .v117-unit-actions .v114-workflow-help{display:none!important;}
 @media(max-width:760px){.v117-publish-actions,.v117-unit-actions{grid-template-columns:1fr!important;padding:12px!important}.v117-status-line{grid-column:1!important;flex-wrap:wrap}.v117-action{min-height:50px!important}}
+
+
+/* ========================================================================== */
+/* Online Store V11.8 - Child flow + unified workflow visuals */
+.v118-child-flow>.v34-section-head .v34-add-row{display:none!important;}
+.v118-hidden-room-field{display:none!important;}
+.v118-child-summary{display:flex;align-items:center;min-height:36px;margin:-2px 0 12px;padding:7px 11px;border:1px solid #dce8df;border-radius:10px;background:#f6faf7;color:#355f48;font-size:13px;font-weight:800;}
+.v36-editor-top-actions .v118-add-child{min-height:34px!important;padding:0 11px!important;background:#eef7f1!important;color:#176b46!important;border:1px solid #bcd8c7!important;}
+.v36-editor-top-actions .v118-add-child:disabled{opacity:.45!important;cursor:not-allowed!important;}
+#onlineStoreEditorV10.v118-child-editor-open>.online-store-save-bar-v10,
+#onlineStoreEditorV10.v118-child-editor-open .online-store-save-bar-v10{display:none!important;}
+.v118-parent-action-label{grid-column:1/-1;font-size:13px;font-weight:900;color:#315c47;margin-bottom:-2px;}
+.v117-publish-actions.v118-publish-actions{grid-template-columns:minmax(180px,1fr) minmax(220px,1fr)!important;}
+.v117-publish-actions.v118-publish-actions>.v117-action{grid-row:2;}
+.v117-publish-actions.v118-publish-actions>.v117-status-line{grid-row:3;}
+.v118-room-draft{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;background:#e8f6ed;color:#176c3b;font-size:12px;font-weight:850;white-space:nowrap;}
+/* Room/allocation chip identifies location only. Blue is reserved for live/published state. */
+.v67-allocation-inline{background:#eef3ef!important;color:#466257!important;border-color:#d9e3dc!important;}
+.v67-allocation-inline.current{background:#edf5ef!important;color:#2d6044!important;}
+/* Publish action is visually blue; draft save green; down is red warning. */
+.v117-publish-btn:not(.v117-down-btn){background:#eef5ff!important;color:#145fc4!important;border:1px solid #9fc0ec!important;}
+.v117-live,.v117-room-live{color:#165dcc!important;background:#e8f1ff!important;}
+@media(max-width:760px){
+  .v36-editor-top-actions{grid-template-columns:1fr 1fr 1fr!important;}
+  .v36-editor-top-actions .v118-add-child{font-size:11px!important;padding:0 6px!important;}
+  .v117-publish-actions.v118-publish-actions{grid-template-columns:1fr!important;}
+  .v117-publish-actions.v118-publish-actions>.v117-action,.v117-publish-actions.v118-publish-actions>.v117-status-line{grid-row:auto!important;}
+}
