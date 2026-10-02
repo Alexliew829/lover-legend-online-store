@@ -7765,3 +7765,20 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:visible!important;}
 @media(max-width:720px){.v120-inventory-metrics{grid-template-columns:1fr}.v120-inventory-head{align-items:flex-start;flex-direction:column}}
 
 /* V12.1 Clean Baseline: current UI rules retained; obsolete runtime wrappers are consolidated in app.js. */
+
+/* ========================================================================== */
+/* Online Store V12.2 - critical testability, speed-first shared room fixes  */
+/* ========================================================================== */
+#onlineStoreEditorV10[data-v122-room="random"] #v34RandomWrap.v122-random-flat{
+  border:0!important;background:transparent!important;padding:0!important;margin-top:10px!important;box-shadow:none!important;
+}
+#onlineStoreEditorV10[data-v122-room="random"] #v34RandomWrap.v122-random-flat>summary{display:none!important;}
+#onlineStoreEditorV10[data-v122-room="random"] #v34RandomWrap.v122-random-flat>.v34-fold-body{padding:0!important;display:block!important;}
+#onlineStoreEditorV10[data-v122-room="random"] #onlineRoomRandomBlockV16.v122-random-block{
+  border:1px solid #d8e7dc!important;border-radius:14px!important;background:#fbfdfb!important;padding:14px!important;
+}
+#onlineStoreEditorV10[data-v122-room="random"] #onlineRoomRandomBlockV16>.online-store-block-head-v10{display:none!important;}
+#onlineStoreEditorV10[data-v122-room="random"] .v122-random-follow-mother{display:none!important;}
+#onlineStoreEditorV10[data-v122-room="random"] #onlineRoomRandomBlockV16 .online-store-cost-breakdown-v14{margin-top:12px!important;}
+#onlineStoreEditorV10[data-v122-room="random"] #onlineStoreRandomQtyV10{max-width:180px!important;font-weight:800!important;}
+#onlineStoreEditorV10[data-v122-room="random"] .v120-random-qty-note{font-weight:750!important;color:#496657!important;}
