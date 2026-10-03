@@ -1,0 +1,13 @@
+Lover Legend Online Store - CHANGELOG
+
+V12.4 CLEAN
+- Base: V11.3 CLEAN PATCH.
+- Force Online Store Import read-only startup mode; inherited Import CRUD/history/repair modules no longer initialize in Online Store.
+- Removed legacy Import operation pages: Import, old Import History, Supplier/Import maintenance page.
+- Removed legacy Import settings/repair panels from Settings.
+- Kept future business modules and navigation positions: Affiliate, Finance, Marketing, Logistics, Holiday Mode, Security/Staff Auth.
+- Simplified Security settings UI to a future Staff Auth placeholder while preserving the existing app-entry mechanism.
+- Simplified Automatic Minimum Price to one global Target Net Margin. Factory default 30%; editable; Reset to Factory restores 30%.
+- Removed cost-band target-margin UI. Runtime pricing uses the same global margin for all products while still including actual Import average cost and enabled Online costs.
+- Kept Import Read-Only product/stock/average cost/minimum price bridge, Online Backup/Restore, Online History, Templates, Pricing, Room/Child/Random logic, and data-safety logic.
+- Updated visible version/cache metadata to V12.4 / build 12400.
