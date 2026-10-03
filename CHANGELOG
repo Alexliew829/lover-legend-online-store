@@ -1,4 +1,15 @@
-V12.5 CLEAN PATCH
+V12.6
+- VIP / Premium / Starter mother product may list directly with fixed quantity 1.
+- Mother direct listing media standardized to 1 photo + 1 video, with its own Draft / Update / Publish / Unpublish controls.
+- Premium / Starter Child can coexist with the listed mother product.
+- Child creation is continuous without saving between additions; active capacity is 10 per room.
+- Child IDs are monotonic and never reused; Sold Child remains history and does not consume the 10-active capacity.
+- New Child inherits mother price, dimensions, package suggestion and weight; individual price/dimension changes remain available.
+- Each Child media is limited to 1 photo + 1 video.
+- Child publishing is batch per room: all current active Child publish/unpublish together; unwanted Child should be deleted before listing.
+- Random remains independent with mother ID only, no Child, display-only 5 photos + 1 video and quantity-pool logic.
+
+V12.6 CLEAN PATCH
 - All rooms: after selecting a product, hide overview search/results/list and show only the current editor.
 - Random is a true independent room: one mother product ID, no Child/Variations, shared editable dimensions, one visible price.
 - Random media remains Display Only: max 5 photos + 1 video.
@@ -9,7 +20,7 @@ V12.5 CLEAN PATCH
 
 Lover Legend Online Store - CHANGELOG
 
-V12.5 CLEAN
+V12.6 CLEAN
 - Base: V11.3 CLEAN PATCH.
 - Force Online Store Import read-only startup mode; inherited Import CRUD/history/repair modules no longer initialize in Online Store.
 - Removed legacy Import operation pages: Import, old Import History, Supplier/Import maintenance page.
@@ -19,4 +30,4 @@ V12.5 CLEAN
 - Simplified Automatic Minimum Price to one global Target Net Margin. Factory default 30%; editable; Reset to Factory restores 30%.
 - Removed cost-band target-margin UI. Runtime pricing uses the same global margin for all products while still including actual Import average cost and enabled Online costs.
 - Kept Import Read-Only product/stock/average cost/minimum price bridge, Online Backup/Restore, Online History, Templates, Pricing, Room/Child/Random logic, and data-safety logic.
-- Updated visible version/cache metadata to V12.5 / build 12500.
+- Updated visible version/cache metadata to V12.6 / build 12600.
