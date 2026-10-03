@@ -4697,7 +4697,7 @@ html, body {
 }
 
 
-/* ================= V10.8 Sales card confirmation preview ================= */
+/* ================= V10.9 Sales card confirmation preview ================= */
 .sales-startup-card-v106{border:1px solid #e0c57b;border-radius:14px;background:#fffdf7;padding:14px;margin:10px 0;display:grid;gap:12px}
 .sales-card-head-v106{font-weight:800;color:#5d5d5d;padding-bottom:8px;border-bottom:1px dashed #d8d8d8}
 .sales-card-line-v106{border:1px solid #d9e4dc;border-radius:12px;background:#fff;padding:12px;display:grid;gap:7px}
@@ -4712,11 +4712,11 @@ html, body {
 .sales-card-safety-v106{font-size:13px;color:#666;line-height:1.45}
 .error-card-v106{border-color:#e7a4a4;background:#fff5f5;color:#8d2020}
 
-/* ================= V10.8 Sales correction workflow ================= */
+/* ================= V10.9 Sales correction workflow ================= */
 .sales-copy-name-v108{border:0;background:transparent;padding:0;font:inherit;font-weight:700;text-align:left;text-decoration:underline dotted;cursor:pointer;color:inherit}.sales-auto-correct-v108{width:100%;margin-top:10px;padding:11px;border:0;border-radius:9px;background:#137a39;color:#fff;font-weight:800}.sales-copy-toast-v108{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:10050;background:#222;color:#fff;padding:9px 15px;border-radius:20px;font-weight:700}.sales-correction-overlay-v108{position:fixed;inset:0;z-index:10020;background:rgba(0,0,0,.52);display:flex;align-items:center;justify-content:center;padding:16px}.sales-correction-dialog-v108{width:min(520px,100%);max-height:90vh;overflow:auto;background:#fff;border:2px solid #e5a11a;border-radius:14px;padding:14px}.sales-correction-head-v108{display:flex;justify-content:space-between;align-items:center;font-size:18px;margin-bottom:10px}.sales-correction-head-v108 button{border:0;background:none;font-size:24px}.sales-correction-row-v108{border:1px solid #d9e4dc;border-radius:10px;padding:10px;margin:8px 0;line-height:1.65}.sales-correction-note-v108{display:block;font-weight:700;margin-top:12px}.sales-correction-note-v108 input{width:100%;box-sizing:border-box;margin-top:5px;padding:10px;border:1px solid #bbb;border-radius:8px}.sales-correction-warning-v108{margin:10px 0;padding:9px;background:#fff7df;border-radius:8px}.sales-correction-confirm-v108,.sales-correction-cancel-v108{width:100%;padding:11px;border-radius:8px;margin-top:7px;font-weight:800}.sales-correction-confirm-v108{border:0;background:#137a39;color:white}.sales-correction-cancel-v108{border:1px solid #aaa;background:white}
 
 
-/* ================= V10.8 unified action feedback ================= */
+/* ================= V10.9 unified action feedback ================= */
 button:not(:disabled){transition:transform .08s ease,opacity .12s ease,box-shadow .12s ease}
 button:not(:disabled):active{transform:scale(.97) translateY(1px)}
 button:disabled{cursor:not-allowed}
@@ -7471,3 +7471,122 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 /* V10.0 FULL DEPLOY FIX */
 #v43FreightRules .v43-rule-actions{gap:10px;flex-wrap:wrap}
 #v100ResetFreightFactory{white-space:nowrap}
+
+
+/* ================= Online Store V10.7 ================= */
+/* Keep the two brand marks visually tied to the centered title without crowding it. */
+@media (min-width:1201px){
+  .admin-brand-v29{grid-template-columns:58px minmax(390px,520px) 58px!important;justify-content:center!important;gap:26px!important;}
+  .admin-brand-v29 .admin-brand-logo-v29:first-child,.admin-brand-v29 .admin-brand-logo-v29:last-child{transform:none!important;}
+}
+/* The detailed System Status card remains on the right; remove the duplicate yellow top status control. */
+#importAnomalyStatusButtonV202{display:none!important;}
+/* Room keyword result stats: one clean row on desktop; responsive wrapping remains on narrow screens. */
+@media (min-width:1200px){
+  .v67-room-search-card .room-product-meta-v28{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;}
+  .v67-room-search-card .room-product-meta-v28 span{padding:7px 8px!important;}
+  .v67-room-search-card .room-product-meta-v28 i,.v67-room-search-card .room-product-meta-v28 strong{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+}
+/* Immediate field-level price validation. */
+.v105-live-price-warning{display:block;margin-top:5px;color:#b3261e;font-size:11px;font-weight:800;line-height:1.35;}
+.v105-live-price-warning[hidden]{display:none!important;}
+.v105-price-invalid{border-color:#d9534f!important;box-shadow:0 0 0 2px rgba(217,83,79,.10)!important;}
+/* Remove the unnecessary vertical offset on operational pages. */
+#ordersPageV27.page.active,#marketingPageV27.page.active,#onlineStoreHistoryPageV14.page.active{margin-top:0!important;padding-top:0!important;align-self:start!important;}
+#ordersPageV27>.module-page-head-v27,#marketingPageV27>.module-page-head-v27,#onlineStoreHistoryPageV14>.online-store-history-v14{margin-top:0!important;}
+
+
+
+
+/* ==========================================================================
+   Online Store V10.7 - stability/layout correction + read-only logic reference
+   ========================================================================== */
+/* Keep the admin shell in the proven two-row geometry. The sidebar spans both
+   rows but must not stretch the header track. */
+@media (min-width:1001px){
+  .admin-layout-v27{
+    grid-template-rows:max-content minmax(0,max-content)!important;
+    align-content:start!important;
+    row-gap:14px!important;
+  }
+  .admin-layout-v27>.app-header-wrap{grid-area:header!important;align-self:start!important;}
+  .admin-layout-v27>.content{grid-area:content!important;align-self:start!important;min-height:0!important;}
+  .admin-layout-v27>.admin-assist-v27{grid-area:assist!important;align-self:start!important;}
+  .admin-sidebar-v27{
+    grid-area:sidebar!important;
+    min-height:0!important;
+    height:calc(100vh - 32px)!important;
+    max-height:calc(100vh - 32px)!important;
+    overflow:auto!important;
+  }
+}
+@media (max-width:1400px) and (min-width:1001px){
+  .admin-layout-v27{grid-template-columns:190px minmax(0,1fr)!important;grid-template-areas:"sidebar header" "sidebar content"!important;}
+  .admin-assist-v27{display:none!important;}
+}
+/* Page-specific pages should never vertically centre themselves. */
+#ordersPageV27.page.active,#marketingPageV27.page.active,#onlineStoreHistoryPageV14.page.active,#shippingPageV27.page.active,#onlineStorePage.page.active,#settingsPage.page.active{
+  margin-top:0!important;padding-top:0!important;align-self:start!important;
+}
+/* Room editor actions: three operation buttons equal; room status same height, wider. */
+@media (min-width:761px){
+  #onlineStoreEditorV10 .v48-editor-actions{display:flex!important;align-items:center!important;gap:10px!important;flex-wrap:nowrap!important;}
+  #onlineStoreEditorV10 .v48-editor-actions>#v46RemoveFromRoom,
+  #onlineStoreEditorV10 .v48-editor-actions>#v44BackProducts,
+  #onlineStoreEditorV10 .v48-editor-actions>#onlineStoreCloseEditorV10{
+    width:132px!important;min-width:132px!important;height:42px!important;min-height:42px!important;padding:0 12px!important;box-sizing:border-box!important;justify-content:center!important;
+  }
+  #onlineStoreEditorV10 #v77CurrentRoomBadge{height:42px!important;min-height:42px!important;min-width:190px!important;padding:0 14px!important;box-sizing:border-box!important;justify-content:center!important;}
+}
+@media (max-width:760px){
+  #onlineStoreEditorV10 .v48-editor-actions{flex-wrap:wrap!important;gap:8px!important;}
+  #onlineStoreEditorV10 .v48-editor-actions>*{min-height:42px!important;}
+  #onlineStoreEditorV10 #v77CurrentRoomBadge{width:100%!important;min-width:0!important;}
+}
+/* Immediate price guard: warning is a separate row, never part of the inline
+   input/button flex row. */
+.v105-live-price-warning{display:block!important;width:100%!important;box-sizing:border-box;margin:6px 0 0!important;color:#b3261e;font-size:11px;font-weight:800;line-height:1.4;}
+.v105-live-price-warning[hidden]{display:none!important;}
+.v105-price-invalid{border-color:#d9534f!important;box-shadow:0 0 0 2px rgba(217,83,79,.10)!important;}
+#v34TreeList .v34-inline{min-width:0!important;}
+#v34TreeList .v34-inline>input{min-width:0!important;flex:1 1 auto!important;width:auto!important;}
+#v34TreeList .v34-inline>.v34-follow-price{flex:0 0 auto!important;white-space:nowrap!important;}
+/* V10.7 read-only logic/formula reference. */
+.v107-logic-reference{overflow:hidden;}
+.v107-logic-reference>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;}
+.v107-logic-reference>summary::-webkit-details-marker{display:none}.v107-logic-reference>summary span:first-child{display:grid;gap:4px}.v107-logic-reference>summary small{font-weight:600;color:#718078}.v107-readonly-badge{display:inline-flex;align-items:center;min-height:28px;padding:4px 10px;border-radius:999px;background:#eef5f0;color:#1a6744;font-weight:800;font-size:12px;white-space:nowrap}
+.v107-logic-body{padding-top:16px;display:grid;gap:14px}.v107-logic-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start}.v107-logic-head p{margin:5px 0 0;color:#6e7d75}.v107-logic-meta{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.v107-logic-meta span{padding:5px 8px;border-radius:999px;background:#f2f6f3;color:#52705f;font-size:11px;font-weight:700}.v107-example-product,.v107-current-params{padding:13px 14px;border:1px solid #d9e8de;border-radius:13px;background:#f8fbf9;display:grid;gap:7px}.v107-example-product span{color:#315b45;font-weight:700}.v107-current-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v107-current-grid span{display:flex;justify-content:space-between;gap:8px;padding:9px 10px;border-radius:10px;background:#fff;border:1px solid #e4ece7;color:#607169;font-size:12px}.v107-current-grid b{color:#164f34;white-space:nowrap}.v107-logic-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.v107-logic-list article{border:1px solid #dfe8e2;border-radius:14px;padding:14px;background:#fff;min-width:0}.v107-logic-list h4{margin:0 0 8px;color:#174e34;font-size:15px}.v107-logic-list p{margin:6px 0;line-height:1.55;color:#465a4f;font-size:13px}.v107-logic-list small{display:block;margin-top:8px;color:#718078;line-height:1.45}.v107-formula{padding:9px 10px!important;border-radius:10px;background:#f3f8f5;color:#103e29!important;font-weight:800;font-variant-numeric:tabular-nums}
+@media(max-width:900px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr 1fr}.v107-logic-head{display:grid}.v107-logic-meta{justify-content:flex-start}}
+@media(max-width:600px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr}.v107-logic-reference>summary{align-items:flex-start}.v107-readonly-badge{flex:0 0 auto}}
+
+/* ========================================================================== 
+   Online Store V11.3 - CLEAN ROOM ARCHITECTURE BASELINE
+   ========================================================================== */
+@media (min-width:1001px){
+  .admin-layout-v27{display:grid!important;grid-template-columns:190px minmax(0,1fr) 220px!important;grid-template-rows:auto minmax(0,1fr)!important;grid-template-areas:"sidebar header header" "sidebar content assist"!important;align-items:start!important;min-height:100vh!important;row-gap:14px!important;}
+  .admin-sidebar-v27{grid-area:sidebar!important;align-self:start!important;position:sticky!important;top:16px!important;min-height:calc(100vh - 32px)!important;max-height:calc(100vh - 32px)!important;overflow:auto!important;}
+  .admin-layout-v27>.app-header-wrap{grid-area:header!important;min-width:0!important;}
+  .admin-layout-v27>.content{grid-area:content!important;min-width:0!important;min-height:0!important;}
+  .admin-layout-v27>.admin-assist-v27{grid-area:assist!important;align-self:start!important;}
+}
+@media(max-width:1220px) and (min-width:1001px){.admin-layout-v27{grid-template-columns:190px minmax(0,1fr)!important;grid-template-areas:"sidebar header" "sidebar content"!important}.admin-assist-v27{display:none!important}}
+@media(min-width:1221px){.admin-assist-v27{display:flex!important}body:not(.v110-home-active) .admin-assist-v27 .assist-system-status-v110{display:none!important}}
+html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
+
+/* Four independent rooms. The editor no longer exposes room-to-room transfer controls. */
+#onlineRoomSelectorV16{display:none!important}
+#onlineRoomToolbarActionsV16 [data-room-switch-v16],#onlineRoomToolbarActionsV16 [data-room-random-v16],#onlineRoomToolbarActionsV16 [data-room-entry-v16]{display:none!important}
+.room-first-card-v27.random .room-first-icon-v27{background:#edf6f1;color:#176b46}
+
+/* Canonical room media */
+.v113-room-media{margin-top:14px;padding:16px;border:1px solid #d8e7dc;border-radius:14px;background:#fbfdfb}
+.v113-media-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:12px}.v113-media-head strong{display:block;font-size:16px}.v113-media-head small{display:block;margin-top:4px;color:#64756c}
+.v113-media-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}.v113-media-columns>div>b{display:block;margin-bottom:8px}.v113-media-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-bottom:8px}.v113-media-row input{width:100%;min-width:0}.v113-remove-media{min-width:66px!important}
+
+/* One workflow panel style only. */
+.v113-workflow-panel{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(110px,auto)!important;gap:12px!important;align-items:center!important;width:100%!important;padding:16px!important;border:1px solid #d6e5db!important;border-radius:16px!important;background:#f8fcf9!important;box-sizing:border-box!important}
+.v113-workflow-panel>button{width:100%!important;min-width:0!important;min-height:48px!important;margin:0!important;border-radius:11px!important}
+.v105-live-price-warning,.v108-mother-price-warning,#v109MotherPriceWarning{display:block!important;width:100%!important;margin:6px 0 0!important;color:#b3261e!important;font-size:12px!important;font-weight:800!important;line-height:1.4!important}
+.v105-live-price-warning[hidden],.v108-mother-price-warning[hidden],#v109MotherPriceWarning[hidden]{display:none!important}
+.v105-price-invalid{border-color:#d9534f!important;box-shadow:0 0 0 2px rgba(217,83,79,.10)!important}
+@media(max-width:760px){.v113-media-columns,.v113-workflow-panel{grid-template-columns:1fr!important}}
