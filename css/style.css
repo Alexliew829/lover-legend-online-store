@@ -7632,3 +7632,10 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 #onlineStoreMotherRegularPriceV33.v127-price-invalid{outline:2px solid currentColor;outline-offset:1px}
 .v127-random-status{margin-left:10px;font-size:12px;font-weight:700}
 .v127-random-status.is-published{font-weight:800}
+
+/* V12.8 styles */
+.v128-mother-floor-warning{display:block;margin-top:6px;font-size:12px;font-weight:700;line-height:1.4}
+.v128-random-direct>summary{display:none!important}
+.v128-random-direct{display:block!important}
+.v128-random-status{margin-left:10px;font-size:12px;font-weight:700}
+.v128-random-status.is-published{font-weight:800}

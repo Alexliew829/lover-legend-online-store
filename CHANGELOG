@@ -39,3 +39,8 @@ V12.7
 - Mother default price below Online protection floor is blocked from save/publish with clear warning.
 - Random media entry is enforced: 5 display photos + 1 display video.
 - Random Draft / Update / Publish / Unpublish controls and status are enforced using the Starter-style workflow.
+
+V12.8
+- 母产品默认售价低于 Online 销售保护底线时，改为输入框下方即时提示；移除下方重复警告，并禁止 Enter 跳到下一项。
+- Random 房间强制展开并显示完整媒体区：最多 5 张照片 + 1 个视频（For Display Only）。
+- Random 强制显示保存草稿 / 更新草稿 / 上架 / 更新上架 / 下架按钮与状态；继续保持无 Child / 无 Variations / Qty <= 20 且受真实可售库存限制。
