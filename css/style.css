@@ -7560,7 +7560,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 @media(max-width:600px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr}.v107-logic-reference>summary{align-items:flex-start}.v107-readonly-badge{flex:0 0 auto}}
 
 /* ========================================================================== 
-   Online Store V11.3 - CLEAN ROOM ARCHITECTURE BASELINE
+   Online Store V12.4 - CLEAN ROOM ARCHITECTURE BASELINE
    ========================================================================== */
 @media (min-width:1001px){
   .admin-layout-v27{display:grid!important;grid-template-columns:190px minmax(0,1fr) 220px!important;grid-template-rows:auto minmax(0,1fr)!important;grid-template-areas:"sidebar header header" "sidebar content assist"!important;align-items:start!important;min-height:100vh!important;row-gap:14px!important;}
@@ -7590,3 +7590,9 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 .v105-live-price-warning[hidden],.v108-mother-price-warning[hidden],#v109MotherPriceWarning[hidden]{display:none!important}
 .v105-price-invalid{border-color:#d9534f!important;box-shadow:0 0 0 2px rgba(217,83,79,.10)!important}
 @media(max-width:760px){.v113-media-columns,.v113-workflow-panel{grid-template-columns:1fr!important}}
+
+
+/* V12.4 CLEAN */
+.future-module-placeholder-v124{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border:1px dashed var(--border,#d8dee8);border-radius:12px;background:#fafbfc}.future-module-placeholder-v124 small{color:var(--muted,#6b7280)}
+.v124-auto-minimum-panel .v124-single-rule-grid{grid-template-columns:minmax(240px,420px)}
+.v124-auto-minimum-panel input{font-variant-numeric:tabular-nums}
