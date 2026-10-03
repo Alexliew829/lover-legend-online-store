@@ -31,3 +31,11 @@ V12.6 CLEAN
 - Removed cost-band target-margin UI. Runtime pricing uses the same global margin for all products while still including actual Import average cost and enabled Online costs.
 - Kept Import Read-Only product/stock/average cost/minimum price bridge, Online Backup/Restore, Online History, Templates, Pricing, Room/Child/Random logic, and data-safety logic.
 - Updated visible version/cache metadata to V12.6 / build 12600.
+
+V12.7
+- Fix current-room badge for Random and keep room display consistent across all rooms.
+- Random now follows the same Import read-only minimum-price refresh path without F5.
+- Enter moves to the next editable field in product editors.
+- Mother default price below Online protection floor is blocked from save/publish with clear warning.
+- Random media entry is enforced: 5 display photos + 1 display video.
+- Random Draft / Update / Publish / Unpublish controls and status are enforced using the Starter-style workflow.

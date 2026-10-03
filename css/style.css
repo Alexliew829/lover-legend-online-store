@@ -7627,3 +7627,8 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 /* V12.6 parent direct listing + Child batch listing */
 .v126-fixed-qty{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line,#d6d9dd);border-radius:10px;white-space:nowrap}.v126-fixed-qty b{font-size:1.05rem}.v126-parent-actions,.v126-child-batch-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--line,#d6d9dd)}.v126-parent-actions>span{font-size:.9rem}.v126-child-batch-actions>div:first-child{display:grid;gap:3px}.v126-child-batch-actions small{opacity:.72}.v126-batch-buttons{display:flex;gap:10px;flex-wrap:wrap}.v126-single-media .v35-media-group-head{margin-bottom:8px}.v126-single-media .v35-media-item{grid-template-columns:auto minmax(0,1fr) auto}.v126-single-media input{min-width:0}.v126-parent-actions .danger-outline-btn,.v126-child-batch-actions .danger-outline-btn{min-width:150px}
 @media (max-width:720px){.v126-parent-actions,.v126-child-batch-actions{align-items:stretch;flex-direction:column}.v126-parent-actions button,.v126-batch-buttons,.v126-batch-buttons button{width:100%}.v126-batch-buttons{display:grid}.v126-fixed-qty{align-self:flex-start}.v126-single-media .v35-media-item{grid-template-columns:1fr}.v126-single-media .v35-media-item>span{font-weight:700}}
+
+/* V12.7 */
+#onlineStoreMotherRegularPriceV33.v127-price-invalid{outline:2px solid currentColor;outline-offset:1px}
+.v127-random-status{margin-left:10px;font-size:12px;font-weight:700}
+.v127-random-status.is-published{font-weight:800}
