@@ -1,6 +1,15 @@
+V12.5 CLEAN PATCH
+- All rooms: after selecting a product, hide overview search/results/list and show only the current editor.
+- Random is a true independent room: one mother product ID, no Child/Variations, shared editable dimensions, one visible price.
+- Random media remains Display Only: max 5 photos + 1 video.
+- Random quantity pool capped at 20 and further limited by current real available stock.
+- Random Close and Remove Room now use the same warning/return model as Starter.
+- Random Draft/Update Draft/Publish/Unpublish uses the same workflow model as Starter.
+- Random allocation/publication no longer depends on Starter Variations state.
+
 Lover Legend Online Store - CHANGELOG
 
-V12.4 CLEAN
+V12.5 CLEAN
 - Base: V11.3 CLEAN PATCH.
 - Force Online Store Import read-only startup mode; inherited Import CRUD/history/repair modules no longer initialize in Online Store.
 - Removed legacy Import operation pages: Import, old Import History, Supplier/Import maintenance page.
@@ -10,4 +19,4 @@ V12.4 CLEAN
 - Simplified Automatic Minimum Price to one global Target Net Margin. Factory default 30%; editable; Reset to Factory restores 30%.
 - Removed cost-band target-margin UI. Runtime pricing uses the same global margin for all products while still including actual Import average cost and enabled Online costs.
 - Kept Import Read-Only product/stock/average cost/minimum price bridge, Online Backup/Restore, Online History, Templates, Pricing, Room/Child/Random logic, and data-safety logic.
-- Updated visible version/cache metadata to V12.4 / build 12400.
+- Updated visible version/cache metadata to V12.5 / build 12500.
