@@ -1,3 +1,10 @@
+V13.5
+- Fix strict 3x3 price layout by moving actual DOM fields, not visual-only CSS.
+- Put listing quantity and single-product shipping on the same row in every room.
+- Keep mother direct-listing media immediately after listing controls, then Variations.
+- Remove failed V13.4 MutationObserver layout loop and duplicate delayed layout passes to improve one-click responsiveness.
+- Preserve Premium/Starter Child inheritance, inline floor validation, 1 photo + 1 video, batch draft/publish.
+
 Online Store V13.4
 - Unified all room pricing cards into the agreed 3 x 3 order.
 - Listing quantity and single-product shipping now share one row.
