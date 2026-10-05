@@ -7769,3 +7769,14 @@ button, [role="button"]{touch-action:manipulation}
 #v51ProtectionMarginBadge.v137-random-margin-editable{cursor:pointer;user-select:none}
 @media(max-width:900px){#onlineStoreEditorV10 #v136PriceGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:720px){#onlineStoreEditorV10 #v136PriceGrid,#onlineStoreEditorV10 #v136ListingRow{grid-template-columns:1fr!important}}
+
+/* V13.8: Variations lives in the Individual Trees header; remove duplicate vertical panel spacing. */
+#onlineStoreEditorV10 #v34SingleTrees .v34-section-head{flex-wrap:wrap}
+#onlineStoreEditorV10 #v34SingleTrees .v138-variations-inline{margin:0 0 0 auto;padding:8px 10px;min-width:310px;gap:10px;border-radius:12px;flex-wrap:nowrap}
+#onlineStoreEditorV10 #v34SingleTrees .v138-variations-inline .v67-variations-copy{display:flex;align-items:center;gap:6px}
+#onlineStoreEditorV10 #v34SingleTrees .v138-variations-inline .v67-variations-copy small{display:none}
+#onlineStoreEditorV10 #v34SingleTrees .v138-variations-inline .v67-direct-listing-status{display:none!important}
+#onlineStoreEditorV10 #v34SingleTrees .v138-variations-inline .v67-variations-switch{width:auto}
+@media(max-width:760px){
+  #onlineStoreEditorV10 #v34SingleTrees .v138-variations-inline{width:100%;margin-left:0;min-width:0}
+}

@@ -1,3 +1,10 @@
+V13.8 CLEAN
+- Removed the duplicate fixed-quantity badge from the mother direct-listing media card.
+- Moved the real Variations switch into the Premium/Starter Individual Trees header; no duplicate switch and no page jumping.
+- Removed legacy inherited Product Details / Care Guide blocks from Random and Child editors; they inherit the mother product content.
+- Preserved the V13.7 canonical editor order, pricing layout, Random margin override, and room workflows.
+- Updated all visible/runtime version markers, manifest, version.json and service-worker cache to V13.8 / build 13800.
+
 V13.7 CLEAN
 - Consolidated the stacked late V13.6 editor patches into one V13.7 editor layer.
 - Removed duplicate late wrappers, layout passes, and overlapping Random/editor handlers.
