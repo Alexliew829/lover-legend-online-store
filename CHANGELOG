@@ -1,3 +1,10 @@
+V13.6
+- Canonical 3x3 pricing DOM for every room.
+- Listing quantity + single-product shipping override share one permanent row.
+- Fixed shipping override toggle being reset during UI refresh.
+- Added one-click product-room/manage routing to bypass stacked legacy click handlers.
+- Removed V13.5 runtime layout block; no observer or polling added.
+
 V13.5
 - Fix strict 3x3 price layout by moving actual DOM fields, not visual-only CSS.
 - Put listing quantity and single-product shipping on the same row in every room.
