@@ -7655,7 +7655,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 #v127RandomStatus,#v128RandomStatus,.v127-random-status,.v128-random-status{display:none!important}
 
 
-/* V13.3 Random compact editor */
+/* V13.1 Random compact editor */
 .v131-random-top-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(260px,1.4fr);gap:14px;align-items:stretch;margin:14px 0;padding:14px;border:1px solid #d9e8dd;border-radius:14px;background:#fbfdfb}
 .v131-random-top-row>label,.v131-random-top-row>#v75ShippingOverrideRow{margin:0;min-width:0}
 .v131-random-top-row #v75ShippingOverrideRow{height:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid #e0e9e2;border-radius:12px;background:#fff}
@@ -7671,20 +7671,3 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 .v131-random-room-chip{background:#eef7f1;color:#17653d;border:1px solid #c9e2d1}
 .v131-random-qty-chip{background:#f5f7f6;color:#34473d;border:1px solid #dfe7e2}
 @media(max-width:720px){.v131-random-top-row{grid-template-columns:1fr}.v131-random-top-row #v75ShippingOverrideRow{min-height:64px}}
-
-/* V13.3 consolidated room-editor cleanup */
-.v133-random-top-row{display:grid;grid-template-columns:minmax(180px,.8fr) minmax(300px,1.2fr);gap:14px;align-items:stretch;margin:14px 0}
-.v133-random-top-row>label,.v133-random-top-row>#v75ShippingOverrideRow{margin:0;min-width:0}
-.v133-random-top-row #v75ShippingOverrideRow{height:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid #dce8df;border-radius:12px;background:#fff}
-#onlineRoomRandomBlockV16.v133-media-workflow-only .online-store-cost-breakdown-v14,
-#onlineRoomRandomBlockV16.v133-media-workflow-only #onlineStoreRandomProfitV13,
-#onlineRoomRandomBlockV16.v133-media-workflow-only .online-store-profit-note-v13,
-#onlineRoomRandomBlockV16.v133-media-workflow-only #v41RandomSummary{display:none!important}
-#onlineRoomRandomBlockV16.v133-media-workflow-only #onlineStoreRegularPriceV10{display:none!important}
-.v133-hidden-legacy{display:none!important}
-.v133-room-state{display:inline-flex;align-items:center;min-height:25px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700}
-.v133-room-state.published{color:#075fc9;background:#edf5ff;border:1px solid #bfd7f7}
-.v133-room-state.dirty{color:#a85b00;background:#fff5e8;border:1px solid #f1d3a5}
-.v133-room-state.saved{color:#1c6a42;background:#eef8f2;border:1px solid #cbe4d4}
-button, [role="button"]{touch-action:manipulation}
-@media(max-width:720px){.v133-random-top-row{grid-template-columns:1fr}}
