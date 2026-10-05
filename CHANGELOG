@@ -46,10 +46,16 @@ V12.8
 - Random 强制显示保存草稿 / 更新草稿 / 上架 / 更新上架 / 下架按钮与状态；继续保持无 Child / 无 Variations / Qty <= 20 且受真实可售库存限制。
 
 
-V12.9
-- Updated every current visible/runtime version marker to V12.9 and build 12900 so legacy wrappers cannot revert the UI to V12.6/V12.7/V12.8.
+V13.0
+- Updated every current visible/runtime version marker to V13.0 and build 13000 so legacy wrappers cannot revert the UI to V12.6/V12.7/V12.8.
 - Shortened mother-price inline guard to: “⚠ RM x.xx 低于销售保护底线 RM x.xx，请先调整售价。” and styled it red.
 - Permanently suppress legacy duplicate lower price-warning blocks while retaining compatibility nodes for older pricing code.
 - Random “分配数量” renamed to “上架数量”.
 - Random workflow now keeps exactly one status indicator.
 - Random status colors: Published blue; Unpublished changes orange; Draft saved/updated green; Unpublish action red.
+
+V13.0
+- Removed duplicate Product Details / Care Guide blocks from Premium/Starter Child editors and the Random lower workflow area; Child and Random inherit mother content at listing time.
+- Variations now default OFF when no explicit saved preference exists; VIP and Random remain Variations/Child disabled, while Premium/Starter can be enabled manually.
+- Removed the redundant VIP direct-listing sentence and hid the obsolete bottom Save / Save-and-Close bar across room editors; formal mother/Child/Random workflow buttons remain authoritative.
+- Updated all current version markers, manifest, service-worker cache, VERSION and version.json to V13.0 / build 13000.

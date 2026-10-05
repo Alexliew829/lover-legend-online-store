@@ -7560,7 +7560,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 @media(max-width:600px){.v107-current-grid,.v107-logic-list{grid-template-columns:1fr}.v107-logic-reference>summary{align-items:flex-start}.v107-readonly-badge{flex:0 0 auto}}
 
 /* ========================================================================== 
-   Online Store V12.9 - CLEAN ROOM ARCHITECTURE BASELINE
+   Online Store V13.0 - CLEAN ROOM ARCHITECTURE BASELINE
    ========================================================================== */
 @media (min-width:1001px){
   .admin-layout-v27{display:grid!important;grid-template-columns:190px minmax(0,1fr) 220px!important;grid-template-rows:auto minmax(0,1fr)!important;grid-template-areas:"sidebar header header" "sidebar content assist"!important;align-items:start!important;min-height:100vh!important;row-gap:14px!important;}
@@ -7592,13 +7592,13 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 @media(max-width:760px){.v113-media-columns,.v113-workflow-panel{grid-template-columns:1fr!important}}
 
 
-/* V12.9 CLEAN */
+/* V13.0 CLEAN */
 .future-module-placeholder-v124{display:flex;flex-direction:column;gap:4px;padding:14px 16px;border:1px dashed var(--border,#d8dee8);border-radius:12px;background:#fafbfc}.future-module-placeholder-v124 small{color:var(--muted,#6b7280)}
 .v124-auto-minimum-panel .v124-single-rule-grid{grid-template-columns:minmax(240px,420px)}
 .v124-auto-minimum-panel input{font-variant-numeric:tabular-nums}
 
 
-/* V12.9 editor isolation + Random room */
+/* V13.0 editor isolation + Random room */
 #onlineStorePage.v125-editor-only #roomFirstHubV27,
 #onlineStorePage.v125-editor-only #productCategoryHubV32,
 #onlineStorePage.v125-editor-only #productEnteredHeaderV32,
@@ -7624,16 +7624,16 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 }
 
 
-/* V12.9 parent direct listing + Child batch listing */
+/* V13.0 parent direct listing + Child batch listing */
 .v126-fixed-qty{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid var(--line,#d6d9dd);border-radius:10px;white-space:nowrap}.v126-fixed-qty b{font-size:1.05rem}.v126-parent-actions,.v126-child-batch-actions{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid var(--line,#d6d9dd)}.v126-parent-actions>span{font-size:.9rem}.v126-child-batch-actions>div:first-child{display:grid;gap:3px}.v126-child-batch-actions small{opacity:.72}.v126-batch-buttons{display:flex;gap:10px;flex-wrap:wrap}.v126-single-media .v35-media-group-head{margin-bottom:8px}.v126-single-media .v35-media-item{grid-template-columns:auto minmax(0,1fr) auto}.v126-single-media input{min-width:0}.v126-parent-actions .danger-outline-btn,.v126-child-batch-actions .danger-outline-btn{min-width:150px}
 @media (max-width:720px){.v126-parent-actions,.v126-child-batch-actions{align-items:stretch;flex-direction:column}.v126-parent-actions button,.v126-batch-buttons,.v126-batch-buttons button{width:100%}.v126-batch-buttons{display:grid}.v126-fixed-qty{align-self:flex-start}.v126-single-media .v35-media-item{grid-template-columns:1fr}.v126-single-media .v35-media-item>span{font-weight:700}}
 
-/* V12.9 */
+/* V13.0 */
 #onlineStoreMotherRegularPriceV33.v127-price-invalid{outline:2px solid currentColor;outline-offset:1px}
 .v127-random-status{margin-left:10px;font-size:12px;font-weight:700}
 .v127-random-status.is-published{font-weight:800}
 
-/* V12.9 styles */
+/* V13.0 styles */
 .v128-mother-floor-warning{display:block;margin-top:6px;font-size:12px;font-weight:700;line-height:1.4}
 .v128-random-direct>summary{display:none!important}
 .v128-random-direct{display:block!important}
@@ -7641,7 +7641,7 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 .v128-random-status.is-published{font-weight:800}
 
 
-/* V12.9 - price guard + Random workflow status cleanup */
+/* V13.0 - price guard + Random workflow status cleanup */
 #onlineStorePriceFloorWarningV21,
 #v127MotherFloorWarning,
 #v77PriceCeilingWarning{display:none!important}
