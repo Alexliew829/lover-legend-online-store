@@ -7653,3 +7653,21 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 [data-v82-publish-unit="random"].danger-outline-btn{color:#c62828;border-color:#c62828}
 
 #v127RandomStatus,#v128RandomStatus,.v127-random-status,.v128-random-status{display:none!important}
+
+
+/* V13.1 Random compact editor */
+.v131-random-top-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(260px,1.4fr);gap:14px;align-items:stretch;margin:14px 0;padding:14px;border:1px solid #d9e8dd;border-radius:14px;background:#fbfdfb}
+.v131-random-top-row>label,.v131-random-top-row>#v75ShippingOverrideRow{margin:0;min-width:0}
+.v131-random-top-row #v75ShippingOverrideRow{height:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid #e0e9e2;border-radius:12px;background:#fff}
+#onlineRoomRandomBlockV16.v131-random-media-only .online-store-form-grid-v10{grid-template-columns:1fr}
+#onlineRoomRandomBlockV16.v131-random-media-only .online-store-cost-breakdown-v14,
+#onlineRoomRandomBlockV16.v131-random-media-only #onlineStoreRandomProfitV13,
+#onlineRoomRandomBlockV16.v131-random-media-only .online-store-profit-note-v13,
+#onlineRoomRandomBlockV16.v131-random-media-only #v41RandomSummary{display:none!important}
+.v51-protection-margin-badge.v131-random-margin-editable{cursor:pointer;user-select:none;touch-action:manipulation;outline-offset:3px}
+.v51-protection-margin-badge.v131-random-margin-editable::after{content:' 长按';font-size:.72em;font-weight:600;opacity:.62}
+.v51-protection-margin-badge.v131-long-press{transform:scale(.96);filter:brightness(.95)}
+.v131-random-room-chip,.v131-random-qty-chip{display:inline-flex;align-items:center;min-height:26px;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.v131-random-room-chip{background:#eef7f1;color:#17653d;border:1px solid #c9e2d1}
+.v131-random-qty-chip{background:#f5f7f6;color:#34473d;border:1px solid #dfe7e2}
+@media(max-width:720px){.v131-random-top-row{grid-template-columns:1fr}.v131-random-top-row #v75ShippingOverrideRow{min-height:64px}}
