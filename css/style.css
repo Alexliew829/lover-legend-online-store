@@ -7688,3 +7688,25 @@ html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 .v133-room-state.saved{color:#1c6a42;background:#eef8f2;border:1px solid #cbe4d4}
 button, [role="button"]{touch-action:manipulation}
 @media(max-width:720px){.v133-random-top-row{grid-template-columns:1fr}}
+
+/* ========================================================================== */
+/* Online Store V13.4 - unified room editor / child batch workflow            */
+/* ========================================================================== */
+.v134-price-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+.v134-listing-row{display:grid;grid-template-columns:minmax(180px,.8fr) minmax(320px,1.2fr);gap:14px;align-items:stretch;margin:16px 0}
+.v134-listing-row>label,.v134-listing-row>.v134-fixed-qty,.v134-listing-row>#v75ShippingOverrideRow{margin:0;min-width:0}
+.v134-fixed-qty{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:12px 14px;border:1px solid #dce8df;border-radius:12px;background:#fff}
+.v134-fixed-qty span{font-weight:700}.v134-fixed-qty strong{font-size:1.15rem}.v134-fixed-qty small{opacity:.72}
+.v134-listing-row #v75ShippingOverrideRow{height:100%;display:flex!important;align-items:center;justify-content:space-between;padding:10px 12px;border:1px solid #dce8df;border-radius:12px;background:#fff}
+.v134-parent-media-order{margin-top:14px}
+.v134-variations-order{margin-top:16px}
+.v134-child-floor-warning{display:block;margin-top:6px;color:#c62828;font-weight:700;line-height:1.35}
+.v134-child-price-invalid{border-color:#d32f2f!important;box-shadow:0 0 0 2px rgba(211,47,47,.10)!important}
+.v134-child-hidden-field{display:none!important}
+#v34TreeList [data-v34-child-card] .v34-media-columns{grid-template-columns:1fr 1fr}
+#v34TreeList [data-v34-child-card] .v35-media-group .v35-media-item~.v35-media-item{display:none!important}
+#v34TreeList [data-v34-child-card] [data-v35-add-media]{display:none!important}
+#v34TreeList [data-v34-child-card] .v34-media-title small{font-size:0}
+#v34TreeList [data-v34-child-card] .v34-media-title small::after{content:'每个子编号 1 个媒体连接。';font-size:.82rem}
+.v134-room-media-title{font-weight:800;margin-bottom:4px}
+@media(max-width:820px){.v134-price-grid{grid-template-columns:1fr!important}.v134-listing-row{grid-template-columns:1fr}.v134-listing-row #v75ShippingOverrideRow{min-height:82px}}

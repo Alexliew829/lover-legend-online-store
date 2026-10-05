@@ -1,3 +1,13 @@
+Online Store V13.4
+- Unified all room pricing cards into the agreed 3 x 3 order.
+- Listing quantity and single-product shipping now share one row.
+- VIP/Premium/Starter mother direct listing stays Qty 1; Random quantity remains editable with stock cap.
+- Mother direct-listing media/workflow is followed by Variations.
+- Premium/Starter Child can be added continuously without prior save and inherits mother price/dimensions.
+- Each Child uses its own price, dimensions, one photo and one video; Child save/publish remains batch-based.
+- Child price below Online protection floor shows an inline red warning and blocks save/publish.
+- Removed .bak files from deployment package.
+
 V13.3
 - Consolidated V13.1 pending UI fixes: Random single price, listing quantity + single-product shipping row directly above Random, deterministic content order, duplicate inherited content removal, obsolete bottom save removal, VIP redundant copy removal, Variations default OFF, version/build 13.3/13300.
 - Random long-press product-specific target-margin override preserved.

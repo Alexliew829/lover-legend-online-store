@@ -1,13 +1,13 @@
-const CACHE = "lover-legend-online-store-13.3-v133-clean-ui-r1-import42-8-readonly";
+const CACHE = "lover-legend-online-store-v13-4-clean-ui-r1-import42-8-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=13.3-v133-clean-ui-r1",
-  "./css/style.css?v=13.3-v133-clean-ui-r1",
-  "./js/common.js?v=13.3-v133-clean-ui-r1",
-  "./js/sync.js?v=13.3-v133-clean-ui-r1",
-  "./js/app.js?v=13.3-v133-clean-ui-r1",
-  "./manifest.json?v=13.3-v133-clean-ui-r1",
+  "./index.html?v=v13-4-clean-ui-r1",
+  "./css/style.css?v=v13-4-clean-ui-r1",
+  "./js/common.js?v=v13-4-clean-ui-r1",
+  "./js/sync.js?v=v13-4-clean-ui-r1",
+  "./js/app.js?v=v13-4-clean-ui-r1",
+  "./manifest.json?v=v13-4-clean-ui-r1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -49,11 +49,11 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=13.3-v133-clean-ui-r1", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=v13-4-clean-ui-r1", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=13.3-v133-clean-ui-r1")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=v13-4-clean-ui-r1")) || (await caches.match("./index.html")))
     );
     return;
   }
