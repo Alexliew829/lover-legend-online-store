@@ -1,3 +1,11 @@
+V13.7 CLEAN
+- Consolidated the stacked late V13.6 editor patches into one V13.7 editor layer.
+- Removed duplicate late wrappers, layout passes, and overlapping Random/editor handlers.
+- Canonical DOM order: product content -> 3x3 pricing -> quantity + shipping -> media/workflow -> Variations.
+- Random keeps one selling price, one quantity pool, 5 photos + 1 video, and product-specific margin override.
+- Shipping toggle uses one persistent node/state path.
+- No MutationObserver or polling added.
+
 V13.6
 - Canonical 3x3 pricing DOM for every room.
 - Listing quantity + single-product shipping override share one permanent row.
