@@ -7821,13 +7821,13 @@ button, [role="button"]{touch-action:manipulation}
 .v143-margin-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.v143-margin-actions button{min-width:100px;padding:11px 16px;border-radius:10px;border:1px solid #cfdcd4;font-weight:800;cursor:pointer}
 .v143-margin-confirm{background:#1f6b45;color:#fff;border-color:#1f6b45!important}.v143-margin-cancel{background:#fff;color:#35513f}
 
-/* V14.8 protection-margin long-press target */
+/* V14.9 protection-margin long-press target */
 #onlineStoreEditorV10 .v51-protection-margin-badge.v146-margin-pointer-bound{cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;outline-offset:3px}
 #onlineStoreEditorV10 .v51-protection-margin-badge.v146-margin-pointer-bound::after{content:' 长按';font-size:.72em;font-weight:700;opacity:.62}
 #onlineStoreEditorV10 .v51-protection-margin-badge.v146-long-press{background:rgba(31,107,69,.10);outline:2px solid rgba(31,107,69,.22);filter:brightness(.96)}
 
 
-/* V14.8 - stable margin long-press + accessory editor */
+/* V14.9 - stable margin long-press + accessory editor */
 #onlineStoreEditorV10 .v51-protection-margin-badge.v147-margin-target{cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:manipulation;outline-offset:3px}
 #onlineStoreEditorV10 .v51-protection-margin-badge.v147-margin-target::after{content:' 长按';font-size:.72em;font-weight:700;opacity:.62}
 #onlineStoreEditorV10 .v51-protection-margin-badge.v147-long-press{background:rgba(31,107,69,.10);outline:2px solid rgba(31,107,69,.24)}
@@ -7839,7 +7839,7 @@ button, [role="button"]{touch-action:manipulation}
 @media(max-width:760px){.v147-local-panel .v147-variation-row{grid-template-columns:1fr}.v147-local-head-actions{width:100%;justify-content:stretch}.v147-local-head-actions button{flex:1 1 160px}}
 
 
-/* V14.8 final UX */
+/* V14.9 final UX */
 #onlineStoreEditorV10 .v51-protection-margin-badge.v147-margin-target,
 #onlineStoreEditorV10 .v51-protection-margin-badge{cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;outline-offset:3px}
 #onlineStoreEditorV10 .v51-protection-margin-badge.v147-margin-target::after{content:' 长按';font-size:.72em;font-weight:700;opacity:.62}
@@ -7853,3 +7853,11 @@ button, [role="button"]{touch-action:manipulation}
 @media(max-width:760px){.v148-variation-card{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .v148-fullscreen-btn{margin-left:auto}.v148-fullscreen{position:fixed!important;inset:18px!important;z-index:100000!important;background:#fff!important;border:1px solid #cddbd2!important;border-radius:16px!important;padding:16px!important;overflow:auto!important;box-shadow:0 20px 60px rgba(0,0,0,.22)!important}.v148-fullscreen #v71VariationRows{display:grid;gap:10px}.v148-fullscreen .v148-variation-card{grid-template-columns:repeat(5,minmax(140px,1fr))}.v148-no-scroll{overflow:hidden!important}
 .v72-room-state.saved{color:#16733b!important;background:#edf8f0!important}.v72-room-state.published{color:#1d4ed8!important;background:#eef4ff!important}.v142-room-label,.v137-random-room-chip{color:#17211b!important;font-weight:900!important;font-size:15px!important;background:transparent!important;border:0!important;padding:0!important}
+
+
+/* V14.9 root-cause stabilization */
+#onlineStoreEditorV10 .v51-protection-margin-badge{cursor:pointer!important;user-select:none!important;-webkit-user-select:none!important;-webkit-touch-callout:none!important;touch-action:none!important}
+#onlineStoreEditorV10 .v51-protection-margin-badge.v149-long-press{background:rgba(31,107,69,.12);outline:2px solid rgba(31,107,69,.34);transform:scale(.98)}
+.v149-room-name-chip{display:inline-flex;align-items:center;margin-left:8px;color:#111!important;background:transparent!important;font-weight:900;white-space:nowrap}
+#v149MotherPriceRequired{display:block;margin-top:6px;color:#c0392b;font-weight:800}
+#v149MotherPriceRequired[hidden]{display:none!important}

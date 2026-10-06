@@ -1,4 +1,12 @@
-Online Store V14.8
+Online Store V14.9
+- Root-cause fix: V14.8 incorrectly accessed top-level let state through window.*, causing margin long-press, accessory Add CTA, and live room shipping recalculation to see empty state.
+- Profit-margin long-press now uses the actual lexical current product/room and opens after a 650ms hold.
+- Four room cards show black room name + separate green draft / blue published state.
+- Mother default price is required in VIP / Premium / Starter / Random and remains blocked below protection floor.
+- Bonsai room shipping uses roomShippingModes only; buyer-paid/seller-paid switch recalculates cost/floor/profit/margin immediately.
+- Accessory category pages always keep exactly one correctly named Add button.
+- Keeps V14.8 compact 1-8 photo slots, single Variation editor, Full Screen list, global Enter navigation, delete workflow, and L-W-H-Weight order.
+
 - Rebuilt target-margin long press with a document-capture controller that survives pricing DOM re-renders.
 - Unified room draft labels: VIP/Premium/Starter/Random 草稿已保存.
 - Consolidated accessory category Add CTA to one dynamic button and prevented CTA leakage into bonsai rooms.
