@@ -47,3 +47,9 @@ V14.3
 - Long-press now uses one stable editor-level controller instead of window-level delegation.
 - Replaced delayed browser prompt with an in-app margin editor dialog.
 - Per-room/per-product margin overrides continue to support positive, zero, and negative values without changing the global Settings rate.
+
+V14.6 CODE CLEANUP
+- Removed superseded V13.7/V14.3/V14.5 target-margin trigger classes/CSS that were no longer used by the V14.6 Pointer Events controller.
+- Removed dead Random quantity-chip styling and the obsolete rule that hid the first Random media field.
+- Removed unused V14.6 locals/helpers and duplicated comments.
+- No business-rule or saved-data schema changes.

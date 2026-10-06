@@ -7764,9 +7764,7 @@ button, [role="button"]{touch-action:manipulation}
 }
 #onlineStoreEditorV10 .v137-mother-floor-warning{display:block;margin-top:6px;color:#c62828;font-weight:700}
 #onlineStoreEditorV10 .v137-mother-floor-warning[hidden]{display:none!important}
-#onlineStoreEditorV10 .v137-random-media-only .online-store-form-grid-v10>label:first-of-type{display:none!important}
-#onlineStoreEditorV10 .v137-random-room-chip,#onlineStoreEditorV10 .v137-random-qty-chip{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:#eef6f0;font-size:12px;font-weight:700}
-#v51ProtectionMarginBadge.v137-random-margin-editable{cursor:pointer;user-select:none}
+#onlineStoreEditorV10 .v137-random-room-chip{display:inline-flex;align-items:center;padding:3px 8px;border-radius:999px;background:#eef6f0;font-size:12px;font-weight:700}
 @media(max-width:900px){#onlineStoreEditorV10 #v136PriceGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
 @media(max-width:720px){#onlineStoreEditorV10 #v136PriceGrid,#onlineStoreEditorV10 #v136ListingRow{grid-template-columns:1fr!important}}
 
@@ -7778,7 +7776,6 @@ button, [role="button"]{touch-action:manipulation}
 }
 #onlineStoreEditorV10 #v34SingleTrees .v139-variations-header-switch[hidden]{display:inline-flex!important}
 #onlineStoreEditorV10 #v34SingleTrees .v139-variations-header-switch input{flex:0 0 auto}
-#v51ProtectionMarginBadge.v139-room-margin-editable{cursor:pointer;user-select:none}
 @media(max-width:760px){
   #onlineStoreEditorV10 #v34SingleTrees .v139-variations-header-switch{margin-left:0;width:100%!important;justify-content:space-between}
 }
@@ -7805,7 +7802,6 @@ button, [role="button"]{touch-action:manipulation}
   font-size:14px!important;
   font-weight:800!important;
 }
-#onlineStoreProductListV10 .v137-random-qty-chip{display:none!important}
 #onlineStoreEditorV10 #onlineRoomRandomBlockV16.v137-random-media-only .online-store-form-grid-v10{
   display:grid!important;
   grid-template-columns:1fr!important;
@@ -7813,17 +7809,7 @@ button, [role="button"]{touch-action:manipulation}
 #onlineStoreEditorV10 #onlineRoomRandomBlockV16.v137-random-media-only .online-store-form-grid-v10>label{
   display:block!important;
 }
-#v51ProtectionMarginBadge.v139-room-margin-editable{
-  cursor:pointer!important;
-  user-select:none!important;
-  -webkit-user-select:none!important;
-  touch-action:manipulation;
-}
-
-/* V14.3 room target-margin editor: stable in-app long-press dialog */
-#onlineStoreEditorV10 .v51-protection-margin-badge.v139-room-margin-editable{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;outline-offset:3px}
-#onlineStoreEditorV10 .v51-protection-margin-badge.v139-room-margin-editable::after{content:' 长按';font-size:.72em;font-weight:700;opacity:.62}
-#onlineStoreEditorV10 .v51-protection-margin-badge.v143-long-press{transform:scale(.95);filter:brightness(.93)}
+/* Room target-margin editor dialog */
 .v143-margin-overlay{position:fixed;inset:0;z-index:99999;background:rgba(16,31,24,.34);display:flex;align-items:center;justify-content:center;padding:20px}
 .v143-margin-dialog{width:min(460px,100%);background:#fff;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.22);padding:20px;border:1px solid #dfe9e2}
 .v143-margin-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}

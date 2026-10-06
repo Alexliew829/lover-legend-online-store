@@ -28881,7 +28881,6 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
    - no MutationObserver, no polling, no repeated layout timers
    ============================================================================ */
 (function v137ConsolidatedEditor(){
-  const VERSION='14.6', BUILD='14600';
   const $=id=>document.getElementById(id);
   const validRoom=r=>typeof v113ValidRoom==='function'?v113ValidRoom(r):String(r||'').trim().toLowerCase();
   const room=()=>validRoom((typeof v113CurrentRoom==='function'?v113CurrentRoom():'')||window.onlineStoreSelectedRoomV27||window.onlineStoreRoomV16||'');
@@ -29010,11 +29009,9 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
   function bindMarginBadgeDirect(badge){
     if(!badge||badge.dataset.v146MarginPointerBound==='1')return badge;
     badge.dataset.v146MarginPointerBound='1';
-    badge.classList.remove('v145-margin-direct-bound');
     badge.classList.add('v146-margin-pointer-bound');
     let timer=0,active=null,longPressed=false;
     const clearTimer=()=>{if(timer)clearTimeout(timer);timer=0;badge.classList.remove('v146-long-press');};
-    const reset=()=>{clearTimer();active=null;longPressed=false;};
     badge.addEventListener('pointerdown',e=>{
       if(e.button!==undefined&&e.button!==0)return;
       const id=pid(),r=room();if(!id||!['vip','premium','entry','random'].includes(r))return;
@@ -29056,7 +29053,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
     const product=getOnlineStoreProductV10(pid()),info=product?calculateOnlineProtectionFloorV21(product):null,n=Number(info?.targetMargin);
     if(!Number.isFinite(n))return;
     badge.textContent=pct(n);badge.classList.toggle('loss',n<0);badge.classList.toggle('profit',n>0);
-    const editable=['vip','premium','entry','random'].includes(room());badge.classList.toggle('v139-room-margin-editable',editable);badge.classList.remove('v137-random-margin-editable','v145-margin-direct-bound','v145-long-press');
+    const editable=['vip','premium','entry','random'].includes(room());
     const r=room(),name=r==='vip'?'VIP':r==='premium'?'Premium':r==='entry'?'Starter':'Random';
     badge.title=editable?`长按修改此产品 ${name} 房间目标净利率；不会修改设置页面。`:'目标净利率由设置页面统一管理';
     bindMarginBadgeDirect(badge);
@@ -29289,8 +29286,6 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
     const protectedAction=t.closest('#v126ParentSave,#v126ParentPublish,#v126ChildSave,#v126ChildPublish,[data-v82-save-unit="random"],[data-v82-publish-unit="random"],#onlineStoreSaveV10,#onlineStorePublishV69');
     if(protectedAction&&!motherGuard(true)){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();return;}
   },true);
-
-  // V14.6: target-margin long-press uses one Pointer Events controller bound at the live badge source.
 
   // Remove this room's override only after a successful room removal.
   try{const baseRemove=v46RemoveCurrentProductFromRoom;v46RemoveCurrentProductFromRoom=function(){const id=pid(),r=room(),out=baseRemove.apply(this,arguments);if(['vip','premium','entry','random'].includes(r)&&out!==false)clearRoomMargin(id,r);return out;};}catch(_){ }
