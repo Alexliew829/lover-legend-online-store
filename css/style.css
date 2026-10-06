@@ -7782,3 +7782,40 @@ button, [role="button"]{touch-action:manipulation}
 @media(max-width:760px){
   #onlineStoreEditorV10 #v34SingleTrees .v139-variations-header-switch{margin-left:0;width:100%!important;justify-content:space-between}
 }
+
+
+/* ================================================================
+   Online Store V14.2 - status / room label / Random media fixes
+   ================================================================ */
+.v72-room-state.published{
+  background:#e8f1ff!important;
+  color:#0b63ce!important;
+}
+.v72-room-state.saved{
+  background:#e8f7ee!important;
+  color:#168244!important;
+}
+.v67-allocation-inline.v142-room-label,
+#onlineStoreProductListV10 .v137-random-room-chip{
+  background:transparent!important;
+  color:#111!important;
+  border:0!important;
+  padding:0!important;
+  margin-left:8px!important;
+  font-size:14px!important;
+  font-weight:800!important;
+}
+#onlineStoreProductListV10 .v137-random-qty-chip{display:none!important}
+#onlineStoreEditorV10 #onlineRoomRandomBlockV16.v137-random-media-only .online-store-form-grid-v10{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+}
+#onlineStoreEditorV10 #onlineRoomRandomBlockV16.v137-random-media-only .online-store-form-grid-v10>label{
+  display:block!important;
+}
+#v51ProtectionMarginBadge.v139-room-margin-editable{
+  cursor:pointer!important;
+  user-select:none!important;
+  -webkit-user-select:none!important;
+  touch-action:manipulation;
+}
