@@ -1,10 +1,17 @@
-V14.4
+V14.5
+- Fixed target-margin long-press self-cancellation.
+- Desktop long-press no longer cancels on mouseleave or tiny mouse movement; release cancels normally.
+- Press feedback no longer scales the badge hit area, preventing accidental mouseleave.
+- Touch movement tolerance increased while keeping touchend/touchcancel safety.
+- Existing in-app margin editor + confirmation and per-room override logic preserved.
+
+V14.5
 - Fixed four-room target-margin long-press at the source badge node.
 - Binding now happens whenever v51EnsureProtectionMarginBadge() returns the live badge.
 - Removed dependency on editor delegation / editable CSS class for activation.
 - Desktop uses direct mouse long-press; mobile uses direct touch long-press; context-menu remains a fallback.
 - Existing per-product/per-room override data logic, confirmation, protection-floor recalculation, and global Settings isolation are unchanged.
-- Version/build updated to V14.4 / 14400.
+- Version/build updated to V14.5 / 14500.
 
 V14.3
 - Fix Random current-room badge at the legacy source: v77CurrentRoom/v77RoomLabel now recognize Random.
