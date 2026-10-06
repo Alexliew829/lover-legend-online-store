@@ -1,8 +1,8 @@
 {
   "name": "线上商店管理系统",
   "short_name": "Online Store",
-  "description": "Lover Legend Gardening · Online Store Management Admin V14.3 · V8.2 Business Logic Base · Import V42.8 Read-Only · Incremental Deploy",
-  "start_url": "/lover-legend-online-store/?v=14.3",
+  "description": "Lover Legend Gardening · Online Store Management Admin V14.4 · V8.2 Business Logic Base · Import V42.8 Read-Only · Incremental Deploy",
+  "start_url": "/lover-legend-online-store/?v=14.4",
   "scope": "/lover-legend-online-store/",
   "display": "standalone",
   "background_color": "#fff7ed",
@@ -40,5 +40,5 @@
     "standalone"
   ],
   "prefer_related_applications": false,
-  "version": "14.3"
+  "version": "14.4"
 }

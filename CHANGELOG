@@ -1,3 +1,11 @@
+V14.4
+- Fixed four-room target-margin long-press at the source badge node.
+- Binding now happens whenever v51EnsureProtectionMarginBadge() returns the live badge.
+- Removed dependency on editor delegation / editable CSS class for activation.
+- Desktop uses direct mouse long-press; mobile uses direct touch long-press; context-menu remains a fallback.
+- Existing per-product/per-room override data logic, confirmation, protection-floor recalculation, and global Settings isolation are unchanged.
+- Version/build updated to V14.4 / 14400.
+
 V14.3
 - Fix Random current-room badge at the legacy source: v77CurrentRoom/v77RoomLabel now recognize Random.
 - Restore Random video URL input in the media section.
