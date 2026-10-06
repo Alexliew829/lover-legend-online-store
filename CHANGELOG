@@ -1,3 +1,10 @@
+V14.6
+- Replaced the repeatedly failing margin mouse/touch handlers with one Pointer Events long-press controller using pointer capture.
+- Product ID + room are captured at press start, so editor/pricing re-renders cannot invalidate the margin edit action.
+- Four bonsai rooms default single-product shipping to Buyer Pays; each product+room may switch to Seller Free Shipping and retain the saved room state.
+- Removed accessory-product add CTAs from VIP / Premium / Starter / Random room headers; accessory creation stays in dedicated category modules.
+- Preserved the V14.5 pricing, room, media, Variations, navigation and status behavior.
+
 V14.5
 - Fixed target-margin long-press self-cancellation.
 - Desktop long-press no longer cancels on mouseleave or tiny mouse movement; release cancels normally.

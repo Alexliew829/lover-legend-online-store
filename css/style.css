@@ -7835,7 +7835,7 @@ button, [role="button"]{touch-action:manipulation}
 .v143-margin-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.v143-margin-actions button{min-width:100px;padding:11px 16px;border-radius:10px;border:1px solid #cfdcd4;font-weight:800;cursor:pointer}
 .v143-margin-confirm{background:#1f6b45;color:#fff;border-color:#1f6b45!important}.v143-margin-cancel{background:#fff;color:#35513f}
 
-/* V14.5 stable direct protection-margin long-press target */
-#onlineStoreEditorV10 .v51-protection-margin-badge.v145-margin-direct-bound{cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;outline-offset:3px}
-#onlineStoreEditorV10 .v51-protection-margin-badge.v145-margin-direct-bound::after{content:' 长按';font-size:.72em;font-weight:700;opacity:.62}
-#onlineStoreEditorV10 .v51-protection-margin-badge.v145-long-press{background:rgba(31,107,69,.10);outline:2px solid rgba(31,107,69,.22);filter:brightness(.96)}
+/* V14.6 Pointer Events protection-margin long-press target */
+#onlineStoreEditorV10 .v51-protection-margin-badge.v146-margin-pointer-bound{cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none;outline-offset:3px}
+#onlineStoreEditorV10 .v51-protection-margin-badge.v146-margin-pointer-bound::after{content:' 长按';font-size:.72em;font-weight:700;opacity:.62}
+#onlineStoreEditorV10 .v51-protection-margin-badge.v146-long-press{background:rgba(31,107,69,.10);outline:2px solid rgba(31,107,69,.22);filter:brightness(.96)}
