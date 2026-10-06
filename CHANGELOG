@@ -1,8 +1,8 @@
-V13.9 CLEAN
+V14.0 CLEAN
 
-- Restored the real Premium / Starter Variations switch in the Individual Trees header.
-- New products keep Variations OFF by default; Premium / Starter can enable it, VIP / Random remain non-Child rooms.
-- Expanded target-net-margin long-press override to VIP / Premium / Starter / Random on a per-product, per-room basis.
-- Room-specific margin overrides never write back to the global Settings margin and are cleared when the product is removed from that room.
-- Migrates the previous Random-only override into the new per-room override structure.
-- Updated all visible/runtime version markers, manifest, version.json and service-worker cache to V13.9 / build 13900.
+- Fixed top room navigation from Bonsai Content Templates: VIP / Premium / Starter / Random now leave the template panel and open the selected room directly.
+- Restored Premium / Starter Variations in the Individual Trees header; new products default OFF, while VIP / Random remain non-Child rooms.
+- Restored per-product, per-room target-net-margin long-press editing for VIP / Premium / Starter / Random. Overrides support positive, zero and negative values, require confirmation, never write back to Settings, and clear when the product is removed from that room.
+- Fixed Random listing quantity: Random no longer inherits the fixed Qty 1 card. Quantity starts blank until explicitly entered, supports 1-20, and remains capped by effective available stock.
+- VIP / Premium / Starter mother-product direct listing remains fixed Qty 1.
+- Updated all visible/runtime version markers, manifest, version.json and service-worker cache to V14.0 / build 14000.
