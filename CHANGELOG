@@ -1,4 +1,4 @@
-Online Store V14.7
+Online Store V14.8
 - Rebuilt target-margin long press with a document-capture controller that survives pricing DOM re-renders.
 - Unified room draft labels: VIP/Premium/Starter/Random 草稿已保存.
 - Consolidated accessory category Add CTA to one dynamic button and prevented CTA leakage into bonsai rooms.
