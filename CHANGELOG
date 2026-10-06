@@ -1,3 +1,9 @@
+Online Store V14.7
+- Rebuilt target-margin long press with a document-capture controller that survives pricing DOM re-renders.
+- Unified room draft labels: VIP/Premium/Starter/Random 草稿已保存.
+- Consolidated accessory category Add CTA to one dynamic button and prevented CTA leakage into bonsai rooms.
+- Added accessory Return to Product Management, video, free Variant Name, per-variation photo/stock/price/package/SKU, and main-product delete.
+
 V14.6
 - Replaced the repeatedly failing margin mouse/touch handlers with one Pointer Events long-press controller using pointer capture.
 - Product ID + room are captured at press start, so editor/pricing re-renders cannot invalidate the margin edit action.
