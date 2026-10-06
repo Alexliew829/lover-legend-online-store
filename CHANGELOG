@@ -1,3 +1,9 @@
+V14.1
+- Fix Premium/Starter Variations toggle disappearing: legacy V7.0/V7.1 no longer hides the whole Individual Trees section when Variations is OFF.
+- Stop cloning the live Variations checkbox so its state/events survive editor renders.
+- Fix four-room target-margin long-press using a direct live-badge controller with contextmenu fallback.
+- Preserve V14.0 navigation fix and Random quantity rules.
+
 V14.0 CLEAN
 
 - Fixed top room navigation from Bonsai Content Templates: VIP / Premium / Starter / Random now leave the template panel and open the selected room directly.
