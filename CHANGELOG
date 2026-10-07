@@ -1,3 +1,11 @@
+Online Store V15.9
+- Restored the top-right System Status button; removed the obsolete V10.7 CSS rule that forcibly hid it.
+- System Status diagnostics now show Cloud host, full last request URL, browser online/offline state, last successful revision and last successful Cloud time.
+- Network failures preserve the full Supabase request URL without exposing the API key.
+- Backup/Restore status text now preserves both action icons instead of replacing the button DOM after completion.
+- Care Guide template textarea auto-grows to fit normal content and avoids the internal vertical scrollbar during editing.
+- Backend schema unchanged; no SQL rerun required.
+
 Online Store V15.8
 - Backup now includes and validates bonsai content templates as first-class disaster-recovery data.
 - Backup payload carries integrity counts for products, templates, history and local/accessory products; mismatches stop the operation.

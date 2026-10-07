@@ -7480,7 +7480,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   .admin-brand-v29 .admin-brand-logo-v29:first-child,.admin-brand-v29 .admin-brand-logo-v29:last-child{transform:none!important;}
 }
 /* The detailed System Status card remains on the right; remove the duplicate yellow top status control. */
-#importAnomalyStatusButtonV202{display:none!important;}
+#importAnomalyStatusButtonV202{display:inline-flex!important;}
 /* Room keyword result stats: one clean row on desktop; responsive wrapping remains on narrow screens. */
 @media (min-width:1200px){
   .v67-room-search-card .room-product-meta-v28{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:7px!important;}
@@ -7931,20 +7931,20 @@ button, [role="button"]{touch-action:manipulation}
 @media (pointer:fine){.v157-pull-refresh-indicator{display:none!important}}
 
 
-/* V15.8 compact system status details */
+/* V15.9 compact system status details */
 .system-status-summary-v157{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 12px;padding:10px;border:1px solid #e5e7eb;border-radius:12px;background:#fff}
 .system-status-summary-v157>div{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:7px 8px;border-radius:8px;background:#f8fafc}
 .system-status-summary-v157 span{font-size:12px;color:#64748b}.system-status-summary-v157 strong{font-size:12px;text-align:right;overflow-wrap:anywhere}
 .system-status-summary-v157 .system-status-error-v157{grid-column:1/-1}.system-status-summary-v157 .system-status-error-v157 strong{max-width:72%;color:#b91c1c}
 @media(max-width:720px){.system-status-summary-v157{grid-template-columns:1fr}.system-status-summary-v157 .system-status-error-v157{grid-column:auto}.system-status-summary-v157>div{font-size:13px}}
 
-/* V15.8 system status dropdown is available from every admin page. */
+/* V15.9 system status dropdown is available from every admin page. */
 #importAnomalyDetailsV202{position:fixed;top:112px;right:18px;z-index:1200;width:min(620px,calc(100vw - 28px));max-height:calc(100vh - 132px);overflow:auto;box-shadow:0 18px 46px rgba(15,23,42,.18);margin:0}
 @media(max-width:980px){#importAnomalyDetailsV202{top:168px}}
 @media(max-width:620px){#importAnomalyDetailsV202{top:196px;right:10px;width:calc(100vw - 20px);max-height:calc(100vh - 212px)}}
 
 
-/* V15.8 Backup / Restore operation lock */
+/* V15.9 Backup / Restore operation lock */
 #v158DataOperationShield{position:fixed;inset:0;z-index:2147483000;background:rgba(255,255,255,.72);backdrop-filter:blur(2px);display:flex;align-items:center;justify-content:center;padding:24px}
 #v158DataOperationShield[hidden]{display:none!important}
 .v158-data-operation-card{max-width:520px;width:min(92vw,520px);background:#fff;border:1px solid #d1d5db;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.18);padding:24px;text-align:center}
@@ -7952,3 +7952,20 @@ button, [role="button"]{touch-action:manipulation}
 .v158-data-operation-card span{display:block;font-size:15px;line-height:1.55;color:#4b5563}
 body.v158-data-operation-active{overflow:hidden}
 body.v158-data-operation-active .nav-btn[data-page]{pointer-events:none;opacity:.55}
+
+
+/* ================= Online Store V15.9 ================= */
+/* Top-right System Status must remain visible beside Recheck. */
+.admin-system-row-v29 #importAnomalyStatusButtonV202{display:inline-flex!important;visibility:visible!important;opacity:1!important;}
+.admin-system-row-v29{min-height:36px;}
+.system-status-summary-v157 .system-status-wide-v159{grid-column:1/-1;}
+.system-status-wide-v159 strong{overflow-wrap:anywhere;word-break:break-word;}
+/* Care Guide grows with content so normal template text does not need an inner scrollbar. */
+#contentTemplateCareV41{min-height:210px!important;overflow-y:hidden!important;resize:vertical;line-height:1.55;}
+/* Preserve icon + label layout even while Backup/Restore status text changes. */
+#onlineStoreBackupV12 .tool-action-icon,#onlineStoreRestoreV12 .tool-action-icon{display:block!important;font-size:30px;line-height:1;}
+@media(max-width:620px){
+  .admin-system-row-v29{grid-template-columns:minmax(0,1fr) auto!important;}
+  .admin-system-row-v29 #importAnomalyStatusButtonV202,.admin-system-row-v29 #refreshImportAnomalyV201{width:100%;}
+  #contentTemplateCareV41{min-height:240px!important;}
+}
