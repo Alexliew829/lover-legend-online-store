@@ -1,4 +1,9 @@
-Online Store V16.1
+Online Store V16.2
+- Fixed Supabase Project URL typo: ccnxfbwszyqwwdzkthxz.supabase.co
+- Restored the full publishable key (V16.1 key was truncated).
+- Kept the V16.1 Clean Zero-Login Sync architecture and diagnostics unchanged.
+- Frontend only; no backend schema/SQL changes.
+
 - Cleaned the Cloud Sync controller: removed legacy per-device key override and obsolete V15.4/V15.5/V15.6 auto-check aliases; one fixed deployment URL/key/store now owns the connection.
 - Network GET checks retry once only for transient fetch failures; POST writes are never blindly retried.
 - Added staged network diagnostics: Browser Online, Supabase host reachability, CORS/API reachability, request stage and attempt count.

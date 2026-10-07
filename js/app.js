@@ -19934,7 +19934,7 @@ function setupOnlineStoreAdminV27(){
   if(!window.ONLINE_STORE_V44_ACTIVE) document.querySelectorAll('.nav-btn[data-page="onlineStorePage"]').forEach(btn=>btn.addEventListener("click",()=>setTimeout(()=>{renderOnlineStoreProductListV10();},0)));
   updateShopPerformanceV27();
 }
-// ================= Online Store V16.1 Backup / Restore Safety =================
+// ================= Online Store V16.2 Backup / Restore Safety =================
 
 function v159SetToolActionLabel(button,label){
   if(!button)return;
@@ -19942,9 +19942,9 @@ function v159SetToolActionLabel(button,label){
   if(text)text.textContent=String(label||'');else button.textContent=String(label||'');
 }
 function v159GetLiveOnlineStoreVersion(){
-  const raw=String(document.querySelector('.sidebar-version-v27')?.textContent||document.getElementById('systemInfoVersionV203')?.textContent||'V16.1');
+  const raw=String(document.querySelector('.sidebar-version-v27')?.textContent||document.getElementById('systemInfoVersionV203')?.textContent||'V16.2');
   const match=raw.match(/V?(\d+\.\d+)/i);
-  return match?.[1]||'16.1';
+  return match?.[1]||'16.2';
 }
 let v158DataOperationState={active:false,title:'',detail:'',button:null};
 function v158DataOperationActive(){return Boolean(v158DataOperationState.active);}
@@ -22323,8 +22323,8 @@ function v43SetupRuleEvents(){
 }
 
 function v43RefreshStaticLabels(){
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
   const floor=document.getElementById('onlineStorePriceFloorV21')?.closest('label');if(floor){floor.childNodes[0].nodeValue='Online \u9500\u552e\u4fdd\u62a4\u5e95\u7ebf (RM)';const sm=floor.querySelector('small');if(sm)sm.textContent='\u81ea\u52a8\uff1aImport \u5e73\u5747\u6210\u672c + Online \u82b1\u76c6 + \u7269\u6d41 + \u5305\u88c5\uff0c\u518d\u6309 Affiliate\u3001Payment Fee \u4e0e\u76ee\u6807\u51c0\u5229\u7387\u53cd\u63a8\u3002';}
 }
 function v43Setup(){v43BuildAutoMinPanel();v43BuildShippingSettings();v43BuildFinanceSettings();v43BuildAffiliateSettings();v43BuildSettingsControl();v43EnsureMasterWeight();v43RefreshStaticLabels();v43SetupRuleEvents();}
@@ -22521,10 +22521,10 @@ window.refreshOnlineImportReadOnlyFieldsV21=function(){
 };
 
 function v44RefreshLabels(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
 }
 function v44Setup(){v44InstallBackButtons();v44CleanCareGuide();v44RefreshLabels();try{if(onlineStoreSelectedProductIdV10)updateOnlineProtectionFloorV21();}catch(_){} }
 window.addEventListener('DOMContentLoaded',()=>window.setTimeout(v44Setup,180));
@@ -22747,10 +22747,10 @@ function v46SetupHistoryCleanup(){
 }
 
 function v46RefreshStaticUi(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
   v46NormalizeMoneyFields();v46RefreshRemoveRoomButton();
 }
 function v46Setup(){v46RunOneTimeHistoryMigration();v46SetupHistoryCleanup();v46RefreshStaticUi();}
@@ -22903,7 +22903,7 @@ function v47PolishOverview(){
   document.querySelectorAll('#productCategoryHubV32 [data-product-category-v32]').forEach(b=>b.classList.remove('active'));
 }
 function v47RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
 }
 function v47Setup(){v47RefreshStatic();v47PolishOverview();v47ReflowProductEditor();v47PolishRemoveRoom();try{v47UpdateProfitDisplays();}catch(_){}}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v47Setup,70));
@@ -22923,11 +22923,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){v47SetEd
 window.ONLINE_STORE_V48_ACTIVE = true;
 
 function v48RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 // Older delayed setup callbacks must not paint an older version after V5.0.
 try{v43RefreshStaticLabels=v48RefreshStatic;}catch(_){}
@@ -23141,11 +23141,11 @@ navigateToProductManagementV46=navigateToProductManagementV48;
 window.ONLINE_STORE_V49_ACTIVE = true;
 
 function v49RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 try{v48RefreshStatic=v49RefreshStatic;}catch(_){}
 try{v47RefreshStatic=v49RefreshStatic;}catch(_){}
@@ -23337,11 +23337,11 @@ let v50Saving = false;
 let v50Dirty = false;
 
 function v50RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 
 // ---------- V5.0 single Dirty Controller ----------
@@ -23536,11 +23536,11 @@ window.addEventListener('DOMContentLoaded',()=>setTimeout(v50Setup,80));
 window.ONLINE_STORE_V51_ACTIVE = true;
 
 function v51RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 
 // Online Store owns the shipping commercial rule. Default is buyer-pays.
@@ -23902,10 +23902,10 @@ document.addEventListener('keydown',function(e){
 },true);
 
 function v55RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{v55RefreshStatic();v55PrepareChildCopyTargets();if(onlineStoreAllTreesModeV38)v55EnhanceAllTrees();},80));
 window.addEventListener('load',()=>setTimeout(v55RefreshStatic,560));
@@ -24026,10 +24026,10 @@ function v57AttachLineClearToWorkingSettings(){
   try{v56SetupLineClear();v56LcLoadSender();v56LineClearCalculate();}catch(_){}
 }
 function v57RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{v57AttachLineClearToWorkingSettings();v57RefreshStatic();},260));
 window.addEventListener('load',()=>setTimeout(()=>{v57AttachLineClearToWorkingSettings();v57RefreshStatic();},680));
@@ -24180,11 +24180,11 @@ document.addEventListener('input',function(e){
 },true);
 
 function v60RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v60PerformanceCleanup(){
   // V6.4 integer-version cleanup: no new timers/observers/sync hooks are introduced.
@@ -24278,11 +24278,11 @@ document.addEventListener('pointerdown',function(e){
 },true);
 
 function v61RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v61Setup(){v61RefreshStatic();try{v60EnsureShippingOverrideUi();v60ApplyShippingUi();}catch(_){ }}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v61Setup,210));
@@ -24411,11 +24411,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v62RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v62Setup(){v62RefreshStatic();v62BindShippingInput();try{v60EnsureShippingOverrideUi();v60ApplyShippingUi();}catch(_){ }}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v62Setup,230));
@@ -24543,11 +24543,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v63RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v63Setup(){v63RefreshStatic();v63BindShippingInput();v63BindGeneralMoneyInputs(document);}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v63Setup,70));
@@ -24662,11 +24662,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v64RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v64Setup(){v64RefreshStatic();v64BindShippingInput();v64BindGeneralMoneyInputs(document);}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v64Setup,80));
@@ -24819,11 +24819,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v65RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v65Setup(){v65RefreshStatic();v65EnsureShippingInput();v65ApplyShippingUi();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v65Setup,520));
@@ -25024,11 +25024,11 @@ window.addEventListener('click',function(e){
 },true);
 
 function v66RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v66RefreshStatic,620));
 window.addEventListener('load',()=>setTimeout(v66RefreshStatic,1080));
@@ -25223,7 +25223,7 @@ renderStorePreviewV13=function(){
 };
 
 function v67RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v67Setup(){v67RefreshStatic();v67SetupFastSearch();const toggle=document.getElementById('onlineStoreVariationsEnabledV67');toggle?.addEventListener('change',()=>{onlineStoreRoomDirtyV16=true;v67ApplyVariationUi();updateOnlineStoreAllocationSummaryV10();});v67ApplyVariationUi();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v67Setup,1220));window.addEventListener('load',()=>setTimeout(v67RefreshStatic,1460));
@@ -25349,11 +25349,11 @@ collectOnlineStoreConfigFromEditorV10=function(){
 };
 
 function v68RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v68Setup(){v68RefreshStatic();v68BindMotherPrice();v68BindVariationToggle();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v68Setup,1500));
@@ -25567,11 +25567,11 @@ const setOnlineStoreEditorValuesV10BaseV69=setOnlineStoreEditorValuesV10;
 setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){const out=setOnlineStoreEditorValuesV10BaseV69(productId,preserveRoomV16);requestAnimationFrame(()=>{v69EnsureControls();v69BindVariationSwitch();});return out;};
 
 function v69RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v69Setup(){v69RefreshStatic();v69EnsureControls();v69BindVariationSwitch();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v69Setup,1560));window.addEventListener('load',()=>setTimeout(v69Setup,1780));
@@ -25844,11 +25844,11 @@ function v70BindFastRoomSearch(){
 }
 
 function v70RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v70Setup(){v70RefreshStatic();v70EnsureLocalProductUi();v70BindVariationSwitch();v70ApplyVariationUi();v70BindFastRoomSearch();}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v70Setup,1650));window.addEventListener('load',()=>setTimeout(v70Setup,1900));
@@ -26068,7 +26068,7 @@ function v71BindAddProductCapture(){if(window.__v71AddProductCaptureBound)return
 // Preview uses first photo and variation minimum price / total stock when variations are enabled.
 renderStorePreviewV13=function(){const grid=document.getElementById('storePreviewGridV13');if(!grid)return;const audience=String(document.getElementById('storePreviewAudienceV13')?.value||'normal'),state=getOnlineStoreStateV10(),cards=[];getProducts().filter(p=>!p?.inventoryArchived).forEach(product=>{const id=String(product?.id||'').trim().toUpperCase(),cfg=normalizeOnlineStoreConfigV10(id,state.products[id]),publicName=String(cfg.publicName||cleanOnlinePublicNameV36(product?.name||'')||product?.name||'');if(!v67VariationsEnabled(cfg)&&v69ParentPublished(cfg)&&cfg.motherRegularPrice>0){const vip=cfg.parentListingRoom==='vip';if(!vip||audience==='vip')cards.push({id,name:publicName,price:cfg.motherRegularPrice,photo:'',tier:v67RoomLabel(cfg.parentListingRoom),vip});}if(v67VariationsEnabled(cfg)){if(cfg.randomPublished&&cfg.randomQty>0&&cfg.regularPrice>0)cards.push({id,name:publicName,price:cfg.regularPrice,photo:cfg.randomPhotos?.[0]||'',tier:'入门首选 / Starter',vip:false});(cfg.uniqueItems||[]).filter(x=>x.published&&x.status!=='sold'&&x.variationParked!==true).forEach(item=>{const vip=item.accessZone==='vip';if(vip&&audience!=='vip')return;const price=Math.max(0,Number(item.regularPrice)||0)||(String(item.priceMode||'follow')==='follow'?Math.max(0,Number(cfg.motherRegularPrice)||0):0);if(price>0)cards.push({id:item.id,name:publicName,price,photo:(item.photos?.[0]||item.photo||''),tier:v67RoomLabel(v69RoomFromTier(item.tier)),vip});});}});v70LoadLocalProducts().filter(p=>p.published).forEach(p=>{const qty=p.variationsEnabled?p.variations.reduce((s,v)=>s+Math.max(0,Number(v.qty)||0),0):Math.max(0,Number(p.qty)||0);const prices=p.variationsEnabled?p.variations.map(v=>Number(v.price)||0).filter(x=>x>0):[Number(p.price)||0];if(qty<=0||!prices.length)return;cards.push({id:p.sku,name:p.name,price:Math.min(...prices),photo:p.photos?.[0]||'',tier:v70LocalCategoryLabel(p.category),vip:false});});const label=document.getElementById('storePreviewAudienceLabelV13');if(label)label.textContent=audience==='vip'?'贵宾厅 / VIP Room · 可浏览商品':'顾客商城 · 可浏览商品';grid.innerHTML=cards.map(x=>{const photo=x.photo?v37DisplayMediaUrl(x.photo):'';return `<article class="store-preview-product-v13">${photo?`<div class="v37-store-photo"><img src="${escapeHTML(photo)}" alt="" loading="lazy" decoding="async"/></div>`:'<div class="store-preview-placeholder-v13 v37-photo-fallback">暂无图片</div>'}<div class="store-preview-card-body-v13"><small>${escapeHTML(x.tier)}</small><strong>${escapeHTML(x.name)}</strong><div class="store-preview-price-v13"><b>RM ${formatOnlineMoneyInputV12(x.price)}</b></div></div></article>`;}).join('')||'<div class="empty-state">目前没有符合这个顾客身份的已上架商品。</div>';};
 
-function v71RefreshStatic(){document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';}
+function v71RefreshStatic(){document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';}
 function v71Setup(){v71RefreshStatic();v71RebuildLocalPanel();v71BindDelegated();v71BindAddProductCapture();try{v71ApplyImportVariationRules();}catch(_){};}
 window.addEventListener('DOMContentLoaded',()=>setTimeout(v71Setup,2150));window.addEventListener('load',()=>setTimeout(v71Setup,2350));
 
@@ -26161,8 +26161,8 @@ function v72BindLocalUx(){if(window.__v72LocalBound)return;window.__v72LocalBoun
 }
 
 function v72RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 function v72Setup(){v72RefreshStatic();v72EnhanceLocalPanel();v72BindLocalUx();try{v71ApplyImportVariationRules();}catch(_){}try{renderOnlineStoreProductListV10();}catch(_){};}
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v72Setup,2500);setTimeout(v72RefreshStatic,3600);});window.addEventListener('load',()=>{setTimeout(v72Setup,2750);setTimeout(v72RefreshStatic,4200);});
@@ -26322,11 +26322,11 @@ navigateToProductManagementV47=navigateToProductManagementV73;
 navigateToProductManagementV46=navigateToProductManagementV73;
 
 function v73RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 
 function v73Setup(){
@@ -26429,13 +26429,13 @@ v70EnsureLocalProductUi=function(){
 };
 
 function v74RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
   const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
   v74RemoveGlobalAddProduct();
 }
 
@@ -26637,11 +26637,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v75RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 function v75Setup(){v75RefreshStatic();v75BuildGlobalPromotion();v75NormalizePercentFields();try{v75EnsureShippingOverrideUi();v75RefreshPricing();}catch(_){}try{v74RemoveGlobalAddProduct?.();}catch(_){} }
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v75Setup,3400);setTimeout(v75RefreshStatic,5600);});window.addEventListener('load',()=>{setTimeout(v75Setup,3600);setTimeout(v75RefreshStatic,6000);});
@@ -26814,11 +26814,11 @@ setOnlineStoreEditorValuesV10=function(productId,preserveRoomV16=false){
 };
 
 function v76RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 function v76Setup(){
   v76RefreshStatic();v75BuildGlobalPromotion();
@@ -26970,11 +26970,11 @@ const renderOnlineRoomChooserV16BaseV77=renderOnlineRoomChooserV16;
 renderOnlineRoomChooserV16=function(){const out=renderOnlineRoomChooserV16BaseV77();v77EnsureCurrentRoomBadge();return out;};
 
 function v77RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 function v77Setup(){v77RefreshStatic();try{v43BuildAutoMinPanel();v77EnsureMarginFactoryReset();v77NormalizePercentInputs();}catch(_){}try{v76BuildShippingResponsibilitySetting();}catch(_){}try{v76ArrangePriceGrid();v77SettingsChanged('setup');v77EnsureCurrentRoomBadge();renderOnlineStorePhotoListV14();v77ValidatePriceCeiling(false);}catch(_){}}
 window.addEventListener('DOMContentLoaded',()=>{setTimeout(v77Setup,3900);setTimeout(v77RefreshStatic,6200);});
@@ -27101,12 +27101,12 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{if(e.target?.id==='v52AffiliateEnabled')setTimeout(()=>v78BroadcastSettingsChanged('affiliate-toggle'),0);},true);
 
 function v78RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 function v78Setup(){
   v78RefreshStatic();
@@ -27182,13 +27182,13 @@ document.addEventListener('click',e=>{
 },true);
 
 function v79RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
   const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 function v79Setup(){
   v79RefreshStatic();
@@ -27355,12 +27355,12 @@ v69SetPublished=function(next){
 };
 
 function v80RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('\u5f53\u524d\u7248\u672c'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 function v80Setup(){
   v80RefreshStatic();
@@ -27587,12 +27587,12 @@ if(!window.__v157CloudApplyRuntimeBound){
 }
 
 function v81RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 let v81SetupDone=false;
 function v81Setup(){
@@ -27771,11 +27771,11 @@ function v82Setup(){
   v82RefreshStatic();
 }
 function v82RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 }
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',v82Setup,{once:true});else v82Setup();
 window.addEventListener('load',v82RefreshStatic,{once:true});
@@ -27863,13 +27863,13 @@ function v100RemoveAutoMinimumProductTab(){
 }
 function v100FreezeVersionLabels(){
   const setText=(el,text)=>{if(el&&el.textContent!==text)el.textContent=text;};
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>setText(el,'Online Store V16.1'));
-  setText(document.querySelector('.online-store-version-v10'),'V16.1');
-  setText(document.getElementById('systemInfoVersionV203'),'V16.1');
-  setText(document.querySelector('#onlineStorePage .muted'),'Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only');
-  setText(document.querySelector('.brand-center small'),'Online Store V16.1 · Import Base V42.8 · Import Data Read-Only');
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>setText(el,'Online Store V16.2'));
+  setText(document.querySelector('.online-store-version-v10'),'V16.2');
+  setText(document.getElementById('systemInfoVersionV203'),'V16.2');
+  setText(document.querySelector('#onlineStorePage .muted'),'Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only');
+  setText(document.querySelector('.brand-center small'),'Online Store V16.2 · Import Base V42.8 · Import Data Read-Only');
   const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-  setText(assist?.querySelector('p'),'Online Store V16.1');
+  setText(assist?.querySelector('p'),'Online Store V16.2');
 }
 function v100FinalUiStabilize(){
   v100RemoveAutoMinimumProductTab();
@@ -28042,12 +28042,12 @@ document.addEventListener('click',e=>{
 },true);
 
 function v101RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 try{v82RefreshStatic=v101RefreshStatic;v81RefreshStatic=v101RefreshStatic;v80RefreshStatic=v101RefreshStatic;v79RefreshStatic=v101RefreshStatic;v78RefreshStatic=v101RefreshStatic;v77RefreshStatic=v101RefreshStatic;v76RefreshStatic=v101RefreshStatic;v75RefreshStatic=v101RefreshStatic;v74RefreshStatic=v101RefreshStatic;v73RefreshStatic=v101RefreshStatic;v72RefreshStatic=v101RefreshStatic;v71RefreshStatic=v101RefreshStatic;v70RefreshStatic=v101RefreshStatic;}catch(_){ }
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',()=>{v101ProductSnapshot(true);v101RefreshStatic();},{once:true});else{v101ProductSnapshot(true);v101RefreshStatic();}
@@ -28072,12 +28072,12 @@ function v104ArrangeFreightSettings(){
   if(lineClear.parentElement!==freight || lineClear.previousElementSibling!==actions) actions.after(lineClear);
 }
 function v104RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 function v104Setup(){v104RefreshStatic();v104ArrangeFreightSettings();}
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(v104Setup),{once:true});else requestAnimationFrame(v104Setup);
@@ -28192,12 +28192,12 @@ v46RemoveCurrentProductFromRoom=function(){
 };
 
 function v105RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.admin-brand-copy-v29 small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.admin-brand-copy-v29 small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 try{v104RefreshStatic=v105RefreshStatic;v101RefreshStatic=v105RefreshStatic;v82RefreshStatic=v105RefreshStatic;v81RefreshStatic=v105RefreshStatic;v80RefreshStatic=v105RefreshStatic;v79RefreshStatic=v105RefreshStatic;v78RefreshStatic=v105RefreshStatic;v77RefreshStatic=v105RefreshStatic;}catch(_){}
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(v105RefreshStatic),{once:true});else requestAnimationFrame(v105RefreshStatic);
@@ -28206,12 +28206,12 @@ window.addEventListener('load',()=>setTimeout(v105RefreshStatic,80),{once:true})
 // V10.7: V10.7 manual template Cloud/Backup/Restore development UI removed.
 // Formal cloud sync will return later as background automatic sync, not a page-level tool.
 function v107RefreshStatic(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-  const top=document.querySelector('.admin-brand-copy-v29 small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+  const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+  const top=document.querySelector('.admin-brand-copy-v29 small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+  const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 try{v105RefreshStatic=v107RefreshStatic;v104RefreshStatic=v107RefreshStatic;v101RefreshStatic=v107RefreshStatic;v82RefreshStatic=v107RefreshStatic;v81RefreshStatic=v107RefreshStatic;v80RefreshStatic=v107RefreshStatic;v79RefreshStatic=v107RefreshStatic;v78RefreshStatic=v107RefreshStatic;v77RefreshStatic=v107RefreshStatic;}catch(_){}
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',()=>{v107RefreshStatic();v107RenderLogicReference();},{once:true});else{v107RefreshStatic();v107RenderLogicReference();}
@@ -28269,7 +28269,7 @@ document.addEventListener('click',e=>{
 if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',()=>requestAnimationFrame(v107EnsureInitialPage),{once:true});else requestAnimationFrame(v107EnsureInitialPage);
 
 /* ============================================================================
-   Online Store V16.1 - CLEAN ROOM ARCHITECTURE BASELINE
+   Online Store V16.2 - CLEAN ROOM ARCHITECTURE BASELINE
    Purpose of this release:
    - remove the stacked V10.8/V10.9/V11.0/V11.1/V13.3 override chain
    - keep one canonical room model and one canonical version writer
@@ -28283,17 +28283,17 @@ if(document.readyState==='loading')window.addEventListener('DOMContentLoaded',()
 window.ONLINE_STORE_V113_ACTIVE=true;
 const V113_VERSION='12.6';
 const V113_BUILD='12600';
-const V113_PRODUCT_SUBTITLE='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-const V113_TOP_SUBTITLE='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+const V113_PRODUCT_SUBTITLE='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+const V113_TOP_SUBTITLE='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
 
 function v113Version(){
-  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
+  document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+  const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+  const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
   const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent=V113_PRODUCT_SUBTITLE;
   const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent=V113_TOP_SUBTITLE;
   const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+  const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
 }
 
 function v113ValidRoom(room){
@@ -28517,7 +28517,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 
 
 /* ============================================================================
-   Online Store V16.1 CLEAN - consolidated cleanup + one global target net margin
+   Online Store V16.2 CLEAN - consolidated cleanup + one global target net margin
    Base: V13.3 CLEAN PATCH
    Purpose:
    - keep Import as read-only Source of Truth
@@ -28627,7 +28627,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 
 
 /* ============================================================================
-   Online Store V16.1 - Room Editor Isolation + Independent Random Room
+   Online Store V16.2 - Room Editor Isolation + Independent Random Room
    Base: V12.4 CLEAN
    Scope:
    - ALL rooms: once a product is selected, hide overview search/results/list and show only editor
@@ -28647,13 +28647,13 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
   const int=v=>Math.max(0,Math.floor(n(v,0)));
 
   function refreshVersion(){
-    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-    const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+    const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
     const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
   }
 
   function editorOnly(on=true){
@@ -28856,7 +28856,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 
 
 /* ============================================================================
-   Online Store V16.1 - Bonsai Parent + Child Batch Listing Model
+   Online Store V16.2 - Bonsai Parent + Child Batch Listing Model
    Base: V12.5 CLEAN PATCH
    Confirmed business rules:
    - VIP / Premium / Starter mother product can be listed directly, fixed Qty = 1
@@ -28882,13 +28882,13 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
   const roomForTier=t=>t==='premium'?'premium':t==='collector'?'vip':'entry';
 
   function version(){
-    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-    const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+    const sys=document.getElementById('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
     const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
   }
 
   // ---- Child capacity: 10 current active Child per Premium / Starter room ----
@@ -29146,7 +29146,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 })();
 
 /* ============================================================================
-   Online Store V16.1 - CONSOLIDATED PRODUCT EDITOR
+   Online Store V16.2 - CONSOLIDATED PRODUCT EDITOR
    Cleaned from the stacked V14.3 completion / price-guard / editor-cleanup /
    Random-layout / canonical-layout patches.
    Rules:
@@ -29169,13 +29169,13 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
   const pct=n=>`${Number(n)>0?'+':''}${Number(n).toFixed(Number(n)%1?2:0)}%`;
 
   function writeVersion(){
-    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-    const sys=$('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+    const sys=$('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
     const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
   }
 
   function globalMargin(){
@@ -29581,7 +29581,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 
 
 /* ============================================================================
-   Online Store V16.1 - ACCESSORY PRODUCT CONSOLIDATION
+   Online Store V16.2 - ACCESSORY PRODUCT CONSOLIDATION
    - one category-specific Add CTA only; never leaks into bonsai rooms
    - local product editor has Back to Product Management, 1-8 display photos + 1 video
    - free Variant Name (size / color / model / capacity...), per-variation photo + stock/price/package/SKU
@@ -29748,7 +29748,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 
 
 /* ============================================================================
-   Online Store V16.1 - FINAL UX CONSOLIDATION
+   Online Store V16.2 - FINAL UX CONSOLIDATION
    - global Enter -> next editable field
    - accessory photo slots (1-8) + 1 video
    - one Variation editor only + Full Screen
@@ -29763,14 +29763,14 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
   const accessoryLabel=c=>typeof v70LocalCategoryLabel==='function'?v70LocalCategoryLabel(c):String(c||'其他');
 
   function writeVersionV148(){
-    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-    const sys=$('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-    document.querySelectorAll('.v107-logic-meta span').forEach(el=>{if(/Online Store V\d+/i.test(el.textContent||''))el.textContent='Online Store V16.1';});
+    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+    const sys=$('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+    document.querySelectorAll('.v107-logic-meta span').forEach(el=>{if(/Online Store V\d+/i.test(el.textContent||''))el.textContent='Online Store V16.2';});
     const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
   }
 
   // ---------- Accessory photo slots ----------
@@ -29871,7 +29871,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 
 
 /* ============================================================================
-   Online Store V16.1 - ROOT CAUSE STABILIZATION
+   Online Store V16.2 - ROOT CAUSE STABILIZATION
    - fixes lexical-global/window mismatch that broke margin long-press, accessory CTA,
      and live room shipping recalculation in V14.8
    - one room label + one draft/published state chip
@@ -29887,14 +29887,14 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
   const money=v=>{const n=Number(String(v??'').replace(/,/g,'').trim());return Number.isFinite(n)?n:0;};
 
   function writeVersionV149(){
-    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-    const sys=$('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
-    document.querySelectorAll('.v107-logic-meta span').forEach(el=>{if(/Online Store V\d+/i.test(el.textContent||''))el.textContent='Online Store V16.1';});
+    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+    const sys=$('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
+    document.querySelectorAll('.v107-logic-meta span').forEach(el=>{if(/Online Store V\d+/i.test(el.textContent||''))el.textContent='Online Store V16.2';});
     const assist=[...document.querySelectorAll('.admin-assist-v27 section')].find(s=>String(s.querySelector('strong')?.textContent||'').includes('当前版本'));
-    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.1';
+    const p=assist?.querySelector('p');if(p)p.textContent='Online Store V16.2';
   }
 
   // ---- Shipping: one source of truth = roomShippingModes ----
@@ -29970,7 +29970,7 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 
 
 /* ============================================================================
-   Online Store V16.1 - FINAL CONSOLIDATION
+   Online Store V16.2 - FINAL CONSOLIDATION
    - one long-press controller only (installed in consolidated editor above)
    - room labels are rendered directly, not post-wrapped
    - Enter moves to the next valid field after existing commit/validation handlers
@@ -29985,11 +29985,11 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
   const visible=el=>!!(el&&el.isConnected&&!el.hidden&&el.offsetParent!==null&&getComputedStyle(el).visibility!=='hidden');
 
   function writeVersion(){
-    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.1');
-    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.1';
-    const sys=$('systemInfoVersionV203');if(sys)sys.textContent='V16.1';
-    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.1 · V8.2 Business Logic Base · Import V42.8 Read-Only';
-    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.1 · Import Base V42.8 · Import Data Read-Only';
+    document.querySelectorAll('.sidebar-version-v27').forEach(el=>el.textContent='Online Store V16.2');
+    const ver=document.querySelector('.online-store-version-v10');if(ver)ver.textContent='V16.2';
+    const sys=$('systemInfoVersionV203');if(sys)sys.textContent='V16.2';
+    const head=document.querySelector('#onlineStorePage .muted');if(head)head.textContent='Online Store V16.2 · V8.2 Business Logic Base · Import V42.8 Read-Only';
+    const top=document.querySelector('.admin-brand-copy-v29 small,.brand-center small');if(top)top.textContent='Online Store V16.2 · Import Base V42.8 · Import Data Read-Only';
   }
 
   function applyFloorRiskColor(){
@@ -30036,13 +30036,13 @@ window.addEventListener('load',()=>requestAnimationFrame(v113Setup),{once:true})
 
 
 /* ================================================================
-   Online Store V16.1 - Cloud Sync Foundation
+   Online Store V16.2 - Cloud Sync Foundation
    - Online-owned data can sync through Supabase with revision conflict protection.
    - Import / Inventory remains read-only and is never included in Online cloud payloads.
    - Local cache remains first paint; first migration is explicit and protected by Backup.
    ================================================================ */
 
-// ================= Online Store V16.1 UI Safety / Care Guide =================
+// ================= Online Store V16.2 UI Safety / Care Guide =================
 function v159AutoGrowTemplateCare(){
   const el=document.getElementById('contentTemplateCareV41');
   if(!el)return;
