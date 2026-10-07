@@ -6809,9 +6809,6 @@ html.online-store-app-v25 .online-min-price-v13 { color:#0b68c9!important; }
 .admin-brand-copy-v29 small{display:block;margin-top:5px;font-size:11px;font-weight:700;color:#77857d}
 .admin-topbar-right-v29{width:410px;max-width:42%;display:flex;flex-direction:column;align-items:flex-end;gap:9px}
 .admin-system-row-v29{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;width:100%}
-.top-sync-status-v29{display:flex;align-items:center;gap:6px;min-height:36px;padding:0 10px;border:1px solid #cde5d7;border-radius:11px;background:#eff9f3;color:#17603d;white-space:nowrap}
-.top-sync-status-v29 .dashboard-sync-icon{font-size:14px;font-weight:900}.top-sync-status-v29 .dashboard-sync-text{font-size:12px}.top-sync-status-v29 small{font-size:10px;color:#6a7b71}.top-sync-status-v29 small b{color:#294c39;font-weight:800}
-.top-sync-status-v29.syncing{background:#fff8e7;border-color:#efd79b;color:#8c6614}.top-sync-status-v29.failed{background:#fff0f0;border-color:#efb7b7;color:#aa2424}.top-sync-status-v29.synced{background:#eef9f2;border-color:#bcdcc9;color:#17603d}
 .admin-system-row-v29 .import-anomaly-status-button-v202,.admin-system-row-v29 .import-anomaly-refresh-v202{height:36px;min-height:36px;border-radius:11px;padding:0 12px;font-size:12px}
 .admin-topbar-actions-v29{display:grid!important;grid-template-columns:repeat(3,minmax(92px,1fr));gap:7px!important;width:100%;justify-content:end!important}
 .admin-topbar-actions-v29 .top-action-v29{height:38px!important;min-height:38px!important;min-width:0!important;width:100%!important;padding:0 12px!important;border-radius:11px!important;font-size:12px!important;display:flex;align-items:center;justify-content:center}
@@ -6831,13 +6828,13 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
 #settingsPage .legacy-import-settings-v12{display:none!important}
 @media(max-width:1200px){.admin-topbar-v29{align-items:flex-start}.admin-brand-v29{grid-template-columns:52px minmax(0,1fr) 52px}.admin-brand-logo-v29{width:48px;height:48px}.admin-brand-copy-v29 .app-header-main-title{font-size:22px}.admin-topbar-right-v29{width:360px;max-width:45%}.order-status-strip-v29{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:980px){.admin-topbar-v29{flex-direction:column;gap:12px}.admin-brand-v29{width:100%}.admin-topbar-right-v29{width:100%;max-width:none;align-items:stretch}.admin-system-row-v29{justify-content:flex-start}.admin-topbar-actions-v29{grid-template-columns:repeat(3,minmax(0,1fr))}.admin-brand-copy-v29 .app-header-brand{font-size:17px}.admin-brand-copy-v29 .app-header-main-title{font-size:22px}}
-@media(max-width:620px){.admin-brand-v29{grid-template-columns:44px minmax(0,1fr) 44px;gap:8px}.admin-brand-logo-v29{width:42px;height:42px}.admin-brand-copy-v29 .app-header-brand{font-size:15px}.admin-brand-copy-v29 .app-header-main-title{font-size:19px}.admin-brand-copy-v29 .app-header-subtitle{font-size:11px}.admin-brand-copy-v29 small{font-size:9px}.admin-system-row-v29{display:grid;grid-template-columns:1fr 1fr}.top-sync-status-v29{grid-column:1/-1;justify-content:center}.admin-topbar-actions-v29{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-topbar-actions-v29 .store-preview-shortcut-v27{display:flex!important;grid-column:1/-1}.order-status-strip-v29{grid-template-columns:repeat(2,minmax(0,1fr))}.holiday-grid-v29{grid-template-columns:1fr}.holiday-message-v29{grid-column:auto}.aftersales-placeholder-v29{align-items:flex-start;flex-direction:column}}
+@media(max-width:620px){.admin-brand-v29{grid-template-columns:44px minmax(0,1fr) 44px;gap:8px}.admin-brand-logo-v29{width:42px;height:42px}.admin-brand-copy-v29 .app-header-brand{font-size:15px}.admin-brand-copy-v29 .app-header-main-title{font-size:19px}.admin-brand-copy-v29 .app-header-subtitle{font-size:11px}.admin-brand-copy-v29 small{font-size:9px}.admin-system-row-v29{display:grid;grid-template-columns:auto minmax(70px,auto) auto;align-items:center}.admin-topbar-actions-v29{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-topbar-actions-v29 .store-preview-shortcut-v27{display:flex!important;grid-column:1/-1}.order-status-strip-v29{grid-template-columns:repeat(2,minmax(0,1fr))}.holiday-grid-v29{grid-template-columns:1fr}.holiday-message-v29{grid-column:auto}.aftersales-placeholder-v29{align-items:flex-start;flex-direction:column}}
 
 /* ===== Online Store V3.0 · Seller Center information architecture ===== */
 .admin-topbar-v29{min-height:108px;padding-top:10px;padding-bottom:10px}
 .admin-brand-v29{align-items:start}.admin-brand-logo-v29{margin-top:2px}.admin-brand-copy-v29{padding-top:0}
 .admin-brand-copy-v29 .app-header-brand{font-size:20px}.admin-brand-copy-v29 .app-header-main-title{font-size:27px}
-.admin-system-row-v29{flex-wrap:nowrap}.admin-system-row-v29>*{flex:0 0 auto}.top-sync-status-v29{max-width:none}
+.admin-system-row-v29{flex-wrap:nowrap}.admin-system-row-v29>*{flex:0 0 auto}
 .module-tabs-v30{display:flex;align-items:center;gap:4px;border-bottom:1px solid #dfe7e2;margin:0 0 16px;overflow-x:auto;scrollbar-width:thin}
 .module-tabs-v30 button{border:0;background:transparent;padding:10px 12px 9px;font-weight:800;color:#66776d;white-space:nowrap;border-bottom:3px solid transparent;cursor:pointer}
 .module-tabs-v30 button.active{color:#11683f;border-bottom-color:#1b9460}.module-tabs-v30 button:disabled{cursor:default;color:#a8b1ac}.module-tabs-v30 small{font-size:9px;font-weight:700}
@@ -7570,7 +7567,7 @@ button.is-busy-v29{pointer-events:none;opacity:.72}button.is-success-v29{backgro
   .admin-layout-v27>.admin-assist-v27{grid-area:assist!important;align-self:start!important;}
 }
 @media(max-width:1220px) and (min-width:1001px){.admin-layout-v27{grid-template-columns:190px minmax(0,1fr)!important;grid-template-areas:"sidebar header" "sidebar content"!important}.admin-assist-v27{display:none!important}}
-@media(min-width:1221px){.admin-assist-v27{display:flex!important}body:not(.v110-home-active) .admin-assist-v27 .assist-system-status-v110{display:none!important}}
+@media(min-width:1221px){.admin-assist-v27{display:flex!important}}
 html:not(.v113-ui-ready) .admin-sidebar-v27{visibility:hidden;}
 
 /* Four independent rooms. The editor no longer exposes room-to-room transfer controls. */
@@ -7969,3 +7966,9 @@ body.v158-data-operation-active .nav-btn[data-page]{pointer-events:none;opacity:
   .admin-system-row-v29 #importAnomalyStatusButtonV202,.admin-system-row-v29 #refreshImportAnomalyV201{width:100%;}
   #contentTemplateCareV41{min-height:240px!important;}
 }
+
+/* V16.1 clean global sync status */
+.global-sync-status-v161{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:800;white-space:nowrap;border:1px solid #e5d39e;background:#fff8e8;color:#8a6512}
+.global-sync-status-v161.synced{border-color:#b9ddc8;background:#eef9f2;color:#17603d}
+.global-sync-status-v161.syncing{border-color:#e5d39e;background:#fff8e8;color:#8a6512}
+@media(max-width:620px){.global-sync-status-v161{min-height:32px;padding:0 7px;font-size:11px}.admin-system-row-v29 #importAnomalyStatusButtonV202,.admin-system-row-v29 #refreshImportAnomalyV201{width:auto!important}}

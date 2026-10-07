@@ -1,3 +1,14 @@
+Online Store V16.1
+- Cleaned the Cloud Sync controller: removed legacy per-device key override and obsolete V15.4/V15.5/V15.6 auto-check aliases; one fixed deployment URL/key/store now owns the connection.
+- Network GET checks retry once only for transient fetch failures; POST writes are never blindly retried.
+- Added staged network diagnostics: Browser Online, Supabase host reachability, CORS/API reachability, request stage and attempt count.
+- Failed-to-fetch now distinguishes host/DNS/project failure from host-reachable CORS/API failure.
+- Global header sync state is aggregated: only when Online Cloud and Import Read-Only Mirror are both confirmed healthy with no dirty/conflict/error does it show “已同步”; otherwise it shows “同步中”.
+- System Status dot now turns red for Online Cloud/Import critical sync failures instead of remaining yellow while Cloud is broken.
+- Removed dead legacy top-sync CSS and the removed Dashboard system-status assist hook.
+- Preserved V16.0 template deletion/tombstone safety, V15.8 Backup/Restore safety, pricing, room shipping, long-press margin and Enter behavior.
+- Backend schema unchanged; no SQL rerun required.
+
 Online Store V16.0
 - Critical data fix: legacy bonsai content template recovery is now a one-time migration only.
 - Existing V41 template stores are treated as authoritative; reopening the site can no longer resurrect a user-deleted template from legacy local data.
