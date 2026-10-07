@@ -1,3 +1,13 @@
+Online Store V15.0
+- Consolidated profit-margin editing to one long-press controller; removed superseded V14.x long-press listeners/classes and duplicate room-label wrapper.
+- Margin dialog adds Restore Default (current global target margin), keeps per-product/per-room override isolation, and left-aligns the editable rate.
+- Negative target margin paints Online Sales Protection Floor red; non-negative protection floor remains blue.
+- Room cards render a direct black VIP/Premium/Starter/Random label plus separate green draft / blue published state.
+- Mother default price remains mandatory in all four bonsai rooms.
+- Seller-paid shipping persists in roomShippingModes and immediately recalculates total cost, protection floor, net profit and margin.
+- Restored one global Enter-to-next controller after field commit/validation.
+- Preserved compact 1-8 accessory photo slots, one video, single Variation editor, Full Screen list, delete workflow, dynamic Add CTA and L-W-H-Weight order.
+
 Online Store V14.9
 - Root-cause fix: V14.8 incorrectly accessed top-level let state through window.*, causing margin long-press, accessory Add CTA, and live room shipping recalculation to see empty state.
 - Profit-margin long-press now uses the actual lexical current product/room and opens after a 650ms hold.
