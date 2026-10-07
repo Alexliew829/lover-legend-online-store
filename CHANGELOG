@@ -1,3 +1,13 @@
+Online Store V15.1
+- Added Online Cloud Sync Foundation for cross-device Online Store data using Supabase Auth + RLS.
+- Online-owned data only: product/room state, Online UI/pricing settings, history, bonsai templates, Holiday Mode, and Online Local Products. Import inventory/average cost/minimum price remain read-only and are never uploaded.
+- Added explicit first migration with automatic local Backup before first upload/download; empty Cloud never auto-overwrites local data.
+- Added monotonic Cloud revision conflict protection through the online_store_sync_push RPC. Conflicting revisions are blocked instead of overwritten.
+- Added Local Cache first paint, debounced save push, and lightweight revision checks on startup/focus/visibility/online; no high-frequency polling.
+- Added Settings Cloud panel for Project URL, Anon Key, Store ID, Auth login, Cloud check, first upload, download, manual sync, logout, revision and last-sync status.
+- Expanded Online Store Backup/Restore to include templates, Holiday Mode and Online Local Products.
+- Added Backend/supabase_v151.sql required to create the protected Cloud table, RLS policies and revision-safe RPC.
+
 Online Store V15.0
 - Consolidated profit-margin editing to one long-press controller; removed superseded V14.x long-press listeners/classes and duplicate room-label wrapper.
 - Margin dialog adds Restore Default (current global target margin), keeps per-product/per-room override isolation, and left-aligns the editable rate.
