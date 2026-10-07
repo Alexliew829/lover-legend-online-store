@@ -1,14 +1,14 @@
-const CACHE = "lover-legend-online-store-v15-4-auto-sync-r1-import42-8-readonly";
+const CACHE = "lover-legend-online-store-v15-5-zero-login-r1-import42-8-readonly";
 const SCOPE_PATH = "/lover-legend-online-store/";
 const CORE = [
   "./",
-  "./index.html?v=v15-4-auto-sync-r1",
-  "./css/style.css?v=v15-4-auto-sync-r1",
-  "./js/common.js?v=v15-4-auto-sync-r1",
-  "./js/sync.js?v=v15-4-auto-sync-r1",
-  "./js/app.js?v=v15-4-auto-sync-r1",
-  "./js/cloud-sync-v154.js?v=v15-4-auto-sync-r1",
-  "./manifest.json?v=v15-4-auto-sync-r1",
+  "./index.html?v=v15-5-zero-login-r1",
+  "./css/style.css?v=v15-5-zero-login-r1",
+  "./js/common.js?v=v15-5-zero-login-r1",
+  "./js/sync.js?v=v15-5-zero-login-r1",
+  "./js/app.js?v=v15-5-zero-login-r1",
+  "./js/cloud-sync-v155.js?v=v15-5-zero-login-r1",
+  "./manifest.json?v=v15-5-zero-login-r1",
   "./assets/images/logo-green.jpg",
   "./assets/images/logo-red.jpg",
   "./assets/icons/online-store-orange-v15.ico",
@@ -50,11 +50,11 @@ self.addEventListener("fetch", event => {
         .then(response => {
           if (response && response.ok) {
             const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put("./index.html?v=v15-4-auto-sync-r1", copy));
+            caches.open(CACHE).then(cache => cache.put("./index.html?v=v15-5-zero-login-r1", copy));
           }
           return response;
         })
-        .catch(async () => (await caches.match("./index.html?v=v15-4-auto-sync-r1")) || (await caches.match("./index.html")))
+        .catch(async () => (await caches.match("./index.html?v=v15-5-zero-login-r1")) || (await caches.match("./index.html")))
     );
     return;
   }
