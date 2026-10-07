@@ -7897,3 +7897,14 @@ button, [role="button"]{touch-action:manipulation}
 .v152-cloud-note{display:block;margin-top:12px;padding:10px 12px;border-radius:12px;background:#f7faf8;line-height:1.55}
 @media(max-width:980px){.v152-cloud-row-auth{grid-template-columns:1fr 1fr}.v152-cloud-row-auth .v152-cloud-field:last-child{grid-column:1/-1}.v151-cloud-actions,.v152-cloud-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.v152-cloud-row-main,.v152-cloud-row-auth{grid-template-columns:1fr}.v152-cloud-row-auth .v152-cloud-field:last-child{grid-column:auto}.v152-cloud-meta-bar{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v152-cloud-meta-divider{display:none}.v152-cloud-meta-item{display:grid;grid-template-columns:1fr;gap:4px}.v151-cloud-actions,.v152-cloud-actions{grid-template-columns:1fr}.v151-cloud-actions .primary-btn,.v151-cloud-actions .secondary-btn,.v151-cloud-actions .danger-outline-btn{width:100%}}
+
+
+/* V15.3 — Supabase Password Recovery */
+.v153-reset-password-link{border:0;background:transparent;color:#176b3d;padding:0;margin-left:4px;font:inherit;font-weight:800;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.v153-reset-password-link:hover{color:#0f5430}
+.v153-recovery-open{overflow:hidden!important}
+.v153-recovery-overlay{position:fixed;inset:0;z-index:100200;background:rgba(15,31,23,.42);display:flex;align-items:center;justify-content:center;padding:18px}
+.v153-recovery-dialog{width:min(500px,100%);background:#fff;border:1px solid #d6e4db;border-radius:18px;box-shadow:0 28px 80px rgba(0,0,0,.24);padding:20px}
+.v153-recovery-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:12px}.v153-recovery-head>div{display:grid;gap:3px}.v153-recovery-head strong{font-size:21px;color:#173f2b}.v153-recovery-head small{color:#6e7e75;font-size:12px}.v153-recovery-x{border:0;background:#eef5f0;border-radius:10px;width:36px;height:36px;font-size:23px;line-height:1;cursor:pointer;color:#294b39}
+.v153-recovery-dialog p{margin:0 0 14px;color:#51645a;line-height:1.55}.v153-recovery-dialog label{display:grid;gap:7px;margin-top:11px;color:#294b39;font-weight:800}.v153-recovery-dialog input{width:100%;box-sizing:border-box;text-align:left!important;font-size:16px;padding:12px 13px;border:1px solid #bcd1c4;border-radius:11px}.v153-recovery-error{margin-top:11px;padding:10px 12px;border:1px solid #e5b0b0;border-radius:10px;background:#fff1f1;color:#a22323;font-weight:800}.v153-recovery-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}.v153-recovery-actions button{min-width:120px;min-height:43px}.v153-recovery-confirm{width:auto!important}.v153-recovery-cancel{width:auto!important}
+@media(max-width:560px){.v153-recovery-dialog{padding:16px}.v153-recovery-actions{display:grid;grid-template-columns:1fr}.v153-recovery-actions button{width:100%!important}}

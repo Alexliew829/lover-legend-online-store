@@ -1,3 +1,11 @@
+Online Store V15.3
+- Added Supabase Password Recovery handling for reset-email links.
+- Added in-app new-password / confirm-password dialog and secure update flow.
+- Added “忘记密码 / Reset” action beside Cloud Password to send a fresh recovery email.
+- Recovery errors such as expired/invalid links are shown clearly instead of silently loading the home page.
+- Password update does not change the Online Store data schema; Backend/supabase_v151.sql does not need to be rerun.
+- Updated visible/runtime/cache/version markers to V15.3 / build 15300.
+
 Online Store V15.2
 - Redesigned Online Cloud Sync panel: Project URL + Publishable/Anon Key share one wide row; Store ID + Email + Password share the next row; compact revision/last-sync status and cleaner action buttons.
 - Project URL and Publishable/Anon Key are no longer squeezed into narrow fields; no redundant copy buttons were added. Publishable/Anon Key is displayed as plain text because it is a browser-safe public key, while Cloud Password remains masked and unsaved.

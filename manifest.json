@@ -1,7 +1,7 @@
 {
   "name": "线上商店管理系统",
   "short_name": "Online Store",
-  "description": "Lover Legend Gardening · Online Store Management Admin V15.2 · V8.2 Business Logic Base · Import V42.8 Read-Only · Cloud Sync",
+  "description": "Lover Legend Gardening · Online Store Management Admin V15.3 · V8.2 Business Logic Base · Import V42.8 Read-Only · Cloud Sync",
   "start_url": "/lover-legend-online-store/?v=15.2",
   "scope": "/lover-legend-online-store/",
   "display": "standalone",
