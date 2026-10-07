@@ -1,3 +1,11 @@
+Online Store V15.4
+- Automatic cross-device Cloud Sync after the first migration: startup, page focus/visibility return, network reconnect, pageshow, and a lightweight 60-second revision check.
+- Saves continue to mark local data dirty and automatically push after a 0.9-second debounce; no manual sync is needed in normal daily use.
+- Added lightweight revision-only checks so background monitoring does not download the full Cloud payload unless the revision changed.
+- Existing devices restore Supabase sessions from the saved refresh token and check Cloud automatically without re-entering the password each time.
+- A clean new device, after one-time Cloud login, automatically downloads the existing Cloud baseline when no meaningful local Online Store data exists; if local data already exists, V15.4 refuses automatic overwrite and asks for a manual choice.
+- Preserved revision conflict protection, local-first display, Import read-only boundary, first-migration safeguards, manual maintenance buttons, and V15.3 password recovery.
+
 Online Store V15.3
 - Added Supabase Password Recovery handling for reset-email links.
 - Added in-app new-password / confirm-password dialog and secure update flow.
