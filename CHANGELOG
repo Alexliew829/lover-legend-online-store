@@ -1,3 +1,22 @@
+Online Store V15.8
+- Backup now includes and validates bonsai content templates as first-class disaster-recovery data.
+- Backup payload carries integrity counts for products, templates, history and local/accessory products; mismatches stop the operation.
+- Backup filename now includes the live version: Lover_Legend_Online_Store_Backup_V15.8_DD-MM-YYYY.json.
+- Restore invalidates v81TemplateCache / v81TemplateIndex / v81TemplateSignature and immediately refreshes template/product/accessory/current editor runtime state.
+- Backup / Restore shows an operation lock screen, disables page navigation, blocks F5/Ctrl+R, and uses beforeunload protection until success/failure.
+- Backup/Restore status buttons now show Backup 中 / Backup 成功 / Restore 中 / Restore 成功.
+- Import inventory, average cost and Import minimum price remain read-only and excluded from Online Store Backup.
+- Backend schema unchanged; no SQL rerun required.
+
+Lover Legend Online Store V15.7
+- Cloud diagnostics: preserve real HTTP/Supabase/RLS/permission/key/network errors and prevent renderStatus from overwriting lastError.
+- Mobile pull-to-refresh: show "Cloud 没有新资料" when revision is unchanged and show full error detail on failure.
+- Cloud Apply: consolidate to one runtime refresh path; invalidate template runtime cache once and repaint dependent views once.
+- Header: remove ambiguous top "已同步 + 最后同步" widget; keep compact 系统状态 + 重新检查.
+- Dashboard: remove standalone 系统状态 card.
+- 系统状态 details now show Online Cloud, Revision, Cloud last sync, Import Read-Only Mirror, Import last check, and error detail.
+- Backend schema unchanged; no SQL rerun required.
+
 V15.6
 - Fixed Cloud apply runtime refresh: invalidates Bonsai Content Template cache/index/signature before repaint.
 - Mobile pull-down refresh triggers a safe Cloud revision check without full-page reload.
