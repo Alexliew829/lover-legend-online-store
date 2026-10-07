@@ -1,3 +1,10 @@
+Online Store V15.2
+- Redesigned Online Cloud Sync panel: Project URL + Publishable/Anon Key share one wide row; Store ID + Email + Password share the next row; compact revision/last-sync status and cleaner action buttons.
+- Project URL and Publishable/Anon Key are no longer squeezed into narrow fields; no redundant copy buttons were added. Publishable/Anon Key is displayed as plain text because it is a browser-safe public key, while Cloud Password remains masked and unsaved.
+- Fixed Supabase Auth diagnostics: a failed login now preserves and displays the real Supabase error instead of immediately reverting to “Cloud 已配置 · 尚未登录”.
+- Existing V15.1 cloud table/RLS/RPC schema remains compatible; Backend/supabase_v151.sql does not need to be rerun solely for this UI/auth-diagnostic update.
+- Updated visible/runtime/cache/version markers to V15.2 / build 15200.
+
 Online Store V15.1
 - Added Online Cloud Sync Foundation for cross-device Online Store data using Supabase Auth + RLS.
 - Online-owned data only: product/room state, Online UI/pricing settings, history, bonsai templates, Holiday Mode, and Online Local Products. Import inventory/average cost/minimum price remain read-only and are never uploaded.
