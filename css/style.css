@@ -7901,7 +7901,7 @@ button, [role="button"]{touch-action:manipulation}
 
 /* V15.3 — Supabase Password Recovery */
 
-/* V15.5 — zero-login cloud sync status/maintenance UI. */
+/* V15.6 — zero-login cloud sync status/maintenance UI. */
 .v155-cloud-panel{background:linear-gradient(180deg,#ffffff 0%,#fbfefc 100%)}
 .v155-cloud-built-in{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0 0 14px}
 .v155-cloud-built-in>div{display:grid;gap:4px;padding:12px 14px;border:1px solid #d9e9df;border-radius:13px;background:#f7fbf8;min-width:0}
@@ -7911,3 +7911,21 @@ button, [role="button"]{touch-action:manipulation}
 .v155-cloud-migration-note{display:block;margin-top:9px;padding:10px 12px;border:1px solid #ead39f;border-radius:12px;background:#fff9eb;color:#71551b;line-height:1.5}
 @media(max-width:980px){.v155-cloud-built-in{grid-template-columns:1fr 1fr}.v155-cloud-built-in>div:last-child{grid-column:1/-1}.v155-cloud-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.v155-cloud-built-in,.v155-cloud-actions{grid-template-columns:1fr}.v155-cloud-built-in>div:last-child{grid-column:auto}}
+
+
+/* V15.6 — mobile pull-to-refresh for Online Cloud. */
+.v156-pull-refresh-indicator{
+  position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));z-index:99999;
+  display:flex;align-items:center;gap:8px;max-width:calc(100vw - 32px);
+  padding:9px 14px;border:1px solid #b9dfc8;border-radius:999px;
+  background:rgba(247,252,249,.97);box-shadow:0 8px 22px rgba(18,70,42,.15);
+  color:#14613b;font-size:13px;font-weight:800;line-height:1;
+  opacity:0;pointer-events:none;transform:translate(-50%,-56px);transition:opacity .16s ease,transform .16s ease;
+}
+.v156-pull-refresh-indicator.show{opacity:1;transform:translate(-50%,min(34px,var(--pull-distance,34px)));}
+.v156-pull-refresh-indicator[data-state="ready"]{border-color:#6fbd8c;background:#eef9f2;}
+.v156-pull-refresh-indicator[data-state="busy"] .v156-pull-refresh-icon{animation:v156-cloud-spin .8s linear infinite;}
+.v156-pull-refresh-indicator[data-state="ok"]{border-color:#59a977;background:#e9f8ef;color:#0b6a3c;}
+.v156-pull-refresh-indicator[data-state="error"]{border-color:#e49a9a;background:#fff2f2;color:#a51d1d;}
+@keyframes v156-cloud-spin{to{transform:rotate(360deg)}}
+@media (pointer:fine){.v156-pull-refresh-indicator{display:none!important}}

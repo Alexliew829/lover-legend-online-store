@@ -1,11 +1,17 @@
-Online Store V15.5
+V15.6
+- Fixed Cloud apply runtime refresh: invalidates Bonsai Content Template cache/index/signature before repaint.
+- Mobile pull-down refresh triggers a safe Cloud revision check without full-page reload.
+- Pull refresh shows checking/synced/failed status and preserves normal automatic sync.
+- No Supabase schema change; V15.5 zero-login SQL remains valid.
+
+Online Store V15.6
 - Zero-login Cloud Sync: fixed Supabase Project URL / Publishable Key / Store ID are built into the deployment; new devices no longer enter Cloud settings or Auth email/password.
-- New devices automatically read Cloud Revision and apply the Cloud master snapshot; if old local Online Store data exists, V15.5 keeps an automatic local safety snapshot before applying Cloud.
+- New devices automatically read Cloud Revision and apply the Cloud master snapshot; if old local Online Store data exists, V15.6 keeps an automatic local safety snapshot before applying Cloud.
 - Existing devices keep Local Cache first, 60-second lightweight revision checks, focus/visibility/network checks, 0.9-second save debounce, and revision conflict protection.
 - Bonsai Content Templates remain part of the Cloud payload and save actions continue to mark Cloud dirty for automatic upload.
 - Cloud settings UI simplified to status + revision + maintenance controls only.
 - Added Backend/supabase_v155_zero_login.sql migration: anon may SELECT only lover-legend-main and may write only through the revision-safe RPC; direct anon table writes stay revoked.
-- Version/build updated to V15.5 / 15500.
+- Version/build updated to V15.6 / 15600.
 
 Online Store V15.4
 - Automatic cross-device Cloud Sync after the first migration: startup, page focus/visibility return, network reconnect, pageshow, and a lightweight 60-second revision check.
