@@ -1,3 +1,10 @@
+Online Store V16.0
+- Critical data fix: legacy bonsai content template recovery is now a one-time migration only.
+- Existing V41 template stores are treated as authoritative; reopening the site can no longer resurrect a user-deleted template from legacy local data.
+- Template deletion now records a tombstone, clears matching product template references, and purges matching legacy template entries without deleting products.
+- Backup/Restore now carries template migration/tombstone metadata so deleted templates remain deleted after disaster recovery.
+- Preserves V15.9 system status, Cloud network diagnostics, Backup/Restore safety lock, icons, and Care Guide auto-height.
+
 Online Store V15.9
 - Restored the top-right System Status button; removed the obsolete V10.7 CSS rule that forcibly hid it.
 - System Status diagnostics now show Cloud host, full last request URL, browser online/offline state, last successful revision and last successful Cloud time.
